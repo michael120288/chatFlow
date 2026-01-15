@@ -42,10 +42,17 @@ const Register = () => {
       setAlertType('alert-success');
       Utils.dispatchUser(result, pageReload, dispatch, setUser);
     } catch (error) {
+      console.log('Registration error:', error);
+      console.log('Error response:', error?.response);
+      console.log('Error response data:', error?.response?.data);
       setLoading(false);
       setHasError(true);
       setAlertType('alert-error');
-      setErrorMessage(error?.response?.data?.message);
+      setErrorMessage(
+        error?.response?.data?.message ||
+          error?.message ||
+          'An error occurred during registration'
+      );
     }
   };
 
