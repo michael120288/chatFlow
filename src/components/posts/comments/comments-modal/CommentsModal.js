@@ -4,13 +4,16 @@ import ReactionWrapper from '@components/posts/modal-wrappers/reaction-wrapper/R
 import useEffectOnce from '@hooks/useEffectOnce';
 import { closeModal } from '@redux/reducers/modal/modal.reducer';
 import { clearPost } from '@redux/reducers/post/post.reducer';
+import { updatePostCommentCount } from '@redux/reducers/post/posts.reducer';
 import { postService } from '@services/api/post/post.service';
 import { Utils } from '@services/utils/utils.service';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { FaTrash } from 'react-icons/fa';
 
 const CommentsModal = () => {
   const { post } = useSelector((state) => state);
+  const { profile } = useSelector((state) => state.user);
   const [postComments, setPostComments] = useState([]);
   const dispatch = useDispatch();
 
@@ -26,6 +29,17 @@ const CommentsModal = () => {
   const closeCommentsModal = () => {
     dispatch(closeModal());
     dispatch(clearPost());
+  };
+
+  const deleteComment = async (commentId) => {
+    try {
+      await postService.deleteComment(post?._id, commentId);
+      // Remove the deleted comment from the local state
+      setPostComments(postComments.filter((comment) => comment._id !== commentId));
+      Utils.dispatchNotification('Comment deleted successfully', 'success', dispatch);
+    } catch (error) {
+      Utils.dispatchNotification(error?.response?.data?.message || 'Failed to delete comment', 'error', dispatch);
+    }
   };
 
   useEffectOnce(() => {
@@ -57,6 +71,15 @@ const CommentsModal = () => {
                       <h1>{data?.username}</h1>
                       <p>{data?.comment}</p>
                     </div>
+                    {profile?.username === data?.username && (
+                      <button
+                        className="delete-comment-btn"
+                        onClick={() => deleteComment(data?._id)}
+                        aria-label="Delete comment"
+                      >
+                        <FaTrash />
+                      </button>
+                    )}
                   </div>
                 </div>
               </li>

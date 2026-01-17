@@ -77,7 +77,7 @@ const ReactionsAndCommentsDisplay = ({ post }) => {
                     </p>
                     <div className="likes-block-icons-list">
                       {postReactions.length === 0 && <FaSpinner className="circle-notch" />}
-                      {postReactions.length && (
+                      {postReactions.length > 0 && (
                         <>
                           {postReactions.slice(0, 19).map((postReaction) => (
                             <div key={Utils.generateString(10)}>
@@ -104,7 +104,7 @@ const ReactionsAndCommentsDisplay = ({ post }) => {
             <div className="tooltip-container-text tooltip-container-likes-bottom" data-testid="tooltip-container">
               <div className="likes-block-icons-list">
                 {postReactions.length === 0 && <FaSpinner className="circle-notch" />}
-                {postReactions.length && (
+                {postReactions.length > 0 && (
                   <>
                     {postReactions.slice(0, 19).map((reaction) => (
                       <span key={Utils.generateString(10)}>{reaction?.username}</span>
@@ -121,16 +121,17 @@ const ReactionsAndCommentsDisplay = ({ post }) => {
         className="comment tooltip-container"
         data-testid="comment-container"
         onClick={() => openCommentsComponent()}
+        onMouseEnter={getPostCommentsNames}
       >
         {post?.commentsCount > 0 && (
-          <span onMouseEnter={getPostCommentsNames} data-testid="comment-count">
+          <span data-testid="comment-count">
             {Utils.shortenLargeNumbers(post?.commentsCount)} {`${post?.commentsCount === 1 ? 'Comment' : 'Comments'}`}
           </span>
         )}
         <div className="tooltip-container-text tooltip-container-comments-bottom" data-testid="comment-tooltip">
           <div className="likes-block-icons-list">
             {postCommentNames.length === 0 && <FaSpinner className="circle-notch" />}
-            {postCommentNames.length && (
+            {postCommentNames.length > 0 && (
               <>
                 {postCommentNames.slice(0, 19).map((names) => (
                   <span key={Utils.generateString(10)}>{names}</span>

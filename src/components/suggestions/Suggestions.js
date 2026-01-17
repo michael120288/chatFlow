@@ -28,7 +28,7 @@ const Suggestions = () => {
 
   useEffect(() => {
     setUsers(suggestions?.users);
-  }, [suggestions, users]);
+  }, [suggestions]);
 
   return (
     <div className="suggestions-list-container" data-testid="suggestions-container">

@@ -2,9 +2,15 @@ import PropTypes from 'prop-types';
 import '@components/posts/modal-wrappers/reaction-wrapper/ReactionWrapper.scss';
 
 const ReactionWrapper = ({ children, closeModal }) => {
+  const handleBackgroundClick = (e) => {
+    if (e.target === e.currentTarget) {
+      closeModal();
+    }
+  };
+
   return (
     <>
-      <div className="modal-wrapper" data-testid="modal-wrapper">
+      <div className="modal-wrapper" data-testid="modal-wrapper" onClick={handleBackgroundClick}>
         <div className="modal-wrapper-container">
           <div className="modal-wrapper-container-header">
             {children[0]}
@@ -15,7 +21,7 @@ const ReactionWrapper = ({ children, closeModal }) => {
             {children[1]}
           </div>
         </div>
-        <div className="modal-bg" data-testid="modal-bg"></div>
+        <div className="modal-bg" data-testid="modal-bg" onClick={closeModal}></div>
       </div>
     </>
   );

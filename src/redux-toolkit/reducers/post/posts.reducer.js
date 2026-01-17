@@ -13,6 +13,13 @@ const postsSlice = createSlice({
   reducers: {
     addToPosts: (state, action) => {
       state.posts = [...action.payload];
+    },
+    updatePostCommentCount: (state, action) => {
+      const { postId, commentCount } = action.payload;
+      const postIndex = state.posts.findIndex((post) => post._id === postId);
+      if (postIndex !== -1) {
+        state.posts[postIndex].commentsCount = commentCount;
+      }
     }
   },
   extraReducers: (builder) => {
@@ -31,5 +38,5 @@ const postsSlice = createSlice({
   }
 });
 
-export const { addToPosts } = postsSlice.actions;
+export const { addToPosts, updatePostCommentCount } = postsSlice.actions;
 export default postsSlice.reducer;
