@@ -1,6 +1,8 @@
 .image-preview-container {
   position: absolute;
-  bottom: 55px;
+  bottom: 65px;
+  left: 10px;
+  z-index: 5;
 
   .image-preview {
     border: 1px solid var(--white-4);

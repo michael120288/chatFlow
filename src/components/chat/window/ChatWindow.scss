@@ -54,30 +54,27 @@
 
   .chat-window {
     grid-area: message-container;
-    display: grid;
-    grid-template-areas:
-      "message-body"
-      "image-preview"
-      "message-form";
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr max-content 45px;
-    height: 826px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 400px;
+    max-height: calc(100vh - 150px);
     position: relative;
     background-repeat: no-repeat;
 
     &-message {
-      grid-area: message-body;
-      height: 100%;
-      overflow-y: scroll;
+      flex: 1;
+      overflow-y: auto;
+      padding-bottom: 10px;
     }
 
     &-input {
-      grid-area: message-form;
-    }
-
-    app-image-preview {
-      grid-area: image-preview;
-      width: 100%;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: auto;
+      min-height: 60px;
     }
   }
 }
@@ -85,6 +82,14 @@
 app-container {
   top: 49%;
   position: absolute;
+}
+
+@media screen and (max-width: 1200px) {
+  .chat-window-container {
+    .chat-window {
+      max-height: calc(100vh - 160px);
+    }
+  }
 }
 
 @media screen and (max-width: 992px) {
@@ -105,7 +110,7 @@ app-container {
     }
 
     .chat-window {
-      height: 700px;
+      max-height: calc(100vh - 165px);
     }
   }
 }
@@ -128,8 +133,7 @@ app-container {
     }
 
     .chat-window {
-      height: 600px;
-      grid-template-rows: 1fr max-content 50px;
+      max-height: calc(100vh - 170px);
     }
   }
 }
@@ -153,7 +157,8 @@ app-container {
     }
 
     .chat-window {
-      height: 500px;
+      max-height: calc(100vh - 175px);
+      min-height: 300px;
     }
   }
 }

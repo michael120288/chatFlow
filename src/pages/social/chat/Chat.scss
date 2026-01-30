@@ -2,8 +2,9 @@
   height: 100vh;
   width: 100%;
   margin: 0;
-  padding-left: 10px;
-  padding-right: 10px;
+  padding: 0 10px;
+  display: flex;
+  flex-direction: column;
 
   &-content {
     margin: 20px 0 0;
@@ -13,17 +14,19 @@
     grid-template-columns: 240px 1fr;
     grid-template-rows: 1fr;
     grid-template-areas: "side message";
-    flex-grow: 1;
+    flex: 1;
     background-color: var(--white-1);
-    height: 95vh;
     width: 100%;
+    max-width: 100%;
+    overflow: hidden;
 
     &-side {
       grid-area: side;
       border-right: 1px solid var(--white-4);
       padding: 0 10px;
-      overflow: hidden;
+      overflow-y: auto;
       min-width: 0;
+      height: 100%;
     }
 
     &-conversation {
@@ -31,6 +34,7 @@
       flex-grow: 1;
       overflow: hidden;
       min-width: 0;
+      height: 100%;
 
       .no-chat {
         color: var(--black-3);
@@ -70,8 +74,7 @@
 
 @media screen and (max-width: 768px) {
   .private-chat-wrapper {
-    padding-left: 5px;
-    padding-right: 5px;
+    padding: 0 5px;
 
     &-content {
       grid-template-columns: 180px 1fr;
@@ -79,6 +82,13 @@
 
       &-side {
         padding: 0 5px;
+      }
+
+      &-conversation {
+        .no-chat {
+          font-size: 16px;
+          padding: 15px;
+        }
       }
     }
   }
@@ -92,6 +102,13 @@
 
       &-side {
         display: none;
+      }
+
+      &-conversation {
+        .no-chat {
+          font-size: 14px;
+          padding: 10px;
+        }
       }
     }
   }
