@@ -112,6 +112,7 @@ const MessageInput = ({ setChatMessage }) => {
                 name="image"
                 type="file"
                 className="file-input"
+                accept="image/*,.heic,.heif"
                 placeholder="Select file"
                 onClick={() => {
                   if (fileInputRef.current) {
@@ -156,10 +157,12 @@ const MessageInput = ({ setChatMessage }) => {
             onBlur={() => setHasFocus(false)}
             handleChange={(event) => setMessage(event.target.value)}
           />
+          <Button
+            label={<FaPaperPlane />}
+            className="paper"
+            handleClick={showImagePreview && !message ? handleImageClick : handleClick}
+          />
         </form>
-        {showImagePreview && !message && (
-          <Button label={<FaPaperPlane />} className="paper" handleClick={handleImageClick} />
-        )}
       </div>
     </>
   );

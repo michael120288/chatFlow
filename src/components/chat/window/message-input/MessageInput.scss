@@ -14,6 +14,8 @@
     display: flex;
     flex-flow: nowrap;
     width: 100%;
+    align-items: center;
+    gap: 5px;
   }
 
   .chat-list {
@@ -65,15 +67,26 @@
 
   .paper {
     grid-area: button;
-    color: var(--primary-1);
-    font-size: 25px;
+    font-size: 20px;
     line-height: 32px;
-    max-width: 80px;
+    min-width: 45px;
+    max-width: 45px;
+    height: 45px;
     border: none;
-    background: none;
-    padding: 7px;
+    background: var(--primary-1);
+    color: var(--white-1);
+    padding: 0;
     outline: none;
     cursor: pointer;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background: var(--primary-2);
+    }
   }
 }
 

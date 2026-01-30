@@ -3,7 +3,15 @@ import { updatePostItem } from '@redux/reducers/post/post.reducer';
 export class ImageUtils {
   static validateFile(file, type) {
     if (type === 'image') {
-      const validImageTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+      const validImageTypes = [
+        'image/jpeg',
+        'image/jpg',
+        'image/png',
+        'image/gif',
+        'image/webp',
+        'image/heic',
+        'image/heif'
+      ];
       return file && validImageTypes.indexOf(file.type) > -1;
     } else {
       const validVideoTypes = ['video/m4v', 'video/avi', 'video/mpg', 'video/mp4', 'video/webm'];

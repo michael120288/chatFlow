@@ -48,11 +48,7 @@ const Register = () => {
       setLoading(false);
       setHasError(true);
       setAlertType('alert-error');
-      setErrorMessage(
-        error?.response?.data?.message ||
-          error?.message ||
-          'An error occurred during registration'
-      );
+      setErrorMessage(error?.response?.data?.message || error?.message || 'An error occurred during registration');
     }
   };
 

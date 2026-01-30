@@ -4,7 +4,6 @@ import ReactionWrapper from '@components/posts/modal-wrappers/reaction-wrapper/R
 import useEffectOnce from '@hooks/useEffectOnce';
 import { closeModal } from '@redux/reducers/modal/modal.reducer';
 import { clearPost } from '@redux/reducers/post/post.reducer';
-import { updatePostCommentCount } from '@redux/reducers/post/posts.reducer';
 import { postService } from '@services/api/post/post.service';
 import { Utils } from '@services/utils/utils.service';
 import { useState } from 'react';

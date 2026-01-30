@@ -89,6 +89,7 @@ const PostForm = () => {
                   ref={fileInputRef}
                   type="file"
                   className="file-input"
+                  accept="image/*,.heic,.heif"
                   onClick={() => {
                     if (fileInputRef.current) {
                       fileInputRef.current.value = null;

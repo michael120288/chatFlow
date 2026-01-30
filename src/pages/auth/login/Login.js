@@ -45,11 +45,7 @@ const Login = () => {
       setLoading(false);
       setHasError(true);
       setAlertType('alert-error');
-      setErrorMessage(
-        error?.response?.data?.message ||
-          error?.message ||
-          'An error occurred during login'
-      );
+      setErrorMessage(error?.response?.data?.message || error?.message || 'An error occurred during login');
     }
   };
 

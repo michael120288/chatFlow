@@ -74,12 +74,6 @@ export const sideBarItems = [
     name: 'Notifications',
     url: '/app/social/notifications',
     iconName: 'FaRegBell'
-  },
-  {
-    index: 9,
-    name: 'Profile',
-    url: '/app/social/profile',
-    iconName: 'FaRegUser'
   }
 ];
 

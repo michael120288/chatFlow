@@ -172,6 +172,7 @@ const BackgroundHeader = ({
                     name="profile"
                     type="file"
                     className="inputFile"
+                    accept="image/*,.heic,.heif"
                     onClick={() => {
                       if (profileImageRef.current) {
                         profileImageRef.current.value = null;
@@ -196,6 +197,7 @@ const BackgroundHeader = ({
                   name="background"
                   type="file"
                   className="inputFile"
+                  accept="image/*,.heic,.heif"
                   onClick={() => {
                     if (backgroundFileRef.current) {
                       backgroundFileRef.current.value = null;

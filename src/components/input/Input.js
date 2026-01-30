@@ -33,6 +33,7 @@ const Input = forwardRef((props, ref) => {
           className={`form-input ${props.className}`}
           style={props.style}
           autoComplete="false"
+          accept={props.accept}
         />
         {isPasswordInput && (
           <button
@@ -61,7 +62,8 @@ Input.propTypes = {
   onClick: PropTypes.func,
   onFocus: PropTypes.func,
   onBlur: PropTypes.func,
-  style: PropTypes.object
+  style: PropTypes.object,
+  accept: PropTypes.string
 };
 
 export default Input;
