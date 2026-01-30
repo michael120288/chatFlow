@@ -47,3 +47,52 @@
     }
   }
 }
+
+@media screen and (max-width: 1200px) {
+  .private-chat-wrapper {
+    &-content {
+      grid-template-columns: 220px 1fr;
+    }
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .private-chat-wrapper {
+    &-content {
+      grid-template-columns: 200px 1fr;
+
+      &-side {
+        padding: 0 8px;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .private-chat-wrapper {
+    padding-left: 5px;
+    padding-right: 5px;
+
+    &-content {
+      grid-template-columns: 180px 1fr;
+      margin: 10px 0 0;
+
+      &-side {
+        padding: 0 5px;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .private-chat-wrapper {
+    &-content {
+      grid-template-columns: 1fr;
+      grid-template-areas: "message";
+
+      &-side {
+        display: none;
+      }
+    }
+  }
+}

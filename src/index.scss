@@ -64,7 +64,8 @@ p {
 .people,
 .videos,
 .photos {
-  max-width: 1152px;
+  max-width: 1400px;
+  width: 100%;
   margin: auto;
   height: 40px;
   background-color: var(--white-1);
@@ -79,7 +80,8 @@ p {
 }
 
 .empty-page {
-  max-width: 1152px;
+  max-width: 1400px;
+  width: 100%;
   background-color: var(--white-1);
   padding: 24px;
   border-radius: 16px;
@@ -87,6 +89,57 @@ p {
   text-align: center;
   font-size: 18px;
   font-weight: 700;
+}
+
+@media screen and (max-width: 1200px) {
+  .notifications,
+  .followers,
+  .following,
+  .people,
+  .videos,
+  .photos {
+    max-width: 100%;
+    font-size: 18px;
+  }
+
+  .empty-page {
+    max-width: 100%;
+    padding: 20px;
+    font-size: 16px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .notifications,
+  .followers,
+  .following,
+  .people,
+  .videos,
+  .photos {
+    font-size: 16px;
+    height: 35px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
+
+  .empty-page {
+    padding: 16px;
+    font-size: 14px;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .notifications,
+  .followers,
+  .following,
+  .people,
+  .videos,
+  .photos {
+    font-size: 14px;
+    height: 30px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
 }
 
 .avatar-skeleton {

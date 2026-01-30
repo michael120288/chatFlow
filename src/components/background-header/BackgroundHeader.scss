@@ -307,16 +307,152 @@
   }
 }
 
-@media only screen and (max-width: 768px) {
-  .profile-banner-data {
-    .profile-name {
-      font-size: 30px;
+@media screen and (max-width: 1200px) {
+  .profile-banner {
+    .profile-banner-data {
+      grid-template-columns: 150px 50px 1fr 1fr;
+
+      .profile-pic {
+        height: 150px;
+        width: 150px;
+        left: 40px;
+        margin-top: -130px;
+      }
+
+      .profile-name {
+        font-size: 24px;
+        left: 60px;
+      }
     }
 
-    .profile-select-image {
-      .inputFile + label {
-        padding: 0.5rem 25px;
-        line-height: 2;
+    .profile-banner-items {
+      .banner-nav {
+        &-item {
+          padding: 0 10px;
+
+          &-name {
+            font-size: 14px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .profile-banner {
+    .profile-banner-data {
+      grid-template-columns: 120px 50px 1fr 1fr;
+
+      .profile-pic {
+        height: 120px;
+        width: 120px;
+        left: 30px;
+        margin-top: -105px;
+      }
+
+      .profile-name {
+        font-size: 20px;
+        left: 50px;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .profile-banner {
+    .profile-banner-image {
+      height: 300px;
+    }
+
+    .profile-banner-data {
+      grid-template-columns: 100px 1fr;
+      grid-template-areas: "image name" ". add-cover-photo";
+
+      .profile-pic {
+        height: 100px;
+        width: 100px;
+        left: 20px;
+        margin-top: -85px;
+      }
+
+      .profile-name {
+        font-size: 18px;
+        left: 30px;
+        transform: translateY(-30px);
+      }
+
+      .profile-select-image {
+        top: -40px;
+
+        label {
+          padding: 0.5rem 20px;
+          font-size: 14px;
+        }
+      }
+    }
+
+    .profile-banner-items {
+      .banner-nav {
+        flex-wrap: wrap;
+        justify-content: center;
+
+        &-item {
+          padding: 0 8px;
+
+          &-name {
+            font-size: 13px;
+
+            .title {
+              display: none;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .profile-banner {
+    .profile-banner-image {
+      height: 250px;
+    }
+
+    .profile-banner-data {
+      .profile-pic {
+        height: 80px;
+        width: 80px;
+        left: 15px;
+        margin-top: -70px;
+      }
+
+      .profile-name {
+        font-size: 16px;
+        left: 20px;
+      }
+
+      .profile-select-image {
+        label {
+          padding: 0.4rem 15px;
+          font-size: 12px;
+
+          span {
+            display: none;
+          }
+        }
+      }
+    }
+
+    .profile-banner-items {
+      .banner-nav {
+        &-item {
+          padding: 0 5px;
+
+          &-name-icon {
+            font-size: 18px;
+          }
+        }
       }
     }
   }

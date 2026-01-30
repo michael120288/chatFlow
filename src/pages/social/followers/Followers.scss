@@ -131,9 +131,9 @@
 
 .follower-card-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, 352px);
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
-  max-width: 1152px;
+  max-width: 1400px;
   margin: auto;
   margin-bottom: 100px;
   overflow: scroll;
@@ -202,6 +202,101 @@
         .isUserFollowed {
           background-color: var(--red-3);
           border: 1px solid var(--red-3);
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .card-element {
+    max-width: 100%;
+    padding: 20px;
+  }
+
+  .follower-card-container {
+    max-width: 100%;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    padding: 20px;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .card-element {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+    padding: 16px;
+
+    &-item {
+      width: 100%;
+    }
+  }
+
+  .follower-card-container {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 15px;
+    padding: 16px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .card-element {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
+    padding: 12px;
+
+    &-header {
+      &-name {
+        font-size: 18px;
+      }
+    }
+  }
+
+  .follower-card-container {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 12px;
+
+    &-elements {
+      padding: 16px;
+
+      &-content {
+        grid-template-columns: max-content 1fr max-content;
+        gap: 10px;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .card-element {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    padding: 10px;
+
+    &-item {
+      height: auto;
+    }
+  }
+
+  .follower-card-container {
+    padding: 10px;
+
+    &-elements {
+      &-content {
+        grid-template-areas:
+          "avatar user"
+          "button button";
+        grid-template-columns: max-content 1fr;
+        grid-template-rows: auto auto;
+
+        .card-following-button {
+          margin-top: 10px;
+          width: 100%;
+
+          .following-button {
+            width: 100%;
+          }
         }
       }
     }

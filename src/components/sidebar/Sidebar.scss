@@ -85,3 +85,52 @@
 .sidebar-link:hover span {
   color: var(--dark-blue-2);
 }
+
+@media screen and (max-width: 992px) {
+  .app-side-menu {
+    .side-menu {
+      padding: 1.5rem 1rem;
+
+      .list-unstyled {
+        li {
+          .sidebar-link {
+            padding: 0.5rem 0.8rem;
+          }
+
+          .menu-link {
+            padding-left: 0.5rem;
+
+            span {
+              font-size: 0.9rem;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .app-side-menu {
+    .side-menu {
+      padding: 1rem 0.5rem;
+
+      .list-unstyled {
+        li {
+          padding-bottom: 0.3rem;
+
+          .sidebar-link {
+            width: 100%;
+            padding: 0.4rem 0.5rem;
+          }
+
+          .menu-link {
+            span {
+              font-size: 0.85rem;
+            }
+          }
+        }
+      }
+    }
+  }
+}

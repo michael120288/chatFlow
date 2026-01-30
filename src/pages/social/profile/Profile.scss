@@ -1,8 +1,10 @@
 .profile-wrapper {
   height: 100vh;
-  max-width: 1152px;
+  max-width: 1400px;
+  width: 100%;
   margin: auto;
   overflow: scroll;
+  padding: 0 20px;
 
   &-container {
     display: grid;
@@ -21,7 +23,7 @@
 
       .imageGrid-container {
         display: grid;
-        grid-template-columns: repeat(auto-fill, 352px);
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
         gap: 20px;
         justify-content: center;
         margin-bottom: 100px;
@@ -34,8 +36,55 @@
   }
 }
 
-@media only screen and (max-width: 768px) {
+@media screen and (max-width: 1200px) {
+  .profile-wrapper {
+    max-width: 100%;
+    padding: 0 15px;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .profile-wrapper {
+    padding: 0 10px;
+
+    &-container {
+      .profile-content {
+        .imageGrid-container {
+          grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+          gap: 15px;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .profile-wrapper {
+    padding: 0 10px;
+  }
+
   .profile-content {
     margin: 0 10px;
+
+    .imageGrid-container {
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 10px;
+      padding: 16px;
+    }
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .profile-wrapper {
+    padding: 0 5px;
+
+    &-container {
+      .profile-content {
+        .imageGrid-container {
+          grid-template-columns: 1fr;
+          gap: 10px;
+        }
+      }
+    }
   }
 }

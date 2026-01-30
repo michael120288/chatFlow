@@ -86,3 +86,74 @@ app-container {
   top: 49%;
   position: absolute;
 }
+
+@media screen and (max-width: 992px) {
+  .chat-window-container {
+    .chat-title {
+      height: 45px;
+      padding: 0 10px;
+
+      &-items {
+        .chat-name {
+          font-size: 14px;
+        }
+
+        .chat-active {
+          font-size: 11px;
+        }
+      }
+    }
+
+    .chat-window {
+      height: 700px;
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .chat-window-container {
+    .chat-title {
+      height: 40px;
+
+      &-avatar {
+        height: 35px;
+        width: 35px;
+      }
+
+      &-items {
+        .chat-name {
+          font-size: 13px;
+        }
+      }
+    }
+
+    .chat-window {
+      height: 600px;
+      grid-template-rows: 1fr max-content 50px;
+    }
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .chat-window-container {
+    .chat-title {
+      height: 35px;
+      padding: 0 8px;
+
+      &-avatar {
+        height: 30px;
+        width: 30px;
+      }
+
+      &-items {
+        .chat-name {
+          font-size: 12px;
+        }
+      }
+    }
+
+    .chat-window {
+      height: 500px;
+    }
+  }
+}
