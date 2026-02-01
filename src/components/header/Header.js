@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import logo from '@assets/images/logo.svg';
-import { FaCaretDown, FaCaretUp, FaRegBell, FaRegEnvelope } from 'react-icons/fa';
+import { FaCaretDown, FaCaretUp, FaRegBell, FaRegEnvelope, FaHome } from 'react-icons/fa';
 
 import '@components/header/Header.scss';
 import Avatar from '@components/avatar/Avatar';
@@ -115,12 +115,17 @@ const Header = () => {
 
   const onLogout = async () => {
     try {
+      // Call logout API while token is still valid
+      await userService.logoutUser();
+      // Clear store and navigate immediately
       setLoggedIn(false);
       Utils.clearStore({ dispatch, deleteStorageUsername, deleteSessionPageReload, setLoggedIn });
-      await userService.logoutUser();
-      navigate('/');
+      navigate('/auth');
     } catch (error) {
-      Utils.dispatchNotification(error.response.data.message, 'error', dispatch);
+      // If logout fails, still clear local state and navigate
+      setLoggedIn(false);
+      Utils.clearStore({ dispatch, deleteStorageUsername, deleteSessionPageReload, setLoggedIn });
+      navigate('/auth');
     }
   };
 
@@ -205,6 +210,17 @@ const Header = () => {
               <span className="bar"></span>
             </div>
             <ul className="header-nav">
+              <li
+                data-testid="home-list-item"
+                className="header-nav-item active-item"
+                onClick={() => navigate('/')}
+                title="Home"
+              >
+                <span className="header-list-name">
+                  <FaHome className="header-list-icon" />
+                </span>
+                &nbsp;
+              </li>
               <li
                 data-testid="notification-list-item"
                 className="header-nav-item active-item"

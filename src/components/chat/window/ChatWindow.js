@@ -24,6 +24,10 @@ const ChatWindow = () => {
 
   const getChatMessages = useCallback(
     async (receiverId) => {
+      // Don't make API call if receiverId is null, undefined, or 'null' string
+      if (!receiverId || receiverId === 'null') {
+        return;
+      }
       try {
         const response = await chatService.getChatMessages(receiverId);
         ChatUtils.privateChatMessages = [...response.data.messages];
@@ -36,16 +40,24 @@ const ChatWindow = () => {
   );
 
   const getNewUserMessages = useCallback(() => {
-    if (searchParams.get('id') && searchParams.get('username')) {
+    const userId = searchParams.get('id');
+    const username = searchParams.get('username');
+    // Don't make API call if userId or username is null, undefined, or 'null' string
+    if (userId && username && userId !== 'null' && username !== 'null') {
       setConversationId('');
       setChatMessages([]);
-      getChatMessages(searchParams.get('id'));
+      getChatMessages(userId);
     }
   }, [getChatMessages, searchParams]);
 
   const getUserProfileByUserId = useCallback(async () => {
+    const userId = searchParams.get('id');
+    // Don't make API call if userId is null, undefined, or 'null' string
+    if (!userId || userId === 'null') {
+      return;
+    }
     try {
-      const response = await userService.getUserProfileByUserId(searchParams.get('id'));
+      const response = await userService.getUserProfileByUserId(userId);
       setReceiver(response.data.user);
       ChatUtils.joinRoomEvent(response.data.user, profile);
     } catch (error) {

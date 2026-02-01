@@ -95,6 +95,13 @@
         .header-list-icon {
           width: 50px;
           text-align: center;
+          font-size: 20px;
+          color: var(--gray-11);
+          transition: color 0.3s ease;
+
+          &:hover {
+            color: var(--primary-1);
+          }
         }
 
         .header-list-name {

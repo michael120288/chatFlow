@@ -18,6 +18,28 @@
     font-weight: 900;
   }
 
+  .home-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 10px 24px;
+    background-color: var(--white-1);
+    color: var(--primary-1);
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+
+    &:hover {
+      background-color: var(--white-3);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+  }
+
   &::before {
     content: "";
     display: block;
