@@ -31,11 +31,13 @@ const ProtectedRoute = ({ children }) => {
       dispatch(addUser({ token: response.data.token, profile: response.data.user }));
     } catch (error) {
       setTokenIsValid(false);
-      setTimeout(async () => {
-        Utils.clearStore({ dispatch, deleteStorageUsername, deleteSessionPageReload, setLoggedIn });
-        await userService.logoutUser();
-        navigate('/');
-      }, 1000);
+      // Navigate immediately to prevent any API calls with invalid token
+      Utils.clearStore({ dispatch, deleteStorageUsername, deleteSessionPageReload, setLoggedIn });
+      navigate('/auth');
+      // Try to logout on backend (fire and forget)
+      userService.logoutUser().catch(() => {
+        // Ignore logout errors
+      });
     }
   }, [dispatch, navigate, deleteStorageUsername, deleteSessionPageReload, setLoggedIn]);
 
@@ -50,7 +52,7 @@ const ProtectedRoute = ({ children }) => {
       return <>{children}</>;
     }
   } else {
-    return <>{<Navigate to="/" />}</>;
+    return <>{<Navigate to="/auth" />}</>;
   }
 };
 ProtectedRoute.propTypes = {

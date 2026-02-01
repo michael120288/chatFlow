@@ -27,6 +27,9 @@ const AuthTabs = () => {
       ) : (
         <div className="container-wrapper" style={{ backgroundImage: `url(${backgroundImage})` }}>
           <div className="environment">{environment}</div>
+          <button className="home-button" onClick={() => navigate('/')}>
+            Home
+          </button>
           <div className="container-wrapper-auth">
             <div className="tabs">
               <div className="tabs-auth">
