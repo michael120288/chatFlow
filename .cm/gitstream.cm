@@ -1,0 +1,65 @@
+# -*- mode: yaml -*-
+
+manifest:
+  version: 1.0
+
+automations:
+  # Auto-approve safe changes
+  safe_changes:
+    if:
+      - {{ is.formatting or is.docs or is.tests }}
+    run:
+      - action: add-label@v1
+        args:
+          label: 'safe-changes'
+      - action: approve@v1
+      - action: add-comment@v1
+        args:
+          comment: |
+            This PR has been automatically approved as it contains safe changes (formatting, docs, or tests).
+
+  # Label PRs by size
+  label_by_size:
+    if:
+      - true
+    run:
+      - action: add-label@v1
+        args:
+          label: "{{ 'size-xs' if changes.ratio <= 0.01 else 'size-s' if changes.ratio <= 0.05 else 'size-m' if changes.ratio <= 0.15 else 'size-l' if changes.ratio <= 0.30 else 'size-xl' }}"
+          color: "{{ '#0e8a16' if changes.ratio <= 0.01 else '#1d76db' if changes.ratio <= 0.05 else '#fbca04' if changes.ratio <= 0.15 else '#ff9800' if changes.ratio <= 0.30 else '#d93f0b' }}"
+
+  # Request review from code owners based on file changes
+  code_experts:
+    if:
+      - true
+    run:
+      - action: add-reviewers@v1
+        args:
+          reviewers: {{ repo.code_owners }}
+
+  # Warn about missing tests
+  missing_tests:
+    if:
+      - {{ has.code_changes and not has.tests_changes }}
+    run:
+      - action: add-label@v1
+        args:
+          label: 'missing-tests'
+          color: '#FFA500'
+      - action: add-comment@v1
+        args:
+          comment: |
+            ⚠️ This PR modifies code but doesn't include test changes. Please consider adding tests.
+
+# Custom expressions
+is:
+  formatting: {{ source.diff.files | isFormattingChange }}
+  docs: {{ files | allDocs }}
+  tests: {{ files | allTests }}
+
+has:
+  code_changes: {{ files | length > 0 }}
+  tests_changes: {{ files | match(regex=r/test/) | some }}
+
+changes:
+  ratio: {{ (branch.diff.files_metadata | map(attr='additions') | sum) / (repo.contributors | length * 50) }}
