@@ -22,7 +22,7 @@ const Home = () => {
   return (
     <div className="home-container">
       <nav className="home-navbar">
-        <div className="navbar-brand">Chatty</div>
+        <div className="navbar-brand">QA</div>
         <div className="navbar-buttons">
           <button onClick={handleChatClick} className="navbar-button">
             Chat
@@ -33,7 +33,7 @@ const Home = () => {
         </div>
       </nav>
       <div className="home-content">
-        <h1 className="home-title">Welcome to Chatty</h1>
+        <h1 className="home-title">Welcome to QA page</h1>
         <p className="home-description">Connect with friends and start chatting</p>
         <div className="home-links">
           <button onClick={handleChatClick} className="home-link chat-link">

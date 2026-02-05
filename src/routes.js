@@ -1,5 +1,6 @@
 import { AuthTabs, ForgotPassword, ResetPassword } from '@pages/auth';
 import { Home } from '@pages/home';
+import { QAPractice } from '@pages/qa-practice';
 import Error from '@pages/error/Error';
 import ProtectedRoute from '@pages/ProtectedRoute';
 import { useRoutes } from 'react-router-dom';
@@ -28,6 +29,92 @@ export const AppRouter = () => {
     {
       path: '/',
       element: <Home />
+    },
+    {
+      path: '/qa-practice',
+      element: <QAPractice />,
+      children: [
+        {
+          path: 'web-inputs',
+          element: <QAPractice />
+        },
+        {
+          path: 'dynamic-table',
+          element: <QAPractice />
+        },
+        {
+          path: 'drag-and-drop',
+          element: <QAPractice />
+        },
+        {
+          path: 'iframe',
+          element: <QAPractice />
+        },
+        {
+          path: 'file-upload',
+          element: <QAPractice />
+        },
+        {
+          path: 'alerts-modals',
+          element: <QAPractice />
+        },
+        {
+          path: 'navigation',
+          element: <QAPractice />
+        },
+        {
+          path: 'tooltips',
+          element: <QAPractice />
+        },
+        {
+          path: 'loaders',
+          element: <QAPractice />
+        },
+        {
+          path: 'accordion',
+          element: <QAPractice />
+        },
+        {
+          path: 'tabs',
+          element: <QAPractice />
+        },
+        {
+          path: 'carousel',
+          element: <QAPractice />
+        },
+        {
+          path: 'search-filters',
+          element: <QAPractice />
+        },
+        {
+          path: 'breadcrumbs',
+          element: <QAPractice />
+        },
+        {
+          path: 'context-menu',
+          element: <QAPractice />
+        },
+        {
+          path: 'copy-clipboard',
+          element: <QAPractice />
+        },
+        {
+          path: 'rating',
+          element: <QAPractice />
+        },
+        {
+          path: 'wizard',
+          element: <QAPractice />
+        },
+        {
+          path: 'infinite-scroll',
+          element: <QAPractice />
+        },
+        {
+          path: 'sticky-elements',
+          element: <QAPractice />
+        }
+      ]
     },
     {
       path: '/auth',

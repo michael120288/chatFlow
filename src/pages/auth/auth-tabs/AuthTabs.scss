@@ -21,7 +21,8 @@
   .home-button {
     position: absolute;
     top: 20px;
-    right: 20px;
+    left: auto !important;
+    right: 20px !important;
     padding: 10px 24px;
     background-color: var(--white-1);
     color: var(--primary-1);
@@ -32,6 +33,10 @@
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    width: auto !important;
+    max-width: fit-content;
+    display: inline-block !important;
+    float: none !important;
 
     &:hover {
       background-color: var(--white-3);

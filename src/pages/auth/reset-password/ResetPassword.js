@@ -83,7 +83,7 @@ const ResetPassword = () => {
                     disabled={!password || !confirmPassword}
                   />
 
-                  <Link to={'/'}>
+                  <Link to={'/auth'}>
                     <span className="login">
                       <FaArrowLeft className="arrow-left" /> Back to Login
                     </span>
