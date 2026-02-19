@@ -1,0 +1,388 @@
+.my-decks-page {
+  min-height: 100vh;
+  background: #f5f6fa;
+  padding: 2rem;
+
+  .my-decks-container {
+    max-width: 1400px;
+    margin: 0 auto;
+
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      gap: 2rem;
+      flex-wrap: wrap;
+
+      .header-content {
+        h1 {
+          font-size: 2.5rem;
+          font-weight: 700;
+          color: #333;
+          margin: 0 0 0.5rem 0;
+        }
+
+        p {
+          font-size: 1.1rem;
+          color: #666;
+          margin: 0;
+        }
+      }
+
+      .create-deck-button {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 1rem 2rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        svg {
+          width: 20px;
+          height: 20px;
+        }
+
+        &:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+      }
+    }
+
+    .deck-form-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 2rem;
+      animation: fadeIn 0.3s ease;
+
+      .deck-form-modal {
+        max-width: 600px;
+        width: 100%;
+        max-height: 90vh;
+        overflow-y: auto;
+        animation: slideUp 0.3s ease;
+      }
+    }
+
+    .decks-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+
+      .stat-card {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        padding: 1.5rem;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+
+        &:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-icon {
+          width: 60px;
+          height: 60px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 12px;
+          color: white;
+          flex-shrink: 0;
+
+          svg {
+            width: 28px;
+            height: 28px;
+          }
+        }
+
+        .stat-content {
+          .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #333;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+          }
+
+          .stat-label {
+            font-size: 0.95rem;
+            color: #666;
+            font-weight: 500;
+          }
+        }
+      }
+    }
+
+    .loading-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 400px;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      padding: 3rem;
+
+      .spinner {
+        width: 60px;
+        height: 60px;
+        border: 4px solid rgba(102, 126, 234, 0.1);
+        border-top-color: #667eea;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 1.5rem;
+      }
+
+      p {
+        font-size: 1.2rem;
+        color: #666;
+        font-weight: 500;
+        margin: 0;
+      }
+    }
+
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 400px;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      padding: 3rem;
+      text-align: center;
+
+      .empty-icon {
+        width: 100px;
+        height: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+        border-radius: 50%;
+        color: #667eea;
+        margin-bottom: 1.5rem;
+
+        svg {
+          width: 50px;
+          height: 50px;
+        }
+      }
+
+      h2 {
+        font-size: 2rem;
+        color: #333;
+        margin: 0 0 1rem 0;
+        font-weight: 700;
+      }
+
+      p {
+        font-size: 1.1rem;
+        color: #666;
+        margin: 0 0 2rem 0;
+        max-width: 500px;
+        line-height: 1.6;
+      }
+
+      .primary-button {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 1rem 2rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        svg {
+          width: 20px;
+          height: 20px;
+        }
+
+        &:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+      }
+    }
+
+    .decks-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 1024px) {
+  .my-decks-page {
+    .my-decks-container {
+      .decks-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .my-decks-page {
+    padding: 1.5rem;
+
+    .my-decks-container {
+      .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+
+        .header-content {
+          h1 {
+            font-size: 2rem;
+          }
+
+          p {
+            font-size: 1rem;
+          }
+        }
+
+        .create-deck-button {
+          width: 100%;
+          justify-content: center;
+        }
+      }
+
+      .decks-stats {
+        grid-template-columns: 1fr;
+
+        .stat-card {
+          padding: 1.25rem;
+
+          .stat-icon {
+            width: 50px;
+            height: 50px;
+
+            svg {
+              width: 24px;
+              height: 24px;
+            }
+          }
+
+          .stat-content {
+            .stat-value {
+              font-size: 1.75rem;
+            }
+
+            .stat-label {
+              font-size: 0.9rem;
+            }
+          }
+        }
+      }
+
+      .decks-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .my-decks-page {
+    padding: 1rem;
+
+    .my-decks-container {
+      .page-header {
+        .header-content {
+          h1 {
+            font-size: 1.75rem;
+          }
+
+          p {
+            font-size: 0.95rem;
+          }
+        }
+
+        .create-deck-button {
+          padding: 0.875rem 1.5rem;
+          font-size: 1rem;
+        }
+      }
+
+      .empty-state {
+        padding: 2rem 1.5rem;
+
+        .empty-icon {
+          width: 80px;
+          height: 80px;
+
+          svg {
+            width: 40px;
+            height: 40px;
+          }
+        }
+
+        h2 {
+          font-size: 1.5rem;
+        }
+
+        p {
+          font-size: 1rem;
+        }
+      }
+    }
+  }
+}

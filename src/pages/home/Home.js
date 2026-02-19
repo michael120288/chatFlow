@@ -19,26 +19,45 @@ const Home = () => {
     navigate('/qa-practice');
   };
 
+  // const handleFlashcardsClick = () => {
+  //   if (profile && token) {
+  //     navigate('/app/social/flashcards');
+  //   } else {
+  //     navigate('/auth');
+  //   }
+  // };
+
   return (
     <div className="home-container">
       <nav className="home-navbar">
         <div className="navbar-brand">QA</div>
-        <div className="navbar-buttons">
-          <button onClick={handleChatClick} className="navbar-button">
-            Chat
-          </button>
-          <button onClick={handleQAPracticeClick} className="navbar-button">
-            QA Practice
-          </button>
-        </div>
       </nav>
-      <div className="home-content">
-        <h1 className="home-title">Welcome to QA page</h1>
-        <p className="home-description">Connect with friends and start chatting</p>
-        <div className="home-links">
-          <button onClick={handleChatClick} className="home-link chat-link">
-            Chat
-          </button>
+      <div className="home-layout">
+        <aside className="home-sidebar">
+          <div className="sidebar-header">
+            <h2>Navigation</h2>
+          </div>
+          <nav className="sidebar-nav">
+            <button className="sidebar-link active" onClick={() => navigate('/')}>
+              <span className="sidebar-icon">🏠</span>
+              <span className="sidebar-text">Home</span>
+            </button>
+            <button className="sidebar-link" onClick={handleChatClick}>
+              <span className="sidebar-icon">💬</span>
+              <span className="sidebar-text">Chat</span>
+            </button>
+            <button className="sidebar-link" onClick={handleQAPracticeClick}>
+              <span className="sidebar-icon">🧪</span>
+              <span className="sidebar-text">QA Practice</span>
+            </button>
+            {/* <button className="sidebar-link" onClick={handleFlashcardsClick}>
+              <span className="sidebar-icon">🎴</span>
+              <span className="sidebar-text">Flashcards</span>
+            </button> */}
+          </nav>
+        </aside>
+        <div className="home-content">
+          <h1 className="home-title">Welcome to QA page</h1>
         </div>
       </div>
     </div>

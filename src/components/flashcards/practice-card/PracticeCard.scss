@@ -1,0 +1,316 @@
+.practice-card-wrapper {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.practice-card {
+  perspective: 1000px;
+  min-height: 400px;
+  margin-bottom: 2rem;
+
+  .practice-card-inner {
+    position: relative;
+    width: 100%;
+    min-height: 400px;
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+  }
+
+  &.flipped .practice-card-inner {
+    transform: rotateY(180deg);
+  }
+
+  .practice-card-face {
+    position: absolute;
+    width: 100%;
+    min-height: 400px;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+
+    .card-category-badge {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      padding: 0.4rem 0.8rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .card-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 2rem 1rem;
+
+      .question-label,
+      .answer-label {
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: #667eea;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 1rem;
+      }
+
+      .question-text,
+      .answer-text {
+        font-size: 1.5rem;
+        color: #333;
+        line-height: 1.6;
+        margin: 0 0 1.5rem 0;
+        max-width: 600px;
+      }
+
+      .card-image {
+        margin: 1.5rem 0;
+        border-radius: 12px;
+        overflow: hidden;
+        max-width: 500px;
+        width: 100%;
+
+        img {
+          width: 100%;
+          height: auto;
+          display: block;
+        }
+      }
+
+      .code-block {
+        background: #1e1e1e;
+        color: #d4d4d4;
+        padding: 1.5rem;
+        border-radius: 12px;
+        overflow-x: auto;
+        margin: 1.5rem 0;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        max-width: 100%;
+        text-align: left;
+
+        code {
+          font-family: 'Courier New', Consolas, Monaco, monospace;
+        }
+      }
+    }
+
+    .flip-button {
+      padding: 1rem 2rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      align-self: center;
+
+      &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+      }
+    }
+  }
+
+  .practice-card-front {
+    z-index: 2;
+  }
+
+  .practice-card-back {
+    transform: rotateY(180deg);
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+
+    .answer-label {
+      color: #764ba2;
+    }
+  }
+}
+
+.practice-controls {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+
+  .controls-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+
+    p {
+      margin: 0;
+      font-size: 1.1rem;
+      color: #666;
+      font-weight: 500;
+    }
+  }
+
+  .difficulty-buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+
+    .difficulty-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1.25rem 1rem;
+      border: 2px solid;
+      background: white;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 600;
+
+      .btn-label {
+        font-size: 1.1rem;
+      }
+
+      .btn-time {
+        font-size: 0.85rem;
+        opacity: 0.7;
+      }
+
+      &.again {
+        border-color: #ef4444;
+        color: #ef4444;
+
+        &:hover {
+          background: #ef4444;
+          color: white;
+          transform: translateY(-4px);
+          box-shadow: 0 6px 20px rgba(239, 68, 68, 0.3);
+        }
+      }
+
+      &.hard {
+        border-color: #f59e0b;
+        color: #f59e0b;
+
+        &:hover {
+          background: #f59e0b;
+          color: white;
+          transform: translateY(-4px);
+          box-shadow: 0 6px 20px rgba(245, 158, 11, 0.3);
+        }
+      }
+
+      &.good {
+        border-color: #10b981;
+        color: #10b981;
+
+        &:hover {
+          background: #10b981;
+          color: white;
+          transform: translateY(-4px);
+          box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
+        }
+      }
+
+      &.easy {
+        border-color: #3b82f6;
+        color: #3b82f6;
+
+        &:hover {
+          background: #3b82f6;
+          color: white;
+          transform: translateY(-4px);
+          box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3);
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .practice-card {
+    .practice-card-face {
+      padding: 1.5rem;
+
+      .card-content {
+        padding: 1.5rem 0.5rem;
+
+        .question-text,
+        .answer-text {
+          font-size: 1.2rem;
+        }
+      }
+
+      .flip-button {
+        padding: 0.875rem 1.5rem;
+        font-size: 1rem;
+      }
+    }
+  }
+
+  .practice-controls {
+    padding: 1rem;
+
+    .difficulty-buttons {
+      grid-template-columns: repeat(2, 1fr);
+
+      .difficulty-btn {
+        padding: 1rem 0.75rem;
+
+        .btn-label {
+          font-size: 1rem;
+        }
+
+        .btn-time {
+          font-size: 0.8rem;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .practice-card {
+    .practice-card-inner {
+      min-height: 350px;
+    }
+
+    .practice-card-face {
+      min-height: 350px;
+      padding: 1rem;
+
+      .card-content {
+        .question-text,
+        .answer-text {
+          font-size: 1.1rem;
+        }
+      }
+    }
+  }
+
+  .practice-controls {
+    .difficulty-buttons {
+      gap: 0.75rem;
+
+      .difficulty-btn {
+        padding: 0.875rem 0.5rem;
+
+        .btn-label {
+          font-size: 0.95rem;
+        }
+
+        .btn-time {
+          font-size: 0.75rem;
+        }
+      }
+    }
+  }
+}

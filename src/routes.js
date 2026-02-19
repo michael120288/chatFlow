@@ -23,6 +23,12 @@ const Photos = lazy(() => import('@pages/social/photos/Photos'));
 const Videos = lazy(() => import('@pages/social/videos/Videos'));
 const Profile = lazy(() => import('@pages/social/profile/Profile'));
 const Streams = lazy(() => import('@pages/social/streams/Streams'));
+const Cards = lazy(() => import('@pages/social/flashcards/Cards'));
+const PracticeMode = lazy(() => import('@pages/social/flashcards/PracticeMode'));
+const Bookmarks = lazy(() => import('@pages/social/flashcards/Bookmarks'));
+const MyDecks = lazy(() => import('@pages/social/flashcards/MyDecks'));
+const DeckDetail = lazy(() => import('@pages/social/flashcards/DeckDetail'));
+const DeckPractice = lazy(() => import('@pages/social/flashcards/DeckPractice'));
 
 export const AppRouter = () => {
   const elements = useRoutes([
@@ -112,6 +118,78 @@ export const AppRouter = () => {
         },
         {
           path: 'sticky-elements',
+          element: <QAPractice />
+        },
+        {
+          path: 'local-storage',
+          element: <QAPractice />
+        },
+        {
+          path: 'cookies',
+          element: <QAPractice />
+        },
+        {
+          path: 'api-testing',
+          element: <QAPractice />
+        },
+        {
+          path: 'form-validation',
+          element: <QAPractice />
+        },
+        {
+          path: 'authentication',
+          element: <QAPractice />
+        },
+        {
+          path: 'download-files',
+          element: <QAPractice />
+        },
+        {
+          path: 'notifications',
+          element: <QAPractice />
+        },
+        {
+          path: 'keyboard-nav',
+          element: <QAPractice />
+        },
+        {
+          path: 'autocomplete',
+          element: <QAPractice />
+        },
+        {
+          path: 'multi-select',
+          element: <QAPractice />
+        },
+        {
+          path: 'date-time-picker',
+          element: <QAPractice />
+        },
+        {
+          path: 'dark-mode',
+          element: <QAPractice />
+        },
+        {
+          path: 'nested-dropdowns',
+          element: <QAPractice />
+        },
+        {
+          path: 'error-boundary',
+          element: <QAPractice />
+        },
+        {
+          path: 'disabled-readonly',
+          element: <QAPractice />
+        },
+        {
+          path: 'progress',
+          element: <QAPractice />
+        },
+        {
+          path: 'virtual-scroll',
+          element: <QAPractice />
+        },
+        {
+          path: 'websocket',
           element: <QAPractice />
         }
       ]
@@ -205,6 +283,54 @@ export const AppRouter = () => {
           element: (
             <Suspense fallback={<ProfileSkeleton />}>
               <Profile />
+            </Suspense>
+          )
+        },
+        {
+          path: 'flashcards',
+          element: (
+            <Suspense fallback={<StreamsSkeleton />}>
+              <Cards />
+            </Suspense>
+          )
+        },
+        {
+          path: 'flashcards/practice',
+          element: (
+            <Suspense fallback={<StreamsSkeleton />}>
+              <PracticeMode />
+            </Suspense>
+          )
+        },
+        {
+          path: 'flashcards/bookmarks',
+          element: (
+            <Suspense fallback={<StreamsSkeleton />}>
+              <Bookmarks />
+            </Suspense>
+          )
+        },
+        {
+          path: 'flashcards/my-decks',
+          element: (
+            <Suspense fallback={<StreamsSkeleton />}>
+              <MyDecks />
+            </Suspense>
+          )
+        },
+        {
+          path: 'flashcards/deck/:deckId',
+          element: (
+            <Suspense fallback={<StreamsSkeleton />}>
+              <DeckDetail />
+            </Suspense>
+          )
+        },
+        {
+          path: 'flashcards/practice/deck/:deckId',
+          element: (
+            <Suspense fallback={<StreamsSkeleton />}>
+              <DeckPractice />
             </Suspense>
           )
         }

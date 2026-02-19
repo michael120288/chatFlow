@@ -200,6 +200,11 @@ const Header = () => {
                 data-testid="home-list-item"
                 className="header-nav-item active-item"
                 onClick={() => navigate('/')}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') navigate('/');
+                }}
+                role="button"
+                tabIndex="0"
                 title="Home"
               >
                 <span className="header-list-name">
@@ -215,6 +220,15 @@ const Header = () => {
                   setIsNotificationActive(true);
                   setIsSettingsActive(false);
                 }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    setIsMessageActive(false);
+                    setIsNotificationActive(true);
+                    setIsSettingsActive(false);
+                  }
+                }}
+                role="button"
+                tabIndex="0"
               >
                 <span className="header-list-name">
                   <FaRegBell className="header-list-icon" />
@@ -249,6 +263,15 @@ const Header = () => {
                   setIsNotificationActive(false);
                   setIsSettingsActive(false);
                 }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    setIsMessageActive(true);
+                    setIsNotificationActive(false);
+                    setIsSettingsActive(false);
+                  }
+                }}
+                role="button"
+                tabIndex="0"
               >
                 <span className="header-list-name">
                   <FaRegEnvelope className="header-list-icon" />
@@ -264,6 +287,15 @@ const Header = () => {
                   setIsMessageActive(false);
                   setIsNotificationActive(false);
                 }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    setIsSettingsActive(!isSettingsActive);
+                    setIsMessageActive(false);
+                    setIsNotificationActive(false);
+                  }
+                }}
+                role="button"
+                tabIndex="0"
               >
                 <span className="header-list-name profile-image">
                   <Avatar

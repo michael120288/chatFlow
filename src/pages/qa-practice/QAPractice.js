@@ -98,6 +98,92 @@ const QAPractice = () => {
   const [scrollItems, setScrollItems] = useState(Array.from({ length: 20 }, (_, i) => i + 1));
   const [isLoadingMore, setIsLoadingMore] = useState(false);
 
+  // LocalStorage/SessionStorage state
+  const [localStorageKey, setLocalStorageKey] = useState('');
+  const [localStorageValue, setLocalStorageValue] = useState('');
+  const [sessionStorageKey, setSessionStorageKey] = useState('');
+  const [sessionStorageValue, setSessionStorageValue] = useState('');
+  const [storageData, setStorageData] = useState({ local: {}, session: {} });
+
+  // Cookie Management state
+  const [cookieName, setCookieName] = useState('');
+  const [cookieValue, setCookieValue] = useState('');
+  const [cookies, setCookies] = useState([]);
+
+  // API Testing state
+  const [apiUrl, setApiUrl] = useState('https://jsonplaceholder.typicode.com/posts/1');
+  const [apiMethod, setApiMethod] = useState('GET');
+  const [apiResponse, setApiResponse] = useState(null);
+  const [apiLoading, setApiLoading] = useState(false);
+  const [apiError, setApiError] = useState(null);
+
+  // Form Validation state
+  const [validationForm, setValidationForm] = useState({
+    username: '',
+    email: '',
+    phone: '',
+    password: '',
+    confirmPassword: '',
+    age: '',
+    website: ''
+  });
+  const [validationErrors, setValidationErrors] = useState({});
+
+  // Authentication state
+  const [authUser, setAuthUser] = useState(null);
+  const [loginForm, setLoginForm] = useState({ username: '', password: '' });
+
+  // Download Files state
+  const [downloadType, setDownloadType] = useState('text');
+
+  // Browser Notifications state
+  const [notificationPermission, setNotificationPermission] = useState(Notification.permission);
+
+  // Keyboard Navigation state
+  const [keyboardLog, setKeyboardLog] = useState([]);
+  const [shortcutPressed, setShortcutPressed] = useState('');
+
+  // Auto-complete state
+  const [autocompleteQuery, setAutocompleteQuery] = useState('');
+  const [autocompleteSuggestions, setAutocompleteSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+
+  // Multi-select state
+  const [multiSelectOptions] = useState(['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5']);
+  const [selectedMultiOptions, setSelectedMultiOptions] = useState([]);
+
+  // Date/Time Picker state
+  const [selectedDate, setSelectedDate] = useState('');
+  const [selectedTime, setSelectedTime] = useState('');
+
+  // Dark Mode state
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  // Nested Dropdowns state
+  const [selectedCountry, setSelectedCountry] = useState('');
+  const [selectedState, setSelectedState] = useState('');
+  const [selectedCity, setSelectedCity] = useState('');
+
+  // Error Boundary state
+  const [shouldThrowError, setShouldThrowError] = useState(false);
+
+  // Disabled/Readonly state
+  const [isInputDisabled, setIsInputDisabled] = useState(true);
+  const [isInputReadonly, setIsInputReadonly] = useState(false);
+
+  // Progress Indicators state
+  const [progressValue, setProgressValue] = useState(0);
+  const [stepProgress, setStepProgress] = useState(1);
+
+  // Virtual Scroll state
+  const [virtualItems] = useState(Array.from({ length: 10000 }, (_, i) => `Item ${i + 1}`));
+  const [visibleRange, setVisibleRange] = useState({ start: 0, end: 50 });
+
+  // WebSocket state
+  const [wsMessages, setWsMessages] = useState([]);
+  const [wsStatus, setWsStatus] = useState('disconnected');
+  const [wsMessage, setWsMessage] = useState('');
+
   // IFrame state
   const [selectedIframe, setSelectedIframe] = useState('custom1');
   const iframeOptions = [
@@ -368,7 +454,20 @@ const QAPractice = () => {
     { id: 'rating', label: 'Rating' },
     { id: 'wizard', label: 'Wizard' },
     { id: 'infinite-scroll', label: 'Infinite Scroll' },
-    { id: 'sticky-elements', label: 'Sticky Elements' }
+    { id: 'sticky-elements', label: 'Sticky Elements' },
+    { id: 'local-storage', label: 'LocalStorage/SessionStorage' },
+    { id: 'api-testing', label: 'API Testing' },
+    { id: 'authentication', label: 'Authentication' },
+    { id: 'download-files', label: 'Download Files' },
+    { id: 'autocomplete', label: 'Auto-complete' },
+    { id: 'multi-select', label: 'Multi-select' },
+    { id: 'date-time-picker', label: 'Date/Time Picker' },
+    { id: 'dark-mode', label: 'Dark Mode' },
+    { id: 'nested-dropdowns', label: 'Nested Dropdowns' },
+    { id: 'disabled-readonly', label: 'Disabled/Readonly' },
+    { id: 'progress', label: 'Progress Indicators' },
+    { id: 'virtual-scroll', label: 'Virtual Scroll' },
+    { id: 'websocket', label: 'WebSocket' }
   ];
 
   // Close context menu on click
@@ -422,6 +521,42 @@ const QAPractice = () => {
       setSelectedOption('infinite-scroll');
     } else if (path.includes('sticky-elements')) {
       setSelectedOption('sticky-elements');
+    } else if (path.includes('local-storage')) {
+      setSelectedOption('local-storage');
+    } else if (path.includes('cookies')) {
+      setSelectedOption('cookies');
+    } else if (path.includes('api-testing')) {
+      setSelectedOption('api-testing');
+    } else if (path.includes('form-validation')) {
+      setSelectedOption('form-validation');
+    } else if (path.includes('authentication')) {
+      setSelectedOption('authentication');
+    } else if (path.includes('download-files')) {
+      setSelectedOption('download-files');
+    } else if (path.includes('notifications')) {
+      setSelectedOption('notifications');
+    } else if (path.includes('keyboard-nav')) {
+      setSelectedOption('keyboard-nav');
+    } else if (path.includes('autocomplete')) {
+      setSelectedOption('autocomplete');
+    } else if (path.includes('multi-select')) {
+      setSelectedOption('multi-select');
+    } else if (path.includes('date-time-picker')) {
+      setSelectedOption('date-time-picker');
+    } else if (path.includes('dark-mode')) {
+      setSelectedOption('dark-mode');
+    } else if (path.includes('nested-dropdowns')) {
+      setSelectedOption('nested-dropdowns');
+    } else if (path.includes('error-boundary')) {
+      setSelectedOption('error-boundary');
+    } else if (path.includes('disabled-readonly')) {
+      setSelectedOption('disabled-readonly');
+    } else if (path.includes('progress')) {
+      setSelectedOption('progress');
+    } else if (path.includes('virtual-scroll')) {
+      setSelectedOption('virtual-scroll');
+    } else if (path.includes('websocket')) {
+      setSelectedOption('websocket');
     } else if (path === '/qa-practice') {
       // Default to web-inputs if on base route
       navigate('/qa-practice/web-inputs', { replace: true });
@@ -2567,6 +2702,1020 @@ const QAPractice = () => {
             >
               ↑ Back to Top
             </button>
+          </div>
+        </div>
+      );
+    }
+
+    // 1. LocalStorage/SessionStorage
+    if (selectedOption === 'local-storage') {
+      const loadStorageData = () => {
+        const local = {};
+        const session = {};
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          local[key] = localStorage.getItem(key);
+        }
+        for (let i = 0; i < sessionStorage.length; i++) {
+          const key = sessionStorage.key(i);
+          session[key] = sessionStorage.getItem(key);
+        }
+        setStorageData({ local, session });
+      };
+
+      return (
+        <div className="content-section">
+          <h2>LocalStorage/SessionStorage</h2>
+          <p>Practice testing browser storage APIs</p>
+          <div className="storage-section">
+            <h3>LocalStorage</h3>
+            <div className="storage-controls">
+              <input
+                type="text"
+                placeholder="Key"
+                value={localStorageKey}
+                onChange={(e) => setLocalStorageKey(e.target.value)}
+              />
+              <input
+                type="text"
+                placeholder="Value"
+                value={localStorageValue}
+                onChange={(e) => setLocalStorageValue(e.target.value)}
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  if (localStorageKey) {
+                    localStorage.setItem(localStorageKey, localStorageValue);
+                    loadStorageData();
+                    setLocalStorageKey('');
+                    setLocalStorageValue('');
+                  }
+                }}
+              >
+                Set Item
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  localStorage.clear();
+                  loadStorageData();
+                }}
+              >
+                Clear All
+              </button>
+            </div>
+            <div className="storage-data">
+              {Object.entries(storageData.local).map(([key, value]) => (
+                <div key={key} className="storage-item">
+                  <strong>{key}:</strong> {value}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      localStorage.removeItem(key);
+                      loadStorageData();
+                    }}
+                  >
+                    Remove
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="storage-section">
+            <h3>SessionStorage</h3>
+            <div className="storage-controls">
+              <input
+                type="text"
+                placeholder="Key"
+                value={sessionStorageKey}
+                onChange={(e) => setSessionStorageKey(e.target.value)}
+              />
+              <input
+                type="text"
+                placeholder="Value"
+                value={sessionStorageValue}
+                onChange={(e) => setSessionStorageValue(e.target.value)}
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  if (sessionStorageKey) {
+                    sessionStorage.setItem(sessionStorageKey, sessionStorageValue);
+                    loadStorageData();
+                    setSessionStorageKey('');
+                    setSessionStorageValue('');
+                  }
+                }}
+              >
+                Set Item
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  sessionStorage.clear();
+                  loadStorageData();
+                }}
+              >
+                Clear All
+              </button>
+            </div>
+            <div className="storage-data">
+              {Object.entries(storageData.session).map(([key, value]) => (
+                <div key={key} className="storage-item">
+                  <strong>{key}:</strong> {value}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      sessionStorage.removeItem(key);
+                      loadStorageData();
+                    }}
+                  >
+                    Remove
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+          <button type="button" onClick={loadStorageData}>
+            Refresh Data
+          </button>
+        </div>
+      );
+    }
+
+    // 2. Cookie Management
+    if (selectedOption === 'cookies') {
+      const getCookies = () => {
+        const cookieArray = document.cookie
+          .split(';')
+          .map((c) => {
+            const [name, value] = c.trim().split('=');
+            return { name, value };
+          })
+          .filter((c) => c.name);
+        setCookies(cookieArray);
+      };
+
+      return (
+        <div className="content-section">
+          <h2>Cookie Management</h2>
+          <p>Practice testing cookie operations</p>
+          <div className="cookie-controls">
+            <input
+              type="text"
+              placeholder="Cookie Name"
+              value={cookieName}
+              onChange={(e) => setCookieName(e.target.value)}
+            />
+            <input
+              type="text"
+              placeholder="Cookie Value"
+              value={cookieValue}
+              onChange={(e) => setCookieValue(e.target.value)}
+            />
+            <button
+              type="button"
+              onClick={() => {
+                if (cookieName) {
+                  document.cookie = `${cookieName}=${cookieValue}; path=/`;
+                  getCookies();
+                  setCookieName('');
+                  setCookieValue('');
+                }
+              }}
+            >
+              Set Cookie
+            </button>
+            <button type="button" onClick={getCookies}>
+              Refresh Cookies
+            </button>
+          </div>
+          <div className="cookie-list">
+            <h3>Current Cookies:</h3>
+            {cookies.length === 0 ? (
+              <p>No cookies found</p>
+            ) : (
+              cookies.map((cookie, index) => (
+                <div key={index} className="cookie-item">
+                  <strong>{cookie.name}:</strong> {cookie.value}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      document.cookie = `${cookie.name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+                      getCookies();
+                    }}
+                  >
+                    Delete
+                  </button>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    // 3. API Testing
+    if (selectedOption === 'api-testing') {
+      const handleApiCall = async () => {
+        setApiLoading(true);
+        setApiError(null);
+        setApiResponse(null);
+        try {
+          const response = await fetch(apiUrl, { method: apiMethod });
+          const data = await response.json();
+          setApiResponse(data);
+        } catch (error) {
+          setApiError(error.message);
+        } finally {
+          setApiLoading(false);
+        }
+      };
+
+      return (
+        <div className="content-section">
+          <h2>API Testing</h2>
+          <p>Practice testing HTTP requests</p>
+          <div className="api-controls">
+            <select value={apiMethod} onChange={(e) => setApiMethod(e.target.value)}>
+              <option value="GET">GET</option>
+              <option value="POST">POST</option>
+              <option value="PUT">PUT</option>
+              <option value="DELETE">DELETE</option>
+            </select>
+            <input type="text" value={apiUrl} onChange={(e) => setApiUrl(e.target.value)} placeholder="API URL" />
+            <button type="button" onClick={handleApiCall} disabled={apiLoading}>
+              {apiLoading ? 'Loading...' : 'Send Request'}
+            </button>
+          </div>
+          {apiError && <div className="api-error">Error: {apiError}</div>}
+          {apiResponse && (
+            <div className="api-response">
+              <h3>Response:</h3>
+              <pre>{JSON.stringify(apiResponse, null, 2)}</pre>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    // 4. Form Validation
+    if (selectedOption === 'form-validation') {
+      const validateForm = () => {
+        const errors = {};
+        if (!validationForm.username || validationForm.username.length < 3) {
+          errors.username = 'Username must be at least 3 characters';
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(validationForm.email)) {
+          errors.email = 'Invalid email format';
+        }
+        if (!/^\d{10}$/.test(validationForm.phone)) {
+          errors.phone = 'Phone must be 10 digits';
+        }
+        if (validationForm.password.length < 8) {
+          errors.password = 'Password must be at least 8 characters';
+        }
+        if (validationForm.password !== validationForm.confirmPassword) {
+          errors.confirmPassword = 'Passwords do not match';
+        }
+        if (validationForm.age && (validationForm.age < 18 || validationForm.age > 100)) {
+          errors.age = 'Age must be between 18 and 100';
+        }
+        if (validationForm.website && !/^https?:\/\/.+/.test(validationForm.website)) {
+          errors.website = 'Invalid URL format';
+        }
+        setValidationErrors(errors);
+        return Object.keys(errors).length === 0;
+      };
+
+      return (
+        <div className="content-section">
+          <h2>Form Validation</h2>
+          <p>Practice testing complex validation scenarios</p>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (validateForm()) alert('Form is valid!');
+            }}
+          >
+            <div className="form-group">
+              <label>Username (min 3 chars):</label>
+              <input
+                type="text"
+                value={validationForm.username}
+                onChange={(e) => setValidationForm({ ...validationForm, username: e.target.value })}
+              />
+              {validationErrors.username && <span className="error">{validationErrors.username}</span>}
+            </div>
+            <div className="form-group">
+              <label>Email:</label>
+              <input
+                type="email"
+                value={validationForm.email}
+                onChange={(e) => setValidationForm({ ...validationForm, email: e.target.value })}
+              />
+              {validationErrors.email && <span className="error">{validationErrors.email}</span>}
+            </div>
+            <div className="form-group">
+              <label>Phone (10 digits):</label>
+              <input
+                type="tel"
+                value={validationForm.phone}
+                onChange={(e) => setValidationForm({ ...validationForm, phone: e.target.value })}
+              />
+              {validationErrors.phone && <span className="error">{validationErrors.phone}</span>}
+            </div>
+            <div className="form-group">
+              <label>Password (min 8 chars):</label>
+              <input
+                type="password"
+                value={validationForm.password}
+                onChange={(e) => setValidationForm({ ...validationForm, password: e.target.value })}
+              />
+              {validationErrors.password && <span className="error">{validationErrors.password}</span>}
+            </div>
+            <div className="form-group">
+              <label>Confirm Password:</label>
+              <input
+                type="password"
+                value={validationForm.confirmPassword}
+                onChange={(e) => setValidationForm({ ...validationForm, confirmPassword: e.target.value })}
+              />
+              {validationErrors.confirmPassword && <span className="error">{validationErrors.confirmPassword}</span>}
+            </div>
+            <div className="form-group">
+              <label>Age (18-100):</label>
+              <input
+                type="number"
+                value={validationForm.age}
+                onChange={(e) => setValidationForm({ ...validationForm, age: e.target.value })}
+              />
+              {validationErrors.age && <span className="error">{validationErrors.age}</span>}
+            </div>
+            <div className="form-group">
+              <label>Website:</label>
+              <input
+                type="url"
+                value={validationForm.website}
+                onChange={(e) => setValidationForm({ ...validationForm, website: e.target.value })}
+              />
+              {validationErrors.website && <span className="error">{validationErrors.website}</span>}
+            </div>
+            <button type="submit">Validate Form</button>
+          </form>
+        </div>
+      );
+    }
+
+    // 5. Authentication
+    if (selectedOption === 'authentication') {
+      const handleLogin = (e) => {
+        e.preventDefault();
+        if (loginForm.username === 'admin' && loginForm.password === 'password123') {
+          setAuthUser({ username: loginForm.username, role: 'admin' });
+          setLoginForm({ username: '', password: '' });
+        } else {
+          alert('Invalid credentials. Try admin/password123');
+        }
+      };
+
+      const handleLogout = () => {
+        setAuthUser(null);
+      };
+
+      return (
+        <div className="content-section">
+          <h2>Authentication Flow</h2>
+          <p>Practice testing login/logout functionality</p>
+          {!authUser ? (
+            <form onSubmit={handleLogin} className="login-form">
+              <h3>Login</h3>
+              <p className="hint">Hint: username: admin, password: password123</p>
+              <input
+                type="text"
+                placeholder="Username"
+                value={loginForm.username}
+                onChange={(e) => setLoginForm({ ...loginForm, username: e.target.value })}
+              />
+              <input
+                type="password"
+                placeholder="Password"
+                value={loginForm.password}
+                onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })}
+              />
+              <button type="submit">Login</button>
+            </form>
+          ) : (
+            <div className="authenticated-content">
+              <h3>Welcome, {authUser.username}!</h3>
+              <p>Role: {authUser.role}</p>
+              <button type="button" onClick={handleLogout}>
+                Logout
+              </button>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    // 6. Download Files
+    if (selectedOption === 'download-files') {
+      const downloadFile = () => {
+        let content, filename, mimeType;
+        if (downloadType === 'text') {
+          content = 'This is a test file for QA automation testing.';
+          filename = 'test.txt';
+          mimeType = 'text/plain';
+        } else if (downloadType === 'json') {
+          content = JSON.stringify({ message: 'Test JSON file', timestamp: new Date() }, null, 2);
+          filename = 'test.json';
+          mimeType = 'application/json';
+        } else if (downloadType === 'csv') {
+          content = 'Name,Email,Role\nJohn Doe,john@example.com,Developer\nJane Smith,jane@example.com,Designer';
+          filename = 'test.csv';
+          mimeType = 'text/csv';
+        }
+        const blob = new Blob([content], { type: mimeType });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        a.click();
+        URL.revokeObjectURL(url);
+      };
+
+      return (
+        <div className="content-section">
+          <h2>Download Files</h2>
+          <p>Practice testing file download functionality</p>
+          <div className="download-controls">
+            <select value={downloadType} onChange={(e) => setDownloadType(e.target.value)}>
+              <option value="text">Text File (.txt)</option>
+              <option value="json">JSON File (.json)</option>
+              <option value="csv">CSV File (.csv)</option>
+            </select>
+            <button type="button" onClick={downloadFile}>
+              Download File
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    // 7. Browser Notifications
+    if (selectedOption === 'notifications') {
+      const requestPermission = async () => {
+        const permission = await Notification.requestPermission();
+        setNotificationPermission(permission);
+      };
+
+      const showNotification = () => {
+        if (notificationPermission === 'granted') {
+          const notification = new Notification('QA Test Notification', {
+            body: 'This is a test notification for automation testing',
+            icon: '/favicon.ico'
+          });
+          // Notification created successfully
+          console.log('Notification shown:', notification);
+        } else {
+          alert('Notification permission not granted');
+        }
+      };
+
+      return (
+        <div className="content-section">
+          <h2>Browser Notifications</h2>
+          <p>Practice testing notification API</p>
+          <div className="notification-controls">
+            <p>
+              Permission Status: <strong>{notificationPermission}</strong>
+            </p>
+            {notificationPermission === 'default' && (
+              <button type="button" onClick={requestPermission}>
+                Request Permission
+              </button>
+            )}
+            {notificationPermission === 'granted' && (
+              <button type="button" onClick={showNotification}>
+                Show Notification
+              </button>
+            )}
+            {notificationPermission === 'denied' && (
+              <p>Notification permission denied. Please reset in browser settings.</p>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    // 8. Keyboard Navigation
+    if (selectedOption === 'keyboard-nav') {
+      const handleKeyDown = (e) => {
+        const log = `${e.key} (${e.code})`;
+        setKeyboardLog((prev) => [log, ...prev.slice(0, 9)]);
+
+        // Check for shortcuts
+        if (e.ctrlKey && e.key === 's') {
+          e.preventDefault();
+          setShortcutPressed('Ctrl+S - Save');
+        } else if (e.ctrlKey && e.key === 'c') {
+          setShortcutPressed('Ctrl+C - Copy');
+        } else if (e.ctrlKey && e.key === 'v') {
+          setShortcutPressed('Ctrl+V - Paste');
+        }
+      };
+
+      return (
+        <div className="content-section" onKeyDown={handleKeyDown} tabIndex={0}>
+          <h2>Keyboard Navigation</h2>
+          <p>Practice testing keyboard shortcuts and navigation</p>
+          <div className="keyboard-demo">
+            <p>Focus this section and press any key. Try Ctrl+S, Ctrl+C, Ctrl+V</p>
+            {shortcutPressed && <div className="shortcut-indicator">{shortcutPressed}</div>}
+            <div className="keyboard-log">
+              <h3>Key Log:</h3>
+              {keyboardLog.map((key, index) => (
+                <div key={index} className="log-item">
+                  {key}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // 9. Auto-complete
+    if (selectedOption === 'autocomplete') {
+      const suggestions = [
+        'JavaScript',
+        'Java',
+        'Python',
+        'Ruby',
+        'PHP',
+        'C++',
+        'C#',
+        'Go',
+        'Rust',
+        'Swift',
+        'Kotlin',
+        'TypeScript',
+        'React',
+        'Angular',
+        'Vue',
+        'Node.js',
+        'Django',
+        'Flask'
+      ];
+
+      const handleAutocompleteChange = (value) => {
+        setAutocompleteQuery(value);
+        if (value) {
+          const filtered = suggestions.filter((s) => s.toLowerCase().includes(value.toLowerCase()));
+          setAutocompleteSuggestions(filtered);
+          setShowSuggestions(true);
+        } else {
+          setShowSuggestions(false);
+        }
+      };
+
+      return (
+        <div className="content-section">
+          <h2>Auto-complete/Type-ahead</h2>
+          <p>Practice testing auto-complete functionality</p>
+          <div className="autocomplete-container">
+            <input
+              type="text"
+              value={autocompleteQuery}
+              onChange={(e) => handleAutocompleteChange(e.target.value)}
+              onFocus={() => autocompleteQuery && setShowSuggestions(true)}
+              placeholder="Type a programming language..."
+            />
+            {showSuggestions && autocompleteSuggestions.length > 0 && (
+              <ul className="suggestions-list">
+                {autocompleteSuggestions.map((suggestion, index) => (
+                  <li
+                    key={index}
+                    onClick={() => {
+                      setAutocompleteQuery(suggestion);
+                      setShowSuggestions(false);
+                    }}
+                  >
+                    {suggestion}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    // 10. Multi-select
+    if (selectedOption === 'multi-select') {
+      const toggleOption = (option) => {
+        if (selectedMultiOptions.includes(option)) {
+          setSelectedMultiOptions(selectedMultiOptions.filter((o) => o !== option));
+        } else {
+          setSelectedMultiOptions([...selectedMultiOptions, option]);
+        }
+      };
+
+      return (
+        <div className="content-section">
+          <h2>Multi-select</h2>
+          <p>Practice testing multiple selection scenarios</p>
+          <div className="multi-select-container">
+            <div className="options-list">
+              {multiSelectOptions.map((option) => (
+                <label key={option} className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={selectedMultiOptions.includes(option)}
+                    onChange={() => toggleOption(option)}
+                  />
+                  {option}
+                </label>
+              ))}
+            </div>
+            <div className="selected-items">
+              <h3>Selected Items:</h3>
+              {selectedMultiOptions.length === 0 ? (
+                <p>No items selected</p>
+              ) : (
+                <ul>
+                  {selectedMultiOptions.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // 11. Date/Time Picker
+    if (selectedOption === 'date-time-picker') {
+      return (
+        <div className="content-section">
+          <h2>Date/Time Picker</h2>
+          <p>Practice testing date and time inputs</p>
+          <div className="datetime-picker">
+            <div className="picker-group">
+              <label>Date:</label>
+              <input type="date" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} />
+              {selectedDate && <p>Selected Date: {selectedDate}</p>}
+            </div>
+            <div className="picker-group">
+              <label>Time:</label>
+              <input type="time" value={selectedTime} onChange={(e) => setSelectedTime(e.target.value)} />
+              {selectedTime && <p>Selected Time: {selectedTime}</p>}
+            </div>
+            <div className="picker-group">
+              <label>DateTime Local:</label>
+              <input type="datetime-local" />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // 12. Dark Mode
+    if (selectedOption === 'dark-mode') {
+      return (
+        <div className={`content-section ${isDarkMode ? 'dark-mode' : ''}`}>
+          <h2>Dark Mode Toggle</h2>
+          <p>Practice testing theme switching</p>
+          <div className="theme-controls">
+            <button type="button" onClick={() => setIsDarkMode(!isDarkMode)}>
+              {isDarkMode ? '☀️ Switch to Light Mode' : '🌙 Switch to Dark Mode'}
+            </button>
+            <div className="theme-demo">
+              <h3>Sample Content</h3>
+              <p>This content changes based on the theme.</p>
+              <button type="button">Sample Button</button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // 13. Nested Dropdowns
+    if (selectedOption === 'nested-dropdowns') {
+      const countries = {
+        USA: {
+          states: {
+            California: ['Los Angeles', 'San Francisco', 'San Diego', 'Sacramento', 'San Jose'],
+            Texas: ['Houston', 'Dallas', 'Austin', 'San Antonio', 'Fort Worth'],
+            'New York': ['New York City', 'Buffalo', 'Rochester', 'Albany', 'Syracuse'],
+            Florida: ['Miami', 'Orlando', 'Tampa', 'Jacksonville', 'Fort Lauderdale'],
+            Illinois: ['Chicago', 'Aurora', 'Naperville', 'Joliet', 'Rockford']
+          }
+        },
+        Canada: {
+          states: {
+            Ontario: ['Toronto', 'Ottawa', 'Mississauga', 'Hamilton', 'London'],
+            Quebec: ['Montreal', 'Quebec City', 'Laval', 'Gatineau', 'Longueuil'],
+            'British Columbia': ['Vancouver', 'Victoria', 'Surrey', 'Burnaby', 'Richmond'],
+            Alberta: ['Calgary', 'Edmonton', 'Red Deer', 'Lethbridge', 'Fort McMurray']
+          }
+        },
+        'United Kingdom': {
+          states: {
+            England: ['London', 'Birmingham', 'Manchester', 'Liverpool', 'Leeds'],
+            Scotland: ['Edinburgh', 'Glasgow', 'Aberdeen', 'Dundee', 'Inverness'],
+            Wales: ['Cardiff', 'Swansea', 'Newport', 'Wrexham', 'Barry'],
+            'Northern Ireland': ['Belfast', 'Derry', 'Lisburn', 'Newry', 'Armagh']
+          }
+        },
+        Australia: {
+          states: {
+            'New South Wales': ['Sydney', 'Newcastle', 'Wollongong', 'Central Coast', 'Maitland'],
+            Victoria: ['Melbourne', 'Geelong', 'Ballarat', 'Bendigo', 'Frankston'],
+            Queensland: ['Brisbane', 'Gold Coast', 'Sunshine Coast', 'Townsville', 'Cairns'],
+            'Western Australia': ['Perth', 'Fremantle', 'Mandurah', 'Bunbury', 'Albany']
+          }
+        },
+        Germany: {
+          states: {
+            Bavaria: ['Munich', 'Nuremberg', 'Augsburg', 'Regensburg', 'Ingolstadt'],
+            'North Rhine-Westphalia': ['Cologne', 'Düsseldorf', 'Dortmund', 'Essen', 'Duisburg'],
+            'Baden-Württemberg': ['Stuttgart', 'Mannheim', 'Karlsruhe', 'Freiburg', 'Heidelberg'],
+            Berlin: ['Berlin Mitte', 'Charlottenburg', 'Kreuzberg', 'Prenzlauer Berg', 'Neukölln']
+          }
+        },
+        Japan: {
+          states: {
+            Tokyo: ['Shinjuku', 'Shibuya', 'Minato', 'Chiyoda', 'Setagaya'],
+            Osaka: ['Osaka City', 'Sakai', 'Higashiosaka', 'Toyonaka', 'Suita'],
+            Kyoto: ['Kyoto City', 'Uji', 'Kameoka', 'Joyo', 'Nagaokakyo'],
+            Hokkaido: ['Sapporo', 'Asahikawa', 'Hakodate', 'Kushiro', 'Obihiro']
+          }
+        }
+      };
+
+      const states = selectedCountry ? Object.keys(countries[selectedCountry]?.states || {}) : [];
+      const cities = selectedCountry && selectedState ? countries[selectedCountry]?.states[selectedState] || [] : [];
+
+      return (
+        <div className="content-section">
+          <h2>Nested Dropdowns</h2>
+          <p>Practice testing cascading select boxes</p>
+          <div className="nested-dropdowns">
+            <select
+              value={selectedCountry}
+              onChange={(e) => {
+                setSelectedCountry(e.target.value);
+                setSelectedState('');
+                setSelectedCity('');
+              }}
+            >
+              <option value="">Select Country</option>
+              {Object.keys(countries).map((country) => (
+                <option key={country} value={country}>
+                  {country}
+                </option>
+              ))}
+            </select>
+            <select
+              value={selectedState}
+              onChange={(e) => {
+                setSelectedState(e.target.value);
+                setSelectedCity('');
+              }}
+              disabled={!selectedCountry}
+            >
+              <option value="">Select State</option>
+              {states.map((state) => (
+                <option key={state} value={state}>
+                  {state}
+                </option>
+              ))}
+            </select>
+            <select value={selectedCity} onChange={(e) => setSelectedCity(e.target.value)} disabled={!selectedState}>
+              <option value="">Select City</option>
+              {cities.map((city) => (
+                <option key={city} value={city}>
+                  {city}
+                </option>
+              ))}
+            </select>
+            {selectedCity && (
+              <p className="selection-result">
+                Selected: {selectedCity}, {selectedState}, {selectedCountry}
+              </p>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    // 14. Error Boundaries
+    if (selectedOption === 'error-boundary') {
+      const ThrowError = () => {
+        if (shouldThrowError) {
+          throw new Error('This is a test error!');
+        }
+        return <p>Click the button to trigger an error</p>;
+      };
+
+      return (
+        <div className="content-section">
+          <h2>Error Boundaries</h2>
+          <p>Practice testing error handling</p>
+          <div className="error-demo">
+            <button type="button" onClick={() => setShouldThrowError(!shouldThrowError)}>
+              {shouldThrowError ? 'Reset' : 'Throw Error'}
+            </button>
+            <div className="error-content">
+              <ThrowError />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // 15. Disabled/Readonly States
+    if (selectedOption === 'disabled-readonly') {
+      return (
+        <div className="content-section">
+          <h2>Disabled/Readonly States</h2>
+          <p>Practice testing element states</p>
+          <div className="state-controls">
+            <button type="button" onClick={() => setIsInputDisabled(!isInputDisabled)}>
+              Toggle Disabled
+            </button>
+            <button type="button" onClick={() => setIsInputReadonly(!isInputReadonly)}>
+              Toggle Readonly
+            </button>
+          </div>
+          <div className="state-examples">
+            <div>
+              <label>Disabled Input:</label>
+              <input type="text" disabled={isInputDisabled} defaultValue="This is disabled" />
+            </div>
+            <div>
+              <label>Readonly Input:</label>
+              <input type="text" readOnly={isInputReadonly} defaultValue="This is readonly" />
+            </div>
+            <div>
+              <button type="button" disabled={isInputDisabled}>
+                Disabled Button
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // 16. Progress Indicators
+    if (selectedOption === 'progress') {
+      return (
+        <div className="content-section">
+          <h2>Progress Indicators</h2>
+          <p>Practice testing progress bars and step indicators</p>
+          <div className="progress-section">
+            <h3>Progress Bar</h3>
+            <progress value={progressValue} max="100" />
+            <p>{progressValue}%</p>
+            <button type="button" onClick={() => setProgressValue(Math.min(100, progressValue + 10))}>
+              +10%
+            </button>
+            <button type="button" onClick={() => setProgressValue(Math.max(0, progressValue - 10))}>
+              -10%
+            </button>
+            <button type="button" onClick={() => setProgressValue(0)}>
+              Reset
+            </button>
+          </div>
+          <div className="progress-section">
+            <h3>Step Indicator</h3>
+            <div className="steps">
+              {[1, 2, 3, 4].map((step) => (
+                <div key={step} className={`step ${stepProgress >= step ? 'completed' : ''}`}>
+                  {step}
+                </div>
+              ))}
+            </div>
+            <button type="button" onClick={() => setStepProgress(Math.min(4, stepProgress + 1))}>
+              Next Step
+            </button>
+            <button type="button" onClick={() => setStepProgress(Math.max(1, stepProgress - 1))}>
+              Previous Step
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    // 17. Virtual Scroll
+    if (selectedOption === 'virtual-scroll') {
+      const handleScroll = (e) => {
+        const scrollTop = e.target.scrollTop;
+        const itemHeight = 50;
+        const start = Math.floor(scrollTop / itemHeight);
+        const end = start + 50;
+        setVisibleRange({ start, end });
+      };
+
+      return (
+        <div className="content-section">
+          <h2>Virtual Scroll</h2>
+          <p>Practice testing large lists with virtual scrolling</p>
+          <div className="virtual-scroll-container" onScroll={handleScroll}>
+            <div style={{ height: `${virtualItems.length * 50}px`, position: 'relative' }}>
+              {virtualItems.slice(visibleRange.start, visibleRange.end).map((item, index) => (
+                <div
+                  key={index}
+                  style={{
+                    position: 'absolute',
+                    top: `${(visibleRange.start + index) * 50}px`,
+                    height: '50px',
+                    width: '100%',
+                    padding: '10px',
+                    borderBottom: '1px solid #ddd'
+                  }}
+                >
+                  {item}
+                </div>
+              ))}
+            </div>
+          </div>
+          <p>
+            Showing items {visibleRange.start + 1} to {visibleRange.end} of {virtualItems.length}
+          </p>
+        </div>
+      );
+    }
+
+    // 18. WebSocket
+    if (selectedOption === 'websocket') {
+      const connectWebSocket = () => {
+        setWsStatus('connecting');
+        // Simulating WebSocket connection
+        setTimeout(() => {
+          setWsStatus('connected');
+          setWsMessages([{ type: 'system', text: 'Connected to WebSocket' }]);
+        }, 1000);
+      };
+
+      const sendMessage = () => {
+        if (wsStatus === 'connected' && wsMessage) {
+          setWsMessages([...wsMessages, { type: 'sent', text: wsMessage }]);
+          // Simulate receiving a response
+          setTimeout(() => {
+            setWsMessages((prev) => [...prev, { type: 'received', text: `Echo: ${wsMessage}` }]);
+          }, 500);
+          setWsMessage('');
+        }
+      };
+
+      const disconnect = () => {
+        setWsStatus('disconnected');
+        setWsMessages([...wsMessages, { type: 'system', text: 'Disconnected from WebSocket' }]);
+      };
+
+      return (
+        <div className="content-section">
+          <h2>WebSocket/Real-time</h2>
+          <p>Practice testing WebSocket connections (simulated)</p>
+          <div className="websocket-controls">
+            <p>
+              Status: <strong>{wsStatus}</strong>
+            </p>
+            {wsStatus === 'disconnected' && (
+              <button type="button" onClick={connectWebSocket}>
+                Connect
+              </button>
+            )}
+            {wsStatus === 'connected' && (
+              <>
+                <button type="button" onClick={disconnect}>
+                  Disconnect
+                </button>
+                <div className="message-input">
+                  <input
+                    type="text"
+                    value={wsMessage}
+                    onChange={(e) => setWsMessage(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
+                    placeholder="Type a message..."
+                  />
+                  <button type="button" onClick={sendMessage}>
+                    Send
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+          <div className="websocket-messages">
+            {wsMessages.map((msg, index) => (
+              <div key={index} className={`ws-message ${msg.type}`}>
+                {msg.text}
+              </div>
+            ))}
           </div>
         </div>
       );

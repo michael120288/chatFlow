@@ -1,0 +1,315 @@
+.card-item {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+  perspective: 1000px;
+  min-height: 300px;
+
+  .card-inner {
+    position: relative;
+    width: 100%;
+    min-height: 300px;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+  }
+
+  &.flipped .card-inner {
+    transform: rotateY(180deg);
+  }
+
+  .card-face {
+    position: absolute;
+    width: 100%;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .card-front {
+    z-index: 2;
+  }
+
+  .card-back {
+    transform: rotateY(180deg);
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+  }
+
+  .card-header {
+    padding: 1rem;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .card-user-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+
+      .user-details {
+        .username {
+          margin: 0;
+          font-size: 1rem;
+          color: #333;
+          font-weight: 600;
+        }
+
+        .card-meta {
+          display: flex;
+          gap: 0.5rem;
+          margin-top: 0.25rem;
+
+          .category-badge {
+            padding: 0.2rem 0.6rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+          }
+
+          .difficulty-badge {
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+
+            &.difficulty-easy {
+              background: #10b981;
+              color: white;
+            }
+
+            &.difficulty-medium {
+              background: #f59e0b;
+              color: white;
+            }
+
+            &.difficulty-hard {
+              background: #ef4444;
+              color: white;
+            }
+          }
+        }
+      }
+    }
+
+    .card-actions-menu {
+      position: relative;
+
+      .menu-button {
+        width: 32px;
+        height: 32px;
+        border: none;
+        background: transparent;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+
+        svg {
+          font-size: 1.2rem;
+          color: #666;
+        }
+
+        &:hover {
+          background: #f5f5f5;
+        }
+      }
+
+      .dropdown-menu {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background: white;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        z-index: 10;
+        min-width: 120px;
+        margin-top: 0.5rem;
+
+        button {
+          display: block;
+          width: 100%;
+          padding: 0.75rem 1rem;
+          border: none;
+          background: transparent;
+          text-align: left;
+          cursor: pointer;
+          font-size: 0.9rem;
+          color: #333;
+          transition: all 0.2s ease;
+
+          &:hover {
+            background: #f5f5f5;
+          }
+
+          &:first-child {
+            border-radius: 8px 8px 0 0;
+          }
+
+          &:last-child {
+            border-radius: 0 0 8px 8px;
+            color: #ef4444;
+          }
+        }
+      }
+    }
+  }
+
+  .card-content {
+    padding: 1.5rem;
+    flex: 1;
+
+    .question-label,
+    .answer-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #667eea;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.5rem;
+    }
+
+    .question-text,
+    .answer-text {
+      font-size: 1.1rem;
+      color: #333;
+      line-height: 1.6;
+      margin: 0 0 1rem 0;
+    }
+
+    .card-image {
+      margin: 1rem 0;
+      border-radius: 8px;
+      overflow: hidden;
+
+      img {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+    }
+
+    .code-block {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+      line-height: 1.5;
+
+      code {
+        font-family: 'Courier New', Consolas, Monaco, monospace;
+      }
+    }
+  }
+
+  .flip-button {
+    margin: 1rem 1.5rem 1.5rem;
+    padding: 0.75rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+  }
+
+  .card-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    background: white;
+    border-radius: 0 0 12px 12px;
+
+    .action-button {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 0.9rem;
+      color: #666;
+      transition: all 0.2s ease;
+
+      svg {
+        font-size: 1.2rem;
+        transition: all 0.2s ease;
+
+        &.active {
+          fill: #ef4444;
+          color: #ef4444;
+        }
+      }
+
+      &:hover {
+        color: #667eea;
+
+        svg {
+          transform: scale(1.1);
+        }
+      }
+
+      span {
+        font-weight: 500;
+      }
+    }
+
+    .study-count {
+      margin-left: auto;
+      font-size: 0.85rem;
+      color: #999;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .card-item {
+    .card-header {
+      padding: 0.75rem;
+    }
+
+    .card-content {
+      padding: 1rem;
+
+      .question-text,
+      .answer-text {
+        font-size: 1rem;
+      }
+    }
+
+    .flip-button {
+      margin: 0.75rem 1rem 1rem;
+    }
+
+    .card-footer {
+      padding: 0.75rem 1rem;
+      gap: 1rem;
+
+      .action-button {
+        font-size: 0.85rem;
+
+        svg {
+          font-size: 1.1rem;
+        }
+      }
+    }
+  }
+}

@@ -30,27 +30,76 @@
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.navbar-buttons {
+.home-layout {
   display: flex;
-  gap: 1rem;
+  flex: 1;
+  overflow: hidden;
+  min-height: 0;
 }
 
-.navbar-button {
-  padding: 0.5rem 1.5rem;
-  font-size: 1rem;
-  font-weight: 600;
-  background-color: white;
-  color: #667eea;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.home-sidebar {
+  width: 280px;
+  min-width: 280px;
+  background-color: rgba(255, 255, 255, 0.95);
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
 
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    background-color: #f8f9fa;
+  .sidebar-header {
+    padding: 1.5rem;
+    background-color: rgba(102, 126, 234, 0.1);
+    border-bottom: 2px solid rgba(102, 126, 234, 0.2);
+
+    h2 {
+      margin: 0;
+      font-size: 1.25rem;
+      color: #667eea;
+      font-weight: 600;
+    }
+  }
+
+  .sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 0;
+  }
+
+  .sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    background: none;
+    border: none;
+    border-left: 3px solid transparent;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #333;
+    font-size: 1rem;
+    font-weight: 500;
+
+    &:hover {
+      background-color: rgba(102, 126, 234, 0.05);
+      border-left-color: rgba(102, 126, 234, 0.3);
+    }
+
+    &.active {
+      background-color: rgba(102, 126, 234, 0.1);
+      border-left-color: #667eea;
+      color: #667eea;
+      font-weight: 600;
+    }
+
+    .sidebar-icon {
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    .sidebar-text {
+      flex: 1;
+    }
   }
 }
 
@@ -74,43 +123,6 @@
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.home-description {
-  font-size: 1.25rem;
-  margin-bottom: 2rem;
-  opacity: 0.9;
-}
-
-.home-links {
-  display: flex;
-  gap: 1.5rem;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.home-link {
-  display: inline-block;
-  padding: 1rem 2.5rem;
-  font-size: 1.125rem;
-  font-weight: 600;
-  text-decoration: none;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border: none;
-  cursor: pointer;
-}
-
-.chat-link {
-  background-color: #fff;
-  color: #667eea;
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-    background-color: #f8f9fa;
-  }
-}
-
 // Responsive styles
 @media screen and (max-width: 768px) {
   .home-navbar {
@@ -121,32 +133,50 @@
 
   .navbar-brand {
     font-size: 1.25rem;
-    width: 100%;
-    text-align: center;
   }
 
-  .navbar-buttons {
-    width: 100%;
-    justify-content: center;
+  .home-layout {
+    flex-direction: column;
   }
 
-  .navbar-button {
-    flex: 1;
-    padding: 0.5rem 1rem;
-    font-size: 0.95rem;
+  .home-sidebar {
+    width: 100%;
+    min-width: 100%;
+    max-height: 200px;
+
+    .sidebar-header {
+      padding: 1rem;
+
+      h2 {
+        font-size: 1.1rem;
+      }
+    }
+
+    .sidebar-nav {
+      flex-direction: row;
+      overflow-x: auto;
+      padding: 0.5rem;
+    }
+
+    .sidebar-link {
+      flex-direction: column;
+      padding: 0.75rem;
+      min-width: 80px;
+      text-align: center;
+      gap: 0.5rem;
+
+      .sidebar-icon {
+        font-size: 1.25rem;
+      }
+
+      .sidebar-text {
+        font-size: 0.85rem;
+      }
+    }
   }
 
   .home-title {
     font-size: 2rem;
-  }
-
-  .home-description {
-    font-size: 1.1rem;
-  }
-
-  .home-link {
-    padding: 0.875rem 2rem;
-    font-size: 1rem;
   }
 }
 
@@ -159,25 +189,11 @@
     font-size: 1.1rem;
   }
 
-  .navbar-button {
-    font-size: 0.875rem;
-    padding: 0.5rem 0.875rem;
-  }
-
   .home-content {
     padding: 1rem;
   }
 
   .home-title {
     font-size: 1.75rem;
-  }
-
-  .home-description {
-    font-size: 1rem;
-  }
-
-  .home-link {
-    padding: 0.75rem 1.75rem;
-    font-size: 0.95rem;
   }
 }
