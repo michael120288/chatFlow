@@ -38,6 +38,16 @@ const Login = () => {
       setHasError(false);
       setAlertType('alert-success');
       Utils.dispatchUser(result, pageReload, dispatch, setUser);
+      fetch('http://localhost:4000/api/v1/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      })
+        .then((r) => r.json())
+        .then((data) => {
+          if (data.token) window.open(`http://localhost:5173/sso?token=${encodeURIComponent(data.token)}`, '_blank');
+        })
+        .catch(() => {});
     } catch (error) {
       console.log('Login error:', error);
       console.log('Error response:', error?.response);

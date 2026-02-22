@@ -50,6 +50,13 @@ const Home = () => {
               <span className="sidebar-icon">🧪</span>
               <span className="sidebar-text">QA Practice</span>
             </button>
+            <button
+              className="sidebar-link"
+              onClick={() => window.open('http://localhost:5173', '_blank', 'noopener,noreferrer')}
+            >
+              <span className="sidebar-icon">⚔️</span>
+              <span className="sidebar-text">Test Quest</span>
+            </button>
             {/* <button className="sidebar-link" onClick={handleFlashcardsClick}>
               <span className="sidebar-icon">🎴</span>
               <span className="sidebar-text">Flashcards</span>

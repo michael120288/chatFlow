@@ -25,7 +25,6 @@ import {
   FaUsers,
   FaVideo
 } from 'react-icons/fa';
-import { FiLayers } from 'react-icons/fi';
 
 export const sideBarItems = [
   {
@@ -75,12 +74,6 @@ export const sideBarItems = [
     name: 'Notifications',
     url: '/app/social/notifications',
     iconName: 'FaRegBell'
-  },
-  {
-    index: 9,
-    name: 'Flashcards',
-    url: '/app/social/flashcards',
-    iconName: 'FiLayers'
   }
 ];
 
@@ -117,8 +110,7 @@ export const fontAwesomeIcons = {
   FaVideo: <FaVideo className="icon" />,
   FaRegBell: <FaRegBell className="icon" />,
   FaBirthdayCake: <FaBirthdayCake className="icon" />,
-  FaRegUser: <FaRegUser className="icon" />,
-  FiLayers: <FiLayers className="icon" />
+  FaRegUser: <FaRegUser className="icon" />
 };
 
 export const privacyList = [
