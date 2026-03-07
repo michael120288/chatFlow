@@ -20,7 +20,8 @@ const postData = {
   reactions: [],
   imgVersion: '1233445',
   imgId: '123445',
-  createdAt: '2022-06-15'
+  createdAt: '2022-06-15',
+  video: ''
 };
 
 describe('post reducer', () => {

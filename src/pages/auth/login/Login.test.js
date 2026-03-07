@@ -40,13 +40,13 @@ describe('SigIn', () => {
   describe('Button', () => {
     it('should be disabled', () => {
       render(<Login />);
-      const buttonElement = screen.getByRole('button');
+      const buttonElement = screen.getByRole('button', { name: /signin/i });
       expect(buttonElement).toBeDisabled();
     });
 
     it('should be enabled with inputs', () => {
       render(<Login />);
-      const buttonElement = screen.getByRole('button');
+      const buttonElement = screen.getByRole('button', { name: /signin/i });
       expect(buttonElement).toBeDisabled();
 
       const usernameElement = screen.getByLabelText('Username');
@@ -60,7 +60,7 @@ describe('SigIn', () => {
 
     it('should change label when clicked', async () => {
       render(<Login />);
-      const buttonElement = screen.getByRole('button');
+      const buttonElement = screen.getByRole('button', { name: /signin/i });
       const usernameElement = screen.getByLabelText('Username');
       const passwordElement = screen.getByLabelText('Password');
 
@@ -72,7 +72,7 @@ describe('SigIn', () => {
       });
 
       await waitFor(() => {
-        const newButtonElement = screen.getByRole('button');
+        const newButtonElement = screen.getByRole('button', { name: /signin/i });
         expect(newButtonElement.textContent).toEqual('SIGNIN IN PROGRESS...');
       });
     });
@@ -81,7 +81,7 @@ describe('SigIn', () => {
   describe('Success', () => {
     it('should navigate to streams page', async () => {
       render(<Login />);
-      const buttonElement = screen.getByRole('button');
+      const buttonElement = screen.getByRole('button', { name: /signin/i });
       const usernameElement = screen.getByLabelText('Username');
       const passwordElement = screen.getByLabelText('Password');
       userEvent.type(usernameElement, 'manny');
@@ -90,13 +90,28 @@ describe('SigIn', () => {
 
       await waitFor(() => expect(mockedUsedNavigate).toHaveBeenCalledWith('/app/social/streams'));
     });
+
+    it('should store tq_sso_token in localStorage', async () => {
+      global.fetch = jest.fn().mockResolvedValueOnce({
+        json: async () => ({ token: 'mock-jwt' })
+      });
+      render(<Login />);
+      const usernameElement = screen.getByLabelText('Username');
+      const passwordElement = screen.getByLabelText('Password');
+      const buttonElement = screen.getByRole('button', { name: /signin/i });
+      userEvent.type(usernameElement, 'manny');
+      userEvent.type(passwordElement, 'qwerty');
+      userEvent.click(buttonElement);
+      await waitFor(() => expect(localStorage.getItem('tq_sso_token')).toBe('mock-jwt'));
+      delete global.fetch;
+    });
   });
 
   describe('Error', () => {
     it('should display error alert and border', async () => {
       server.use(signInMockError);
       render(<Login />);
-      const buttonElement = screen.getByRole('button');
+      const buttonElement = screen.getByRole('button', { name: /signin/i });
       const usernameElement = screen.getByLabelText('Username');
       const passwordElement = screen.getByLabelText('Password');
       userEvent.type(usernameElement, 'ma');

@@ -7,6 +7,14 @@ import 'jest-canvas-mock';
 
 import { server } from '@mocks/server';
 
+// Suppress socket.io-client CORS errors emitted in jsdom environment
+const originalConsoleError = console.error;
+console.error = (...args) => {
+  if (args[0] instanceof Error && /Cross origin/.test(args[0].message)) return;
+  if (typeof args[0] === 'string' && /Cross origin/.test(args[0])) return;
+  originalConsoleError(...args);
+};
+
 beforeAll(() => {
   // Establish requests interception layer before all tests.
   server.listen();

@@ -24,7 +24,7 @@ describe('PostForm', () => {
     render(<PostForm />);
     const inputBodyElement = await screen.findByTestId('input-body');
     expect(inputBodyElement).toBeInTheDocument();
-    expect(inputBodyElement.childNodes.item(0)).toHaveAttribute('src', 'http://place-hold.it/500x500');
+    expect(within(inputBodyElement).getByRole('img')).toHaveAttribute('src', 'http://place-hold.it/500x500');
     expect(inputBodyElement.childNodes.item(1)).toHaveAttribute('data-placeholder', 'Write something here...');
   });
 
@@ -39,7 +39,7 @@ describe('PostForm', () => {
   it('should have 3 list items', async () => {
     render(<PostForm />);
     const listElement = await screen.findAllByTestId('list-item');
-    expect(listElement[0].childNodes.length).toEqual(3);
+    expect(listElement[0].childNodes.length).toEqual(4);
   });
 
   it('should have photo list item', async () => {

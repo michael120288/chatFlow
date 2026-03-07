@@ -52,7 +52,12 @@ const Home = () => {
             </button>
             <button
               className="sidebar-link"
-              onClick={() => window.open('http://localhost:5173', '_blank', 'noopener,noreferrer')}
+              onClick={() => {
+                const token = localStorage.getItem('tq_sso_token');
+                window.location.href = token
+                  ? `http://localhost:5173/sso?token=${encodeURIComponent(token)}`
+                  : 'http://localhost:5173';
+              }}
             >
               <span className="sidebar-icon">⚔️</span>
               <span className="sidebar-text">Test Quest</span>

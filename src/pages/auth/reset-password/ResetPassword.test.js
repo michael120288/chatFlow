@@ -25,7 +25,7 @@ describe('ResetPassword', () => {
 
   it('button should be disabled', () => {
     render(<ResetPassword />);
-    const buttonElement = screen.getByRole('button');
+    const buttonElement = screen.getByRole('button', { name: /reset password/i });
     expect(buttonElement).toBeDisabled();
   });
 
@@ -37,7 +37,7 @@ describe('ResetPassword', () => {
 
   it('should be enabled with input', () => {
     render(<ResetPassword />);
-    const buttonElement = screen.getByRole('button');
+    const buttonElement = screen.getByRole('button', { name: /reset password/i });
     expect(buttonElement).toBeDisabled();
 
     const newPasswordLabel = screen.getByLabelText('New Password');
@@ -49,7 +49,7 @@ describe('ResetPassword', () => {
 
   it('should change label when clicked', async () => {
     render(<ResetPassword />);
-    const buttonElement = screen.getByRole('button');
+    const buttonElement = screen.getByRole('button', { name: /reset password/i });
     const newPasswordLabel = screen.getByLabelText('New Password');
     const confirmPasswordLabel = screen.getByLabelText('Confirm Password');
     userEvent.type(newPasswordLabel, 'qwerty1');
@@ -57,10 +57,10 @@ describe('ResetPassword', () => {
 
     userEvent.click(buttonElement);
 
-    const newButtonElement = screen.getByRole('button');
+    const newButtonElement = screen.getByRole('button', { name: /reset password/i });
     expect(newButtonElement.textContent).toEqual('RESET PASSWORD IN PROGRESS...');
     await waitFor(() => {
-      const newButtonElement1 = screen.getByRole('button');
+      const newButtonElement1 = screen.getByRole('button', { name: /reset password/i });
       expect(newButtonElement1.textContent).toEqual('RESET PASSWORD');
     });
   });
@@ -68,7 +68,7 @@ describe('ResetPassword', () => {
   describe('Success', () => {
     it('should display success alert', async () => {
       render(<ResetPassword />);
-      const buttonElement = screen.getByRole('button');
+      const buttonElement = screen.getByRole('button', { name: /reset password/i });
       const newPasswordLabel = screen.getByLabelText('New Password');
       const confirmPasswordLabel = screen.getByLabelText('Confirm Password');
       userEvent.type(newPasswordLabel, 'qwerty1');
@@ -86,7 +86,7 @@ describe('ResetPassword', () => {
     it('should display error alert and border', async () => {
       server.use(resetPasswordMockError);
       render(<ResetPassword />);
-      const buttonElement = screen.getByRole('button');
+      const buttonElement = screen.getByRole('button', { name: /reset password/i });
       const newPasswordLabel = screen.getByLabelText('New Password');
       const confirmPasswordLabel = screen.getByLabelText('Confirm Password');
       userEvent.type(newPasswordLabel, 'qwerty1');

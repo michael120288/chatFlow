@@ -1,3 +1,4 @@
+import { getUserSuggestions } from '@redux/api/suggestion';
 import reducer, { addToSuggestions } from '@redux/reducers/suggestions/suggestions.reducer';
 
 const initialState = {
@@ -22,6 +23,27 @@ describe('suggestions reducer', () => {
     expect(reducer(initialState, addToSuggestions({ users: [1, 2, 3, 4, 5], isLoading: true }))).toEqual({
       users: [1, 2, 3, 4, 5],
       isLoading: true
+    });
+  });
+
+  describe('getUserSuggestions async thunk', () => {
+    it('should set isLoading true on pending', () => {
+      const result = reducer(initialState, getUserSuggestions.pending('req-1'));
+      expect(result).toEqual({ users: [], isLoading: true });
+    });
+
+    it('should populate users and clear isLoading on fulfilled', () => {
+      const users = [{ _id: 'u1' }, { _id: 'u2' }];
+      const result = reducer(
+        { ...initialState, isLoading: true },
+        getUserSuggestions.fulfilled({ users }, 'req-1')
+      );
+      expect(result).toEqual({ users, isLoading: false });
+    });
+
+    it('should clear isLoading on rejected', () => {
+      const result = reducer({ ...initialState, isLoading: true }, getUserSuggestions.rejected(null, 'req-1'));
+      expect(result).toEqual({ users: [], isLoading: false });
     });
   });
 });

@@ -1,7 +1,7 @@
 import Input from '@components/input/Input';
 import Button from '@components/button/Button';
 import '@pages/auth/register/Register.scss';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Utils } from '@services/utils/utils.service';
 import { authService } from '@services/api/auth/auth.service';
 import { useNavigate } from 'react-router-dom';
@@ -18,6 +18,7 @@ const Register = () => {
   const [alertType, setAlertType] = useState('');
   const [hasError, setHasError] = useState(false);
   const [user, setUser] = useState();
+  const ssoRedirecting = useRef(false);
   const [setStoredUsername] = useLocalStorage('username', 'set');
   const [setLoggedIn] = useLocalStorage('keepLoggedIn', 'set');
   const [pageReload] = useSessionStorage('pageReload', 'set');
@@ -41,16 +42,23 @@ const Register = () => {
       setStoredUsername(username);
       setAlertType('alert-success');
       Utils.dispatchUser(result, pageReload, dispatch, setUser);
-      fetch('http://localhost:4000/api/v1/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
-      })
-        .then((r) => r.json())
-        .then((data) => {
-          if (data.token) window.open(`http://localhost:5173/sso?token=${encodeURIComponent(data.token)}`, '_blank');
-        })
-        .catch(() => {});
+      try {
+        const r = await fetch('http://localhost:4000/api/v1/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+        const data = await r.json();
+        if (data.token) {
+          localStorage.setItem('tq_sso_token', data.token);
+          ssoRedirecting.current = true;
+          window.location.href = `http://localhost:5173/sso?token=${data.token}&return=${encodeURIComponent(
+            'http://localhost:3000/app/social/streams'
+          )}`;
+        }
+      } catch {
+        // TQ fetch failed — fall through to normal navigation via useEffect
+      }
     } catch (error) {
       console.log('Registration error:', error);
       console.log('Error response:', error?.response);
@@ -63,6 +71,7 @@ const Register = () => {
   };
 
   useEffect(() => {
+    if (ssoRedirecting.current) return;
     if (loading && !user) return;
     if (user) navigate('/app/social/streams');
   }, [loading, user, navigate]);

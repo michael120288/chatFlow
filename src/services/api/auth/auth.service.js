@@ -20,6 +20,11 @@ class AuthService {
     const response = await axios.post(`/reset-password/${token}`, body);
     return response;
   }
+
+  async ssoLogin(token) {
+    const response = await axios.post('/sso', { token });
+    return response;
+  }
 }
 
 export const authService = new AuthService();

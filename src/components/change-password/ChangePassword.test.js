@@ -15,13 +15,13 @@ describe('ChangePassword', () => {
 
   it('should have button disabled', () => {
     render(<ChangePassword />);
-    const buttonElement = screen.getByRole('button');
+    const buttonElement = screen.getByRole('button', { name: /update/i });
     expect(buttonElement).toBeDisabled();
   });
 
   it('should have button enabled with inputs', () => {
     render(<ChangePassword />);
-    const buttonElement = screen.getByRole('button');
+    const buttonElement = screen.getByRole('button', { name: /update/i });
     expect(buttonElement).toBeDisabled();
 
     const currentPasswordLabel = screen.getByLabelText('Current Password');
@@ -63,7 +63,7 @@ describe('ChangePassword', () => {
   it('should have empty fields after button submit', async () => {
     render(<ChangePassword />);
 
-    const buttonElement = screen.getByRole('button');
+    const buttonElement = screen.getByRole('button', { name: /update/i });
     const currentPasswordLabel = screen.getByLabelText('Current Password');
     const newPasswordLabel = screen.getByLabelText('New Password');
     const confirmPasswordLabel = screen.getByLabelText('Confirm Password');

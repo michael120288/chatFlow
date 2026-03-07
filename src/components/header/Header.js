@@ -110,18 +110,14 @@ const Header = () => {
 
   const onLogout = async () => {
     try {
-      // Call logout API while token is still valid
       await userService.logoutUser();
-      // Clear store and navigate immediately
-      setLoggedIn(false);
-      Utils.clearStore({ dispatch, deleteStorageUsername, deleteSessionPageReload, setLoggedIn });
-      navigate('/auth');
-    } catch (error) {
-      // If logout fails, still clear local state and navigate
-      setLoggedIn(false);
-      Utils.clearStore({ dispatch, deleteStorageUsername, deleteSessionPageReload, setLoggedIn });
-      navigate('/auth');
+    } catch {
+      // ignore logout API errors
     }
+    setLoggedIn(false);
+    Utils.clearStore({ dispatch, deleteStorageUsername, deleteSessionPageReload, setLoggedIn });
+    localStorage.removeItem('tq_sso_token');
+    window.location.href = 'http://localhost:5173/logout?return=' + encodeURIComponent('http://localhost:3000/auth');
   };
 
   useEffectOnce(() => {
@@ -188,7 +184,7 @@ const Header = () => {
           <div className="header-navbar">
             <div className="header-image" data-testid="header-image" onClick={() => navigate('/app/social/streams')}>
               <img src={logo} className="img-fluid" alt="" />
-              <div className="app-name">Chat</div>
+              <div className="app-name">Chatty</div>
             </div>
             <div className="header-menu-toggle">
               <span className="bar"></span>

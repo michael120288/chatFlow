@@ -1,5 +1,7 @@
 import { AuthTabs, ForgotPassword, ResetPassword } from '@pages/auth';
 import { Home } from '@pages/home';
+import SSOCallback from '@pages/auth/sso/SSOCallback';
+import Signout from '@pages/auth/signout/Signout';
 import { QAPractice } from '@pages/qa-practice';
 import Error from '@pages/error/Error';
 import ProtectedRoute from '@pages/ProtectedRoute';
@@ -197,6 +199,14 @@ export const AppRouter = () => {
     {
       path: '/auth',
       element: <AuthTabs />
+    },
+    {
+      path: '/sso',
+      element: <SSOCallback />
+    },
+    {
+      path: '/signout',
+      element: <Signout />
     },
     {
       path: '/forgot-password',

@@ -131,7 +131,7 @@ describe('BackgroundHeader', () => {
     props.loading = false;
     render(<BackgroundHeader {...props} />);
     const profilePic = await screen.findByTestId('profile-pic');
-    const imageElement = profilePic.childNodes.item(0);
+    const imageElement = profilePic.querySelector('img');
     expect(profilePic).toBeInTheDocument();
     expect(imageElement).toHaveAttribute('src', 'http://place-hold.it/500x500');
   });

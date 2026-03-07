@@ -28,7 +28,7 @@ describe('ChatList', () => {
     const titleElement = baseElement.querySelector('.title-text');
     expect(headerImage).toBeInTheDocument();
     expect(titleElement).toBeInTheDocument();
-    expect(headerImage.childNodes.item(0)).toHaveAttribute('src', 'http://place-hold.it/500x500');
+    expect(headerImage.querySelector('img')).toHaveAttribute('src', 'http://place-hold.it/500x500');
     expect(titleElement.textContent).toEqual(existingUser.username);
   });
 

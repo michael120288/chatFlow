@@ -41,7 +41,7 @@ describe('SearchList', () => {
     render(<SearchList {...props} />);
     const searchResultElement = await screen.findByTestId('search-result-item');
     expect(searchResultElement).toBeInTheDocument();
-    expect(searchResultElement.childNodes.item(0)).toHaveAttribute('src', 'http://place-hold.it/500x500');
+    expect(searchResultElement.querySelector('img')).toHaveAttribute('src', 'http://place-hold.it/500x500');
     expect(searchResultElement.childNodes.item(1).textContent).toEqual('Danny');
   });
 });
