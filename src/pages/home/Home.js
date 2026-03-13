@@ -50,15 +50,7 @@ const Home = () => {
               <span className="sidebar-icon">🧪</span>
               <span className="sidebar-text">QA Practice</span>
             </button>
-            <button
-              className="sidebar-link"
-              onClick={() => {
-                const token = localStorage.getItem('tq_sso_token');
-                window.location.href = token
-                  ? `http://localhost:5173/sso?token=${encodeURIComponent(token)}`
-                  : 'http://localhost:5173';
-              }}
-            >
+            <button className="sidebar-link" onClick={() => navigate('/app/game')}>
               <span className="sidebar-icon">⚔️</span>
               <span className="sidebar-text">Test Quest</span>
             </button>

@@ -1,0 +1,199 @@
+.track-page {
+  min-height: calc(100vh - 56px);
+  background: #0a0a14;
+  color: #eee;
+  display: flex;
+  flex-direction: column;
+}
+
+// ── Header ──────────────────────────────────────────────────────────────────
+
+.track-header {
+  padding: 32px 40px;
+  border-bottom: 1px solid #1e1e3a;
+  background: linear-gradient(180deg, #0d0d2e 0%, #0a0a14 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.back-link {
+  color: #555;
+  text-decoration: none;
+  font-size: 13px;
+  transition: color 0.15s;
+  align-self: flex-start;
+
+  &:hover { color: #aaa; }
+}
+
+.track-header-inner {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.track-header-icon {
+  font-size: 48px;
+  line-height: 1;
+}
+
+.track-header-title {
+  font-size: 32px;
+  font-weight: 800;
+  margin: 0 0 6px;
+
+  .track-ui & { color: #4da6ff; }
+  .track-api & { color: #a78bfa; }
+}
+
+.track-header-desc {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+
+.track-header-stats {
+  display: flex;
+  gap: 20px;
+}
+
+.th-stat {
+  background: #0d0d2e;
+  border: 1px solid #1e1e3a;
+  border-radius: 10px;
+  padding: 14px 20px;
+  text-align: center;
+  min-width: 80px;
+
+  .th-stat-n {
+    font-size: 22px;
+    font-weight: bold;
+
+    .track-ui & { color: #4da6ff; }
+    .track-api & { color: #a78bfa; }
+  }
+
+  .th-stat-l { font-size: 11px; color: #555; margin-top: 2px; }
+}
+
+.track-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: bold;
+  text-decoration: none;
+  transition: opacity 0.15s, transform 0.1s;
+  align-self: flex-start;
+
+  .track-ui & { background: #4da6ff; color: #000; }
+  .track-api & { background: #a78bfa; color: #000; }
+
+  &:hover { opacity: 0.85; transform: translateY(-1px); }
+}
+
+// ── Body ─────────────────────────────────────────────────────────────────────
+
+.track-body {
+  flex: 1;
+  padding: 24px 40px;
+  overflow-y: auto;
+}
+
+.track-loading,
+.track-error {
+  padding: 40px;
+  text-align: center;
+  color: #555;
+}
+
+.track-error { color: #e94560; }
+
+.track-progress-bar {
+  height: 4px;
+  background: #1e1e3a;
+  border-radius: 2px;
+  margin-bottom: 28px;
+  overflow: hidden;
+}
+
+.track-progress-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.4s ease;
+
+  .track-ui & { background: #4da6ff; }
+  .track-api & { background: #a78bfa; }
+}
+
+.track-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+// ── Level cards (shared with Home) ───────────────────────────────────────────
+
+.level-card {
+  background: #0d0d1e;
+  border: 1px solid #1e1e3a;
+  border-radius: 10px;
+  padding: 16px;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: background 0.15s, border-color 0.15s, transform 0.15s;
+  cursor: pointer;
+
+  &:hover:not(.locked) { background: #1e1e3a; transform: translateY(-2px); }
+
+  .track-ui &.done { border-color: #4da6ff; }
+  .track-api &.done { border-color: #a78bfa; }
+
+  &.locked { opacity: 0.4; cursor: not-allowed; }
+}
+
+.card-order { font-size: 11px; color: #555; font-family: monospace; }
+
+.card-status {
+  font-size: 20px;
+
+  .track-ui .done & { color: #4da6ff; }
+  .track-api .done & { color: #a78bfa; }
+}
+
+.card-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #ccc;
+
+  .track-ui .done & { color: #4da6ff; }
+  .track-api .done & { color: #a78bfa; }
+}
+
+.card-tags {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.tag {
+  background: #0d1a2e;
+  color: #4da6ff;
+  border: 1px solid #1a3a5e;
+  padding: 1px 6px;
+  border-radius: 8px;
+  font-size: 10px;
+}
+
+.card-xp {
+  font-size: 12px;
+  color: #ffd700;
+  font-weight: bold;
+  margin-top: auto;
+}

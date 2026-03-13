@@ -1,0 +1,10 @@
+.code-editor {
+  height: 100%;
+  background: #1e1e1e;
+  border-radius: 0;
+  overflow: hidden;
+
+  .monaco-editor {
+    padding: 0;
+  }
+}

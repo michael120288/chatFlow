@@ -5,6 +5,11 @@ import Signout from '@pages/auth/signout/Signout';
 import { QAPractice } from '@pages/qa-practice';
 import Error from '@pages/error/Error';
 import ProtectedRoute from '@pages/ProtectedRoute';
+import { GameSection } from '@pages/game/GameSection';
+import { GameHome } from '@pages/game/GameHome';
+import { Track } from '@pages/game/Track';
+import { Game } from '@pages/game/Game';
+import { LevelComplete } from '@pages/game/LevelComplete';
 import { useRoutes } from 'react-router-dom';
 import { Suspense, lazy } from 'react';
 import StreamsSkeleton from '@pages/social/streams/StreamsSkeleton';
@@ -343,6 +348,32 @@ export const AppRouter = () => {
               <DeckPractice />
             </Suspense>
           )
+        }
+      ]
+    },
+    {
+      path: '/app/game',
+      element: (
+        <ProtectedRoute>
+          <GameSection />
+        </ProtectedRoute>
+      ),
+      children: [
+        {
+          path: '',
+          element: <GameHome />
+        },
+        {
+          path: 'track/:category',
+          element: <Track />
+        },
+        {
+          path: ':levelId',
+          element: <Game />
+        },
+        {
+          path: 'complete/:levelId',
+          element: <LevelComplete />
         }
       ]
     },

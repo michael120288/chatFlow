@@ -1,0 +1,161 @@
+.game-layout {
+  min-height: 100vh;
+  background: #0a0a14;
+  display: flex;
+  flex-direction: column;
+}
+
+.top-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  height: 56px;
+  background: #0d0d1e;
+  border-bottom: 1px solid #1e1e3a;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: inherit;
+
+  .brand-icon { font-size: 22px; }
+  .brand-text {
+    font-size: 18px;
+    font-weight: 700;
+    color: #ffd700;
+    letter-spacing: 1px;
+  }
+}
+
+.nav-center {
+  display: flex;
+  gap: 16px;
+}
+
+.nav-link {
+  color: #aaa;
+  text-decoration: none;
+  font-size: 14px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: background 0.2s, color 0.2s;
+
+  &:hover {
+    background: #1e1e3a;
+    color: #eee;
+  }
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.xp-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #1a1500;
+  border: 1px solid #3a3000;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #ffd700;
+
+  .xp-icon { font-size: 16px; }
+}
+
+.progress-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #0d1a0d;
+  border: 1px solid #1a3a1a;
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: bold;
+  color: #4ecca3;
+  line-height: 1.2;
+
+  .progress-label { font-size: 10px; color: #555; font-weight: normal; }
+}
+
+.auth-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.avatar-circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.nav-username {
+  font-size: 13px;
+  color: #ccc;
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.logout-btn {
+  background: none;
+  border: 1px solid #2a2a4a;
+  color: #888;
+  border-radius: 6px;
+  font-size: 12px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+
+  &:hover {
+    border-color: #ff6b6b;
+    color: #ff6b6b;
+  }
+}
+
+.home-btn {
+  background: none;
+  border: 1px solid #1e1e3a;
+  color: #aaa;
+  border-radius: 6px;
+  font-size: 12px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+
+  &:hover { border-color: #4ecca3; color: #4ecca3; }
+}
+
+.login-link {
+  font-size: 12px;
+  color: #4ecca3 !important;
+  border: 1px solid #1a3a3a;
+  padding: 5px 12px !important;
+  border-radius: 6px;
+}
+
+.main-content {
+  flex: 1;
+  overflow: hidden;
+}

@@ -117,7 +117,7 @@ const Header = () => {
     setLoggedIn(false);
     Utils.clearStore({ dispatch, deleteStorageUsername, deleteSessionPageReload, setLoggedIn });
     localStorage.removeItem('tq_sso_token');
-    window.location.href = 'http://localhost:5173/logout?return=' + encodeURIComponent('http://localhost:3000/auth');
+    window.location.href = '/auth';
   };
 
   useEffectOnce(() => {
