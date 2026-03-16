@@ -73,10 +73,10 @@
 
 .tracks-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 24px;
   width: 100%;
-  max-width: 900px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
@@ -104,6 +104,11 @@
     border-color: #2a1a4e;
     &:hover { border-color: #a78bfa; }
   }
+
+  &.track-cypress {
+    border-color: #0d2e1a;
+    &:hover { border-color: #22c55e; }
+  }
 }
 
 .tc-icon { font-size: 44px; line-height: 1; margin-top: 2px; }
@@ -117,6 +122,7 @@
 
   .track-ui & { color: #4da6ff; }
   .track-api & { color: #a78bfa; }
+  .track-cypress & { color: #22c55e; }
 }
 
 .tc-desc {
@@ -157,6 +163,7 @@
 
   .track-ui & { background: #4da6ff; }
   .track-api & { background: #a78bfa; }
+  .track-cypress & { background: #22c55e; }
 }
 
 .tc-done {
@@ -174,6 +181,7 @@
 .track-card:hover .tc-arrow { transform: translateX(3px); }
 .track-ui:hover .tc-arrow { color: #4da6ff; }
 .track-api:hover .tc-arrow { color: #a78bfa; }
+.track-cypress:hover .tc-arrow { color: #22c55e; }
 
 // ── Footer ────────────────────────────────────────────────────────────────────
 

@@ -1,0 +1,7 @@
+{
+  "heroes": [
+    { "name": "Aria Stormwind", "class": "Archer", "level": 42, "guild": "Silver Hawks" },
+    { "name": "Krag Ironforge", "class": "Warrior", "level": 55, "guild": "Iron Fist" },
+    { "name": "Lyria Moonweave", "class": "Mage", "level": 38, "guild": "Arcane Circle" }
+  ]
+}

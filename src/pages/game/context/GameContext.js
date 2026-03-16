@@ -8,7 +8,8 @@ const STORAGE_KEY = 'test-quest-progress';
 const defaultState = {
   xp: 0,
   completedLevels: [],
-  currentLevelId: null
+  currentLevelId: null,
+  solutions: {}
 };
 
 function loadState() {
@@ -81,12 +82,21 @@ export function GameProvider({ children }) {
 
   const isCompleted = useCallback((levelId) => state.completedLevels.includes(levelId), [state.completedLevels]);
 
+  const saveSolution = useCallback((levelId, code) => {
+    setState((prev) => ({
+      ...prev,
+      solutions: { ...prev.solutions, [levelId]: code }
+    }));
+  }, []);
+
   const resetProgress = useCallback(() => {
     setState(defaultState);
   }, []);
 
   return (
-    <GameContext.Provider value={{ ...state, addXP, completeLevel, setCurrentLevel, isCompleted, resetProgress }}>
+    <GameContext.Provider
+      value={{ ...state, addXP, completeLevel, setCurrentLevel, isCompleted, saveSolution, resetProgress }}
+    >
       {children}
     </GameContext.Provider>
   );

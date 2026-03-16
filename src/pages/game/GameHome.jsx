@@ -19,15 +19,15 @@ export function GameHome() {
       .finally(() => setLoading(false));
   }, []);
 
-  const uiLevels = levels.filter((l) => l.category === 'ui');
-  const apiLevels = levels.filter((l) => l.category === 'api');
+  const playwrightLevels = levels.filter((l) => l.category === 'ui' || l.category === 'api');
+  const cypressLevels = levels.filter((l) => l.category === 'cypress-ui');
 
-  const uiDone = uiLevels.filter((l) => completedLevels.includes(l.id)).length;
-  const apiDone = apiLevels.filter((l) => completedLevels.includes(l.id)).length;
+  const playwrightDone = playwrightLevels.filter((l) => completedLevels.includes(l.id)).length;
+  const cypressDone = cypressLevels.filter((l) => completedLevels.includes(l.id)).length;
 
-  const uiTotalXP = uiLevels.reduce((sum, l) => sum + l.xpReward, 0);
-  const apiTotalXP = apiLevels.reduce((sum, l) => sum + l.xpReward, 0);
-  const grandTotalXP = uiTotalXP + apiTotalXP;
+  const playwrightTotalXP = playwrightLevels.reduce((sum, l) => sum + l.xpReward, 0);
+  const cypressTotalXP = cypressLevels.reduce((sum, l) => sum + l.xpReward, 0);
+  const grandTotalXP = playwrightTotalXP + cypressTotalXP;
 
   return (
     <div className="home-page">
@@ -61,49 +61,47 @@ export function GameHome() {
 
         {!loading && !error && (
           <div className="tracks-row">
-            <Link to="/app/game/track/ui" className="track-card track-ui">
-              <div className="tc-icon">🖥️</div>
+            <Link to="/app/game/track/playwright" className="track-card track-playwright">
+              <div className="tc-icon">🎭</div>
               <div className="tc-body">
-                <h2 className="tc-title">Playwright UI Testing</h2>
-                <p className="tc-desc">
-                  Selectors, clicks, forms, keyboard, viewport, screenshots, drag &amp; drop, iframes and more
-                </p>
+                <h2 className="tc-title">Playwright Testing</h2>
+                <p className="tc-desc">UI automation, network interception, API testing and advanced browser control</p>
                 <div className="tc-meta">
-                  <span className="tc-count">{uiLevels.length} Levels</span>
-                  <span className="tc-xp">{uiTotalXP.toLocaleString()} XP</span>
+                  <span className="tc-count">{playwrightLevels.length} Levels</span>
+                  <span className="tc-xp">{playwrightTotalXP.toLocaleString()} XP</span>
                 </div>
                 <div className="tc-progress-track">
                   <div
                     className="tc-progress-fill"
-                    style={{ width: `${uiLevels.length ? (uiDone / uiLevels.length) * 100 : 0}%` }}
+                    style={{
+                      width: `${playwrightLevels.length ? (playwrightDone / playwrightLevels.length) * 100 : 0}%`
+                    }}
                   />
                 </div>
                 <span className="tc-done">
-                  {uiDone} / {uiLevels.length} complete
+                  {playwrightDone} / {playwrightLevels.length} complete
                 </span>
               </div>
               <div className="tc-arrow">→</div>
             </Link>
 
-            <Link to="/app/game/track/api" className="track-card track-api">
-              <div className="tc-icon">🔌</div>
+            <Link to="/app/game/track/cypress-ui" className="track-card track-cypress">
+              <div className="tc-icon">🌲</div>
               <div className="tc-body">
-                <h2 className="tc-title">Playwright API Testing</h2>
-                <p className="tc-desc">
-                  Network interception, route mocking, request &amp; response monitoring, headers and more
-                </p>
+                <h2 className="tc-title">Cypress UI Testing</h2>
+                <p className="tc-desc">cy.get, cy.type, cy.intercept, viewport, cookies, iframes, dialogs and more</p>
                 <div className="tc-meta">
-                  <span className="tc-count">{apiLevels.length} Levels</span>
-                  <span className="tc-xp">{apiTotalXP.toLocaleString()} XP</span>
+                  <span className="tc-count">{cypressLevels.length} Levels</span>
+                  <span className="tc-xp">{cypressTotalXP.toLocaleString()} XP</span>
                 </div>
                 <div className="tc-progress-track">
                   <div
                     className="tc-progress-fill"
-                    style={{ width: `${apiLevels.length ? (apiDone / apiLevels.length) * 100 : 0}%` }}
+                    style={{ width: `${cypressLevels.length ? (cypressDone / cypressLevels.length) * 100 : 0}%` }}
                   />
                 </div>
                 <span className="tc-done">
-                  {apiDone} / {apiLevels.length} complete
+                  {cypressDone} / {cypressLevels.length} complete
                 </span>
               </div>
               <div className="tc-arrow">→</div>

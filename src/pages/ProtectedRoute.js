@@ -5,17 +5,13 @@ import { addUser } from '@redux/reducers/user/user.reducer';
 import { userService } from '@services/api/user/user.service';
 import { Utils } from '@services/utils/utils.service';
 import { useCallback, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Navigate, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { getConversationList } from '@redux/api/chat';
 
 const ProtectedRoute = ({ children }) => {
-  const { profile, token } = useSelector((state) => state.user);
-  const [userData, setUserData] = useState(null);
-  const [tokenIsValid, setTokenIsValid] = useState(false);
-  const keepLoggedIn = useLocalStorage('keepLoggedIn', 'get');
-  const pageReload = useSessionStorage('pageReload', 'get');
+  const [tokenIsValid, setTokenIsValid] = useState(null);
   const [deleteStorageUsername] = useLocalStorage('username', 'delete');
   const [setLoggedIn] = useLocalStorage('keepLoggedIn', 'set');
   const [deleteSessionPageReload] = useSessionStorage('pageReload', 'delete');
@@ -26,18 +22,13 @@ const ProtectedRoute = ({ children }) => {
     try {
       const response = await userService.checkCurrentUser();
       dispatch(getConversationList());
-      setUserData(response.data.user);
       setTokenIsValid(true);
       dispatch(addUser({ token: response.data.token, profile: response.data.user }));
     } catch (error) {
       setTokenIsValid(false);
-      // Navigate immediately to prevent any API calls with invalid token
       Utils.clearStore({ dispatch, deleteStorageUsername, deleteSessionPageReload, setLoggedIn });
       navigate('/auth');
-      // Try to logout on backend (fire and forget)
-      userService.logoutUser().catch(() => {
-        // Ignore logout errors
-      });
+      userService.logoutUser().catch(() => {});
     }
   }, [dispatch, navigate, deleteStorageUsername, deleteSessionPageReload, setLoggedIn]);
 
@@ -45,16 +36,17 @@ const ProtectedRoute = ({ children }) => {
     checkUser();
   });
 
-  if (keepLoggedIn || (!keepLoggedIn && userData) || (profile && token) || pageReload) {
-    if (!tokenIsValid) {
-      return <></>;
-    } else {
-      return <>{children}</>;
-    }
-  } else {
-    return <>{<Navigate to="/auth" />}</>;
+  if (tokenIsValid === null) {
+    return <></>;
   }
+
+  if (tokenIsValid) {
+    return <>{children}</>;
+  }
+
+  return <Navigate to="/auth" />;
 };
+
 ProtectedRoute.propTypes = {
   children: PropTypes.node.isRequired
 };

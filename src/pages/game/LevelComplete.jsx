@@ -30,8 +30,11 @@ export function LevelComplete() {
 
   if (!level) return null;
 
+  const isCypress = level.id.startsWith('cy-');
+  const totalLevels = isCypress ? 560 : 365;
   const nextOrder = level.order + 1;
-  const isLastLevel = level.order >= 59;
+  const isLastLevel = level.order >= totalLevels;
+  const nextId = isCypress ? `cy-${String(nextOrder).padStart(3, '0')}` : `level-${String(nextOrder).padStart(2, '0')}`;
 
   return (
     <div className="complete-page">
@@ -58,11 +61,13 @@ export function LevelComplete() {
         </div>
 
         <div className="total-xp">Total XP: {xp.toLocaleString()}</div>
-        <div className="levels-done">{completedLevels.length} / 59 Levels Complete</div>
+        <div className="levels-done">
+          {completedLevels.length} / {totalLevels} Levels Complete
+        </div>
 
         <div className="complete-actions">
           {!isLastLevel ? (
-            <Link to={`/app/game/level-${String(nextOrder).padStart(2, '0')}`} className="btn btn-next">
+            <Link to={`/app/game/${nextId}`} className="btn btn-next">
               Next Level → Level {nextOrder}
             </Link>
           ) : (

@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import './EditorToolbar.scss';
 
-export function EditorToolbar({ onRun, onReset, hints, loading }) {
+export function EditorToolbar({ onRun, onReset, hints, loading, showingSolution }) {
   const [hintIndex, setHintIndex] = useState(-1);
   const [showHints, setShowHints] = useState(false);
 
@@ -33,8 +33,9 @@ export function EditorToolbar({ onRun, onReset, hints, loading }) {
           )}
         </button>
         <button className="btn btn-reset" onClick={onReset} title="Reset to starter code">
-          ↺ Reset
+          ↺ {showingSolution ? 'Reset to Starter' : 'Reset'}
         </button>
+        {showingSolution && <span className="solution-badge">✓ Your solution</span>}
       </div>
 
       <div className="toolbar-right">
@@ -61,5 +62,6 @@ EditorToolbar.propTypes = {
   onRun: PropTypes.func.isRequired,
   onReset: PropTypes.func.isRequired,
   hints: PropTypes.arrayOf(PropTypes.string).isRequired,
-  loading: PropTypes.bool.isRequired
+  loading: PropTypes.bool.isRequired,
+  showingSolution: PropTypes.bool
 };

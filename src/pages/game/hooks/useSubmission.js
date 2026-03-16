@@ -6,7 +6,7 @@ export function useSubmission() {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const { addXP, completeLevel } = useGame();
+  const { addXP, completeLevel, isCompleted, saveSolution } = useGame();
 
   const submit = useCallback(
     async (levelId, code) => {
@@ -17,9 +17,11 @@ export function useSubmission() {
       try {
         const res = await gameService.submitCode(levelId, code);
         setResult(res);
-        if (res.passed && res.xpAwarded > 0) {
-          addXP(res.xpAwarded);
+        if (res.passed) {
+          const alreadyDone = isCompleted(levelId);
+          if (!alreadyDone && res.xpAwarded > 0) addXP(res.xpAwarded);
           completeLevel(levelId);
+          saveSolution(levelId, code);
         }
         return res;
       } catch (err) {
@@ -30,7 +32,7 @@ export function useSubmission() {
         setLoading(false);
       }
     },
-    [addXP, completeLevel]
+    [addXP, completeLevel, isCompleted, saveSolution]
   );
 
   const reset = useCallback(() => {

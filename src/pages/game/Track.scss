@@ -1,9 +1,6 @@
 .track-page {
-  min-height: calc(100vh - 56px);
   background: #0a0a14;
   color: #eee;
-  display: flex;
-  flex-direction: column;
 }
 
 // ── Header ──────────────────────────────────────────────────────────────────
@@ -45,6 +42,7 @@
 
   .track-ui & { color: #4da6ff; }
   .track-api & { color: #a78bfa; }
+  .track-cypress-ui & { color: #22c55e; }
 }
 
 .track-header-desc {
@@ -72,6 +70,7 @@
 
     .track-ui & { color: #4da6ff; }
     .track-api & { color: #a78bfa; }
+    .track-cypress-ui & { color: #22c55e; }
   }
 
   .th-stat-l { font-size: 11px; color: #555; margin-top: 2px; }
@@ -91,6 +90,7 @@
 
   .track-ui & { background: #4da6ff; color: #000; }
   .track-api & { background: #a78bfa; color: #000; }
+  .track-cypress-ui & { background: #22c55e; color: #000; }
 
   &:hover { opacity: 0.85; transform: translateY(-1px); }
 }
@@ -100,7 +100,6 @@
 .track-body {
   flex: 1;
   padding: 24px 40px;
-  overflow-y: auto;
 }
 
 .track-loading,
@@ -127,6 +126,7 @@
 
   .track-ui & { background: #4da6ff; }
   .track-api & { background: #a78bfa; }
+  .track-cypress-ui & { background: #22c55e; }
 }
 
 .track-grid {
@@ -154,6 +154,7 @@
 
   .track-ui &.done { border-color: #4da6ff; }
   .track-api &.done { border-color: #a78bfa; }
+  .track-cypress-ui &.done { border-color: #22c55e; }
 
   &.locked { opacity: 0.4; cursor: not-allowed; }
 }
@@ -196,4 +197,110 @@
   color: #ffd700;
   font-weight: bold;
   margin-top: auto;
+}
+
+// ── Section nav ──────────────────────────────────────────────────────────────
+
+.section-nav {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  gap: 8px;
+  padding: 10px 40px;
+  background: rgba(10, 10, 20, 0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid #1e1e3a;
+  overflow-x: auto;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar { display: none; }
+}
+
+.section-nav-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: #0d0d2e;
+  border: 1px solid #1e1e3a;
+  border-radius: 20px;
+  color: #666;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+
+  &:hover { color: #aaa; border-color: #2a2a5e; }
+
+  .track-cypress-ui &.active {
+    background: #0a2014;
+    border-color: #22c55e;
+    color: #22c55e;
+  }
+
+  .track-ui &.active {
+    background: #0a1a2e;
+    border-color: #4da6ff;
+    color: #4da6ff;
+  }
+
+  .track-api &.active {
+    background: #1a0a2e;
+    border-color: #a78bfa;
+    color: #a78bfa;
+  }
+}
+
+// ── Sections ─────────────────────────────────────────────────────────────────
+
+.track-section {
+  margin-bottom: 40px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 20px;
+  background: #0d0d2e;
+  border: 1px solid #1e1e3a;
+  border-radius: 10px;
+  margin-bottom: 14px;
+}
+
+.section-icon {
+  font-size: 28px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.section-header-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.section-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #eee;
+  margin-bottom: 2px;
+
+  .track-cypress-ui & { color: #22c55e; }
+}
+
+.section-desc {
+  font-size: 12px;
+  color: #555;
+}
+
+.section-count {
+  font-size: 13px;
+  font-weight: bold;
+  color: #555;
+  white-space: nowrap;
+  flex-shrink: 0;
+
+  .track-cypress-ui & { color: #22c55e; }
 }
