@@ -1,15 +1,25 @@
 import { useGame } from '../context/GameContext';
 
-const TOTAL_LEVELS = 59;
-
 export function useProgress() {
-  const { xp, completedLevels, addXP, completeLevel, isCompleted, resetProgress } = useGame();
-  const progressPercent = Math.round((completedLevels.length / TOTAL_LEVELS) * 100);
+  const {
+    xp,
+    trackXP,
+    completedLevels,
+    totalLevels,
+    setTotalLevels,
+    addXP,
+    completeLevel,
+    isCompleted,
+    resetProgress
+  } = useGame();
+  const progressPercent = totalLevels > 0 ? Math.round((completedLevels.length / totalLevels) * 100) : 0;
 
   return {
     xp,
+    trackXP,
     completedLevels,
-    totalLevels: TOTAL_LEVELS,
+    totalLevels,
+    setTotalLevels,
     progressPercent,
     addXP,
     completeLevel,

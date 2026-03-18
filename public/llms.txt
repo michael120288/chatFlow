@@ -1,0 +1,37 @@
+# Chatty
+
+> Chatty is a full-stack social platform with real-time chat, social feeds, and interactive QA practice tools for learning Playwright end-to-end testing.
+
+## About
+
+Chatty provides two main experiences:
+
+1. **Social Platform** — Authenticated users can post to streams, chat in real time, follow other users, share images and videos, manage flashcard decks, and play the Test Quest game.
+2. **QA Practice** — A public suite of 35+ interactive UI scenarios (web inputs, drag-and-drop, iframes, file uploads, alerts, dynamic tables, API testing, WebSocket, virtual scroll, etc.) designed for practising Playwright automation.
+
+## Public Pages
+
+- /: Home — platform overview and navigation
+- /auth: Sign in or register
+- /qa-practice: QA practice hub — index of all available scenarios
+- /qa-practice/web-inputs: Form inputs practice
+- /qa-practice/dynamic-table: Dynamic table interactions
+- /qa-practice/drag-and-drop: Drag and drop practice
+- /qa-practice/iframe: iFrame handling
+- /qa-practice/file-upload: File upload scenarios
+- /qa-practice/alerts-modals: Alerts and modals
+- /qa-practice/navigation: Navigation patterns
+- /qa-practice/api-testing: API testing practice
+- /qa-practice/websocket: WebSocket interactions
+- /qa-practice/form-validation: Form validation patterns
+- /qa-practice/keyboard-nav: Keyboard navigation
+
+## Protected Pages (require authentication)
+
+- /app/social/*: Social feeds, chat, profiles, photos, videos, notifications, flashcards
+- /app/game/*: Test Quest — Playwright learning game with tracks and levels
+
+## Tech Stack
+
+- Frontend: React 18, Create React App, Redux Toolkit, Socket.IO client
+- Backend: Node.js, Express, TypeScript, MongoDB, Redis, Bull queues

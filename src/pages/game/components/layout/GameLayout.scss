@@ -63,15 +63,21 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  background: #1a1500;
-  border: 1px solid #3a3000;
+  background: #12122e;
+  border: 1px solid #2a2a5e;
   padding: 6px 14px;
   border-radius: 20px;
   font-size: 14px;
   font-weight: bold;
-  color: #ffd700;
+  color: #818cf8;
 
   .xp-icon { font-size: 16px; }
+
+  &--cypress {
+    color: #22c55e;
+    border-color: #1a3a1a;
+    background: #0d1a0d;
+  }
 }
 
 .progress-chip {

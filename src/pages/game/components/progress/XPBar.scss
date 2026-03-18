@@ -53,3 +53,42 @@
   transition: width 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   min-width: 4px;
 }
+
+.xp-tracks {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.xp-track-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.xp-track-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.xp-track-label {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.xp-track-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.xp-track-done {
+  font-size: 12px;
+  color: #666;
+}
+
+.xp-track-xp {
+  font-size: 12px;
+  font-weight: 700;
+}

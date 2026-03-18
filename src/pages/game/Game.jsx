@@ -69,7 +69,7 @@ export function Game() {
 
   const handleRun = useCallback(async () => {
     if (!levelId) return;
-    await submit(levelId, code);
+    await submit(levelId, code, level?.category);
   }, [levelId, code, submit]);
 
   const hasSavedSolution = level && !!solutions[level.id];

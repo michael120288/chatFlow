@@ -4,7 +4,7 @@ import { useProgress } from '../../hooks/useProgress';
 import './GameLayout.scss';
 
 export function GameLayout() {
-  const { xp, completedLevels, totalLevels } = useProgress();
+  const { trackXP, completedLevels, totalLevels } = useProgress();
   const { profile } = useSelector((state) => state.user);
   const location = useLocation();
   const navigate = useNavigate();
@@ -30,8 +30,12 @@ export function GameLayout() {
             🏠 Home
           </button>
           <div className="xp-chip">
-            <span className="xp-icon">✨</span>
-            <span className="xp-value">{xp.toLocaleString()} XP</span>
+            <span className="xp-icon">🎭</span>
+            <span className="xp-value">{(trackXP.playwright ?? 0).toLocaleString()} XP</span>
+          </div>
+          <div className="xp-chip xp-chip--cypress">
+            <span className="xp-icon">🌲</span>
+            <span className="xp-value">{(trackXP['cypress-ui'] ?? 0).toLocaleString()} XP</span>
           </div>
           <div className="progress-chip">
             <span>

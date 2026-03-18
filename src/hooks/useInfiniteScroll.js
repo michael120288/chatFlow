@@ -1,19 +1,22 @@
-import { useCallback, useEffect } from 'react';
+import { useEffect } from 'react';
 
 const useInfiniteScroll = (bodyRef, bottomLineRef, callback) => {
-  const handleScroll = useCallback(() => {
-    const containerHeight = bodyRef?.current?.getBoundingClientRect().height;
-    const { top: bottomLineTop } = bottomLineRef?.current?.getBoundingClientRect();
-    if (bottomLineTop <= containerHeight) {
-      callback();
-    }
-  }, [bodyRef, bottomLineRef, callback]);
-
   useEffect(() => {
-    const bodyRefCurrent = bodyRef?.current;
-    bodyRefCurrent?.addEventListener('scroll', handleScroll, true);
-    return () => bodyRefCurrent.removeEventListener('scroll', handleScroll, true);
-  }, [bodyRef, handleScroll]);
+    const bottomEl = bottomLineRef?.current;
+    if (!bottomEl) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          callback();
+        }
+      },
+      { root: bodyRef?.current ?? null, threshold: 0.1 }
+    );
+
+    observer.observe(bottomEl);
+    return () => observer.disconnect();
+  }, [bodyRef, bottomLineRef, callback]);
 };
 
 export default useInfiniteScroll;

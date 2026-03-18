@@ -1,3 +1,25 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+Disallow: /app/
+Disallow: /sso
+Disallow: /signout
+Disallow: /reset-password
+
+# AI crawlers — explicitly allowed for public content
+User-agent: GPTBot
+Allow: /
+Disallow: /app/
+
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /app/
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /app/
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /app/
+
+Sitemap: https://chatty.app/sitemap.xml

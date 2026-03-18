@@ -9,7 +9,7 @@ export function useSubmission() {
   const { addXP, completeLevel, isCompleted, saveSolution } = useGame();
 
   const submit = useCallback(
-    async (levelId, code) => {
+    async (levelId, code, category) => {
       setLoading(true);
       setError(null);
       setResult(null);
@@ -19,7 +19,10 @@ export function useSubmission() {
         setResult(res);
         if (res.passed) {
           const alreadyDone = isCompleted(levelId);
-          if (!alreadyDone && res.xpAwarded > 0) addXP(res.xpAwarded);
+          if (!alreadyDone && res.xpAwarded > 0) {
+            const track = category === 'cypress-ui' ? 'cypress-ui' : 'playwright';
+            addXP(res.xpAwarded, track);
+          }
           completeLevel(levelId);
           saveSolution(levelId, code);
         }

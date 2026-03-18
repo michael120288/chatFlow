@@ -7,6 +7,7 @@ const STORAGE_KEY = 'test-quest-progress';
 
 const defaultState = {
   xp: 0,
+  trackXP: {},
   completedLevels: [],
   currentLevelId: null,
   solutions: {}
@@ -37,6 +38,7 @@ export function GameProvider({ children }) {
   const isAuthenticated = !!token;
   const [state, setState] = useState(loadState);
   const [serverLoaded, setServerLoaded] = useState(false);
+  const [totalLevels, setTotalLevels] = useState(0);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -63,8 +65,12 @@ export function GameProvider({ children }) {
     gameService.saveProgress({ completedLevels: state.completedLevels, xp: state.xp }).catch(() => {});
   }, [state.completedLevels, state.xp, isAuthenticated, serverLoaded]);
 
-  const addXP = useCallback((amount) => {
-    setState((prev) => ({ ...prev, xp: prev.xp + amount }));
+  const addXP = useCallback((amount, track) => {
+    setState((prev) => ({
+      ...prev,
+      xp: prev.xp + amount,
+      trackXP: track ? { ...prev.trackXP, [track]: (prev.trackXP[track] ?? 0) + amount } : prev.trackXP
+    }));
   }, []);
 
   const completeLevel = useCallback((levelId) => {
@@ -95,7 +101,17 @@ export function GameProvider({ children }) {
 
   return (
     <GameContext.Provider
-      value={{ ...state, addXP, completeLevel, setCurrentLevel, isCompleted, saveSolution, resetProgress }}
+      value={{
+        ...state,
+        totalLevels,
+        setTotalLevels,
+        addXP,
+        completeLevel,
+        setCurrentLevel,
+        isCompleted,
+        saveSolution,
+        resetProgress
+      }}
     >
       {children}
     </GameContext.Provider>

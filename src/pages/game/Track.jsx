@@ -10,7 +10,7 @@ export function Track() {
   const [levels, setLevels] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { completedLevels } = useProgress();
+  const { completedLevels, trackXP } = useProgress();
 
   useEffect(() => {
     gameService
@@ -156,174 +156,203 @@ export function Track() {
         {
           title: 'Core Cypress',
           icon: '🎯',
+          group: 'UI Tests',
           desc: 'Selectors, clicks, forms, assertions, intercept, viewport and cookies',
           orderRange: [1, 75]
         },
         {
           title: 'Intermediate',
           icon: '⚡',
+          group: 'UI Tests',
           desc: 'DOM traversal, aliases, fixtures, API requests, spies, stubs and sessions',
           orderRange: [76, 150]
         },
         {
           title: 'Advanced Topics',
           icon: '🔮',
+          group: 'UI Tests',
           desc: 'Custom commands, test organization, retry-ability and cy.task()',
           orderRange: [151, 170]
         },
         {
           title: 'Component Testing',
           icon: '⚛️',
+          group: 'Component Tests',
           desc: 'cy.mount(), props, state, forms, event spies, React Router, Redux, Context and custom mount commands',
           orderRange: [171, 215]
         },
         {
           title: 'End-to-End Journeys',
           icon: '🗺️',
+          group: 'UI Tests',
           desc: 'Multi-page flows: authentication, shopping and multi-step forms',
           orderRange: [216, 230]
         },
         {
           title: 'Chai Assertions',
           icon: '⚗️',
+          group: 'API & Utilities',
           desc: 'Truthiness, equality, comparison, types, strings, properties, length and change',
           orderRange: [231, 275]
         },
         {
           title: 'Chai-jQuery DOM',
           icon: '🔍',
+          group: 'UI Tests',
           desc: 'Attributes, CSS, content, form states, focus, DOM structure and visibility',
           orderRange: [276, 310]
         },
         {
           title: 'Sinon-Chai Spies',
           icon: '👁️',
+          group: 'API & Utilities',
           desc: 'Call counts, arguments, call order and return values with cy.spy() and cy.stub()',
           orderRange: [311, 325]
         },
         {
           title: 'Mocha Test Structure',
           icon: '🧪',
+          group: 'API & Utilities',
           desc: 'describe, context, before/after, beforeEach/afterEach, it.skip and aliases',
           orderRange: [326, 345]
         },
         {
           title: 'Lodash (Cypress._)',
           icon: '🔧',
+          group: 'API & Utilities',
           desc: 'filter, map, find, pick, omit, get, merge, sortBy, groupBy, chunk and more',
           orderRange: [346, 360]
         },
         {
           title: 'jQuery (Cypress.$)',
           icon: '💲',
+          group: 'API & Utilities',
           desc: 'Synchronous DOM queries, traversal, find, parent, closest, filter and siblings',
           orderRange: [361, 370]
         },
         {
           title: 'Minimatch, Promise, Blob & Buffer',
           icon: '📦',
+          group: 'API & Utilities',
           desc: 'Glob pattern matching, Bluebird promises, blob conversion and binary buffers',
           orderRange: [371, 395]
         },
         {
           title: 'Conditional Testing',
           icon: '🔀',
+          group: 'UI Tests',
           desc: 'DOM conditionals, URL params, cookie state, server queries and stability testing',
           orderRange: [396, 420]
         },
         {
           title: 'Network Requests',
           icon: '🌐',
+          group: 'UI Tests',
           desc: 'Request modification, response sculpting, network delays, GraphQL intercept and multi-request inspection',
           orderRange: [421, 465]
         },
         {
           title: 'Advanced Stubs, Spies & Clocks',
           icon: '🕰️',
+          group: 'API & Utilities',
           desc: 'withArgs branching, async resolves/rejects, freezing Date.now(), setInterval control and sinon matchers',
           orderRange: [466, 490]
         },
         {
           title: 'Cross-Origin Testing',
           icon: '🌍',
+          group: 'UI Tests',
           desc: 'cy.origin() — visit and interact with pages on different domains, pass args, run assertions and manage cookies across origins',
           orderRange: [491, 495]
         },
         {
           title: 'System Commands',
           icon: '🖥️',
+          group: 'API & Utilities',
           desc: 'cy.exec() — run shell commands, check exit codes, read stdout/stderr and execute Node scripts during tests',
           orderRange: [496, 500]
         },
         {
           title: 'Reading Files',
           icon: '📖',
+          group: 'API & Utilities',
           desc: 'cy.readFile() — read fixture files, parse JSON, retry until files exist and specify encodings',
           orderRange: [501, 505]
         },
         {
           title: 'Writing Files',
           icon: '✍️',
+          group: 'API & Utilities',
           desc: 'cy.writeFile() — write strings and JSON, append to files, share state between tests and reset fixtures',
           orderRange: [506, 510]
         },
         {
           title: 'Environment & Config',
           icon: '⚙️',
+          group: 'API & Utilities',
           desc: 'Cypress.env() and Cypress.config() — read and set environment variables, use them in cy.visit() and access runtime configuration',
           orderRange: [511, 515]
         },
         {
           title: 'Storage Management',
           icon: '🗄️',
+          group: 'API & Utilities',
           desc: 'cy.clearAllCookies(), cy.clearAllLocalStorage(), cy.clearAllSessionStorage() and cy.getAllLocalStorage() — full storage control',
           orderRange: [516, 520]
         },
         {
           title: 'Logging',
           icon: '📝',
+          group: 'API & Utilities',
           desc: 'cy.log() — annotate the command log, log dynamic values, structure multi-step tests and log inside iterations',
           orderRange: [521, 525]
         },
         {
           title: 'Debugging',
           icon: '🔬',
+          group: 'API & Utilities',
           desc: 'cy.pause(), cy.debug() and .then() — pause execution, inspect subjects in the console and create custom log entries',
           orderRange: [526, 530]
         },
         {
           title: 'Browser Detection',
           icon: '🧭',
+          group: 'UI Tests',
           desc: 'Cypress.browser and Cypress.isBrowser() — detect browser name, family, headless mode and write conditional cross-browser logic',
           orderRange: [531, 535]
         },
         {
           title: 'File Selection',
           icon: '📎',
+          group: 'UI Tests',
           desc: '.selectFile() — attach real and virtual files, select multiple files, simulate drag-and-drop uploads and read the FileList',
           orderRange: [536, 540]
         },
         {
           title: 'Shadow DOM',
           icon: '👥',
+          group: 'UI Tests',
           desc: '.shadow() — pierce shadow boundaries, find nested elements, click inside shadow DOM and use includeShadowDom option',
           orderRange: [541, 545]
         },
         {
           title: 'Focus Management',
           icon: '🎯',
+          group: 'UI Tests',
           desc: 'cy.focused() and .blur() — get the focused element, assert focus, navigate with Tab and verify blur behaviour',
           orderRange: [546, 550]
         },
         {
           title: 'Array Spreading',
           icon: '📦',
+          group: 'API & Utilities',
           desc: '.spread() — destructure arrays into callback arguments, spread cookies, Promise.all results and DOM element collections',
           orderRange: [551, 555]
         },
         {
           title: 'DOM Root',
           icon: '🌳',
+          group: 'UI Tests',
           desc: 'cy.root() — get the document root, use root inside .within() scopes, chain .find() from root and compare with cy.document()',
           orderRange: [556, 560]
         }
@@ -352,7 +381,8 @@ export function Track() {
 
   const doneLevels = trackLevels.filter((l) => completedLevels.includes(l.id));
   const totalXP = trackLevels.reduce((sum, l) => sum + l.xpReward, 0);
-  const earnedXP = doneLevels.reduce((sum, l) => sum + l.xpReward, 0);
+  const trackKey = category === 'cypress-ui' ? 'cypress-ui' : 'playwright';
+  const earnedXP = trackXP[trackKey] ?? doneLevels.reduce((sum, l) => sum + l.xpReward, 0);
   const nextLevel = trackLevels.find((l) => !completedLevels.includes(l.id));
 
   const [activeSection, setActiveSection] = useState(0);
@@ -417,7 +447,7 @@ export function Track() {
         )}
       </div>
 
-      <XPBar completedCount={doneLevels.length} totalCount={trackLevels.length} />
+      <XPBar completedCount={doneLevels.length} totalCount={trackLevels.length} xpEarned={earnedXP} />
 
       {meta.sections && !loading && (
         <div className="section-nav">
@@ -453,48 +483,53 @@ export function Track() {
                   (l) => l.order >= section.orderRange[0] && l.order <= section.orderRange[1]
                 );
                 const doneSectionCount = sectionLevels.filter((l) => completedLevels.includes(l.id)).length;
+                const prevGroup = sectionIdx > 0 ? meta.sections[sectionIdx - 1].group : null;
+                const showGroupHeader = section.group && section.group !== prevGroup;
                 return (
-                  <div
-                    key={section.title}
-                    className="track-section"
-                    ref={(el) => (sectionRefs.current[sectionIdx] = el)}
-                  >
-                    <div className="section-header">
-                      <span className="section-icon">{section.icon}</span>
-                      <div className="section-header-text">
-                        <div className="section-title">{section.title}</div>
-                        <div className="section-desc">{section.desc}</div>
+                  <div key={section.title}>
+                    {showGroupHeader && (
+                      <div className="track-group-header">
+                        <span className="track-group-label">{section.group}</span>
                       </div>
-                      <div className="section-count">
-                        {doneSectionCount}/{sectionLevels.length}
+                    )}
+                    <div className="track-section" ref={(el) => (sectionRefs.current[sectionIdx] = el)}>
+                      <div className="section-header">
+                        <span className="section-icon">{section.icon}</span>
+                        <div className="section-header-text">
+                          <div className="section-title">{section.title}</div>
+                          <div className="section-desc">{section.desc}</div>
+                        </div>
+                        <div className="section-count">
+                          {doneSectionCount}/{sectionLevels.length}
+                        </div>
                       </div>
-                    </div>
-                    <div className="track-grid">
-                      {sectionLevels.map((level) => {
-                        const idx = trackLevels.findIndex((l) => l.id === level.id);
-                        const done = completedLevels.includes(level.id);
-                        const unlocked = isUnlocked(level);
-                        return (
-                          <Link
-                            key={level.id}
-                            to={unlocked ? `/app/game/${level.id}` : '#'}
-                            className={`level-card ${done ? 'done' : ''} ${!unlocked ? 'locked' : ''}`}
-                            onClick={(e) => !unlocked && e.preventDefault()}
-                          >
-                            <div className="card-order">{String(idx + 1).padStart(2, '0')}</div>
-                            <div className="card-status">{done ? '✓' : !unlocked ? '🔒' : '▶'}</div>
-                            <div className="card-title">{level.title}</div>
-                            <div className="card-tags">
-                              {level.tags.slice(0, 2).map((t) => (
-                                <span key={t} className="tag">
-                                  {t}
-                                </span>
-                              ))}
-                            </div>
-                            <div className="card-xp">+{level.xpReward} XP</div>
-                          </Link>
-                        );
-                      })}
+                      <div className="track-grid">
+                        {sectionLevels.map((level) => {
+                          const idx = trackLevels.findIndex((l) => l.id === level.id);
+                          const done = completedLevels.includes(level.id);
+                          const unlocked = isUnlocked(level);
+                          return (
+                            <Link
+                              key={level.id}
+                              to={unlocked ? `/app/game/${level.id}` : '#'}
+                              className={`level-card ${done ? 'done' : ''} ${!unlocked ? 'locked' : ''}`}
+                              onClick={(e) => !unlocked && e.preventDefault()}
+                            >
+                              <div className="card-order">{String(idx + 1).padStart(2, '0')}</div>
+                              <div className="card-status">{done ? '✓' : !unlocked ? '🔒' : '▶'}</div>
+                              <div className="card-title">{level.title}</div>
+                              <div className="card-tags">
+                                {level.tags.slice(0, 2).map((t) => (
+                                  <span key={t} className="tag">
+                                    {t}
+                                  </span>
+                                ))}
+                              </div>
+                              <div className="card-xp">+{level.xpReward} XP</div>
+                            </Link>
+                          );
+                        })}
+                      </div>
                     </div>
                   </div>
                 );

@@ -184,6 +184,13 @@ const QAPractice = () => {
   const [wsStatus, setWsStatus] = useState('disconnected');
   const [wsMessage, setWsMessage] = useState('');
 
+  // Credit Card state
+  const [cardForm, setCardForm] = useState({ cardNumber: '', expiry: '', cvv: '', cardholderName: '', zip: '' });
+  const [cardErrors, setCardErrors] = useState({});
+  const [paymentStep, setPaymentStep] = useState('form');
+  const [cvvVisible, setCvvVisible] = useState(false);
+  const [transactionData, setTransactionData] = useState(null);
+
   // IFrame state
   const [selectedIframe, setSelectedIframe] = useState('custom1');
   const iframeOptions = [
@@ -434,42 +441,6 @@ const QAPractice = () => {
     }
   ];
 
-  const sidebarOptions = [
-    { id: 'web-inputs', label: 'Web Inputs' },
-    { id: 'dynamic-table', label: 'Dynamic Table' },
-    { id: 'drag-and-drop', label: 'Drag and Drop' },
-    { id: 'iframe', label: 'IFrame' },
-    { id: 'file-upload', label: 'File Upload' },
-    { id: 'alerts-modals', label: 'Alerts & Modals' },
-    { id: 'navigation', label: 'Navigation' },
-    { id: 'tooltips', label: 'Tooltips' },
-    { id: 'loaders', label: 'Loaders & Spinners' },
-    { id: 'accordion', label: 'Accordion' },
-    { id: 'tabs', label: 'Tabs' },
-    { id: 'carousel', label: 'Carousel' },
-    { id: 'search-filters', label: 'Search & Filters' },
-    { id: 'breadcrumbs', label: 'Breadcrumbs' },
-    { id: 'context-menu', label: 'Context Menu' },
-    { id: 'copy-clipboard', label: 'Copy to Clipboard' },
-    { id: 'rating', label: 'Rating' },
-    { id: 'wizard', label: 'Wizard' },
-    { id: 'infinite-scroll', label: 'Infinite Scroll' },
-    { id: 'sticky-elements', label: 'Sticky Elements' },
-    { id: 'local-storage', label: 'LocalStorage/SessionStorage' },
-    { id: 'api-testing', label: 'API Testing' },
-    { id: 'authentication', label: 'Authentication' },
-    { id: 'download-files', label: 'Download Files' },
-    { id: 'autocomplete', label: 'Auto-complete' },
-    { id: 'multi-select', label: 'Multi-select' },
-    { id: 'date-time-picker', label: 'Date/Time Picker' },
-    { id: 'dark-mode', label: 'Dark Mode' },
-    { id: 'nested-dropdowns', label: 'Nested Dropdowns' },
-    { id: 'disabled-readonly', label: 'Disabled/Readonly' },
-    { id: 'progress', label: 'Progress Indicators' },
-    { id: 'virtual-scroll', label: 'Virtual Scroll' },
-    { id: 'websocket', label: 'WebSocket' }
-  ];
-
   // Close context menu on click
   useEffect(() => {
     if (contextMenu) {
@@ -557,9 +528,8 @@ const QAPractice = () => {
       setSelectedOption('virtual-scroll');
     } else if (path.includes('websocket')) {
       setSelectedOption('websocket');
-    } else if (path === '/qa-practice') {
-      // Default to web-inputs if on base route
-      navigate('/qa-practice/web-inputs', { replace: true });
+    } else if (path.includes('credit-card')) {
+      setSelectedOption('credit-card');
     }
   }, [location.pathname, navigate]);
 
@@ -2994,6 +2964,7 @@ const QAPractice = () => {
           <h2>Form Validation</h2>
           <p>Practice testing complex validation scenarios</p>
           <form
+            className="qa-form"
             onSubmit={(e) => {
               e.preventDefault();
               if (validateForm()) alert('Form is valid!');
@@ -3721,31 +3692,408 @@ const QAPractice = () => {
       );
     }
 
+    // 19. Credit Card Payment
+    if (selectedOption === 'credit-card') {
+      const formatCardNumber = (value) => {
+        const digits = value.replace(/\D/g, '').slice(0, 16);
+        return digits.replace(/(.{4})/g, '$1 ').trim();
+      };
+
+      const formatExpiry = (value) => {
+        const digits = value.replace(/\D/g, '').slice(0, 4);
+        if (digits.length >= 3) return `${digits.slice(0, 2)}/${digits.slice(2)}`;
+        return digits;
+      };
+
+      const getCardType = (number) => {
+        const d = number.replace(/\s/g, '');
+        if (/^4/.test(d)) return 'Visa';
+        if (/^5[1-5]/.test(d)) return 'Mastercard';
+        if (/^3[47]/.test(d)) return 'Amex';
+        return '';
+      };
+
+      const handleCardInput = (e) => {
+        const { name, value } = e.target;
+        let formatted = value;
+        if (name === 'cardNumber') formatted = formatCardNumber(value);
+        if (name === 'expiry') formatted = formatExpiry(value);
+        if (name === 'cvv') formatted = value.replace(/\D/g, '').slice(0, 4);
+        if (name === 'zip') formatted = value.replace(/\D/g, '').slice(0, 10);
+        setCardForm((prev) => ({ ...prev, [name]: formatted }));
+        setCardErrors((prev) => ({ ...prev, [name]: '' }));
+      };
+
+      const validateCard = () => {
+        const errs = {};
+        const raw = cardForm.cardNumber.replace(/\s/g, '');
+        if (!raw) errs.cardNumber = 'Card number is required.';
+        else if (raw.length < 13) errs.cardNumber = 'Card number must be at least 13 digits.';
+        if (!cardForm.expiry) {
+          errs.expiry = 'Expiry date is required.';
+        } else {
+          const [mm, yy] = cardForm.expiry.split('/');
+          const now = new Date();
+          const expYear = 2000 + parseInt(yy || '0', 10);
+          const expMonth = parseInt(mm || '0', 10);
+          if (expMonth < 1 || expMonth > 12) errs.expiry = 'Invalid month.';
+          else if (expYear < now.getFullYear() || (expYear === now.getFullYear() && expMonth < now.getMonth() + 1))
+            errs.expiry = 'Card has expired.';
+        }
+        if (!cardForm.cvv) errs.cvv = 'CVV is required.';
+        else if (cardForm.cvv.length < 3) errs.cvv = 'CVV must be 3–4 digits.';
+        if (!cardForm.cardholderName.trim()) errs.cardholderName = 'Cardholder name is required.';
+        if (!cardForm.zip) errs.zip = 'ZIP / postal code is required.';
+        return errs;
+      };
+
+      const submitPayment = (e) => {
+        e.preventDefault();
+        const errs = validateCard();
+        if (Object.keys(errs).length > 0) {
+          setCardErrors(errs);
+          return;
+        }
+        const raw = cardForm.cardNumber.replace(/\s/g, '');
+        const last4 = raw.slice(-4);
+        const cardTypeName = getCardType(cardForm.cardNumber);
+        const now = new Date();
+        setPaymentStep('redirecting');
+        setTimeout(() => setPaymentStep('processing'), 1200);
+        setTimeout(() => {
+          if (raw === '4000000000000002') {
+            setTransactionData({ outcome: 'declined', reason: 'Your card was declined by the issuing bank.' });
+          } else if (raw === '4000000000000069') {
+            setTransactionData({ outcome: 'expired', reason: 'The card expiry date does not match our records.' });
+          } else {
+            setTransactionData({
+              outcome: 'success',
+              transactionId: 'TXN-' + Math.random().toString(36).slice(2, 10).toUpperCase(),
+              orderId: 'ORD-' + Math.floor(100000 + Math.random() * 900000),
+              amount: '$49.99',
+              currency: 'USD',
+              cardType: cardTypeName || 'Card',
+              last4,
+              cardholderName: cardForm.cardholderName,
+              date: now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
+              time: now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
+              billingZip: cardForm.zip,
+              status: 'Approved'
+            });
+          }
+          setPaymentStep('result');
+        }, 3200);
+      };
+
+      const resetCard = () => {
+        setCardForm({ cardNumber: '', expiry: '', cvv: '', cardholderName: '', zip: '' });
+        setCardErrors({});
+        setPaymentStep('form');
+        setTransactionData(null);
+        setCvvVisible(false);
+      };
+
+      const cardType = getCardType(cardForm.cardNumber);
+
+      // ── Step: redirecting ──────────────────────────────────────────────────
+      if (paymentStep === 'redirecting') {
+        return (
+          <div className="payment-page payment-page--redirecting" data-testid="payment-redirecting">
+            <div className="payment-page-inner">
+              <div className="payment-brand">🔒 Secure Payment Gateway</div>
+              <div className="payment-page-spinner" />
+              <p className="payment-page-msg" data-testid="redirecting-message">
+                Redirecting to secure payment processor…
+              </p>
+              <p className="payment-page-sub">Please do not close this window.</p>
+            </div>
+          </div>
+        );
+      }
+
+      // ── Step: processing ──────────────────────────────────────────────────
+      if (paymentStep === 'processing') {
+        return (
+          <div className="payment-page payment-page--processing" data-testid="payment-processing-page">
+            <div className="payment-page-inner">
+              <div className="payment-brand">🔒 Secure Payment Gateway</div>
+              <div className="payment-page-spinner payment-page-spinner--green" />
+              <p className="payment-page-msg" data-testid="processing-message">
+                Processing your payment…
+              </p>
+              <div className="processing-steps">
+                <div className="processing-step processing-step--done" data-testid="step-validating">
+                  ✓ Validating card details
+                </div>
+                <div className="processing-step processing-step--active" data-testid="step-authorising">
+                  <span className="step-dot" /> Authorising with bank
+                </div>
+                <div className="processing-step processing-step--pending" data-testid="step-confirming">
+                  Confirming transaction
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      }
+
+      // ── Step: result ──────────────────────────────────────────────────────
+      if (paymentStep === 'result' && transactionData) {
+        if (transactionData.outcome !== 'success') {
+          return (
+            <div className="payment-page payment-page--result" data-testid="payment-result-page">
+              <div className="payment-result payment-result--failed">
+                <div className="payment-result-icon" data-testid="result-icon">
+                  ❌
+                </div>
+                <h2 className="payment-result-title" data-testid="result-title">
+                  Payment {transactionData.outcome === 'expired' ? 'Failed' : 'Declined'}
+                </h2>
+                <p className="payment-result-reason" data-testid="result-reason">
+                  {transactionData.reason}
+                </p>
+                <div className="payment-result-actions">
+                  <button className="cc-pay-btn" onClick={resetCard} data-testid="try-again-button">
+                    Try Again
+                  </button>
+                </div>
+              </div>
+            </div>
+          );
+        }
+
+        return (
+          <div className="payment-page payment-page--result" data-testid="payment-result-page">
+            <div className="payment-result payment-result--success">
+              <div className="payment-result-icon" data-testid="result-icon">
+                ✅
+              </div>
+              <h2 className="payment-result-title" data-testid="result-title">
+                Payment Successful
+              </h2>
+              <p className="payment-result-subtitle">
+                Thank you, {transactionData.cardholderName}. Your order is confirmed.
+              </p>
+
+              <div className="receipt" data-testid="receipt">
+                <div className="receipt-header">
+                  <span className="receipt-label">Receipt</span>
+                  <span className="receipt-status" data-testid="receipt-status">
+                    {transactionData.status}
+                  </span>
+                </div>
+                <div className="receipt-row">
+                  <span className="receipt-key">Transaction ID</span>
+                  <span className="receipt-val" data-testid="transaction-id">
+                    {transactionData.transactionId}
+                  </span>
+                </div>
+                <div className="receipt-row">
+                  <span className="receipt-key">Order ID</span>
+                  <span className="receipt-val" data-testid="order-id">
+                    {transactionData.orderId}
+                  </span>
+                </div>
+                <div className="receipt-row">
+                  <span className="receipt-key">Amount Charged</span>
+                  <span className="receipt-val receipt-val--amount" data-testid="amount">
+                    {transactionData.amount} {transactionData.currency}
+                  </span>
+                </div>
+                <div className="receipt-row">
+                  <span className="receipt-key">Payment Method</span>
+                  <span className="receipt-val" data-testid="payment-method">
+                    {transactionData.cardType} ending in {transactionData.last4}
+                  </span>
+                </div>
+                <div className="receipt-row">
+                  <span className="receipt-key">Cardholder</span>
+                  <span className="receipt-val" data-testid="receipt-cardholder">
+                    {transactionData.cardholderName}
+                  </span>
+                </div>
+                <div className="receipt-row">
+                  <span className="receipt-key">Billing ZIP</span>
+                  <span className="receipt-val" data-testid="receipt-zip">
+                    {transactionData.billingZip}
+                  </span>
+                </div>
+                <div className="receipt-row">
+                  <span className="receipt-key">Date</span>
+                  <span className="receipt-val" data-testid="receipt-date">
+                    {transactionData.date}
+                  </span>
+                </div>
+                <div className="receipt-row">
+                  <span className="receipt-key">Time</span>
+                  <span className="receipt-val" data-testid="receipt-time">
+                    {transactionData.time}
+                  </span>
+                </div>
+              </div>
+
+              <div className="payment-result-actions">
+                <button className="cc-pay-btn" onClick={resetCard} data-testid="pay-again-button">
+                  Make Another Payment
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      }
+
+      // ── Step: form (default) ──────────────────────────────────────────────
+      return (
+        <div className="content-section">
+          <h2>Credit Card Payment</h2>
+          <p className="section-description">
+            Practice automating a realistic payment flow — fill the form, click Pay Now, and watch it redirect through a
+            processing page to a receipt. Test cards: <code>4111 1111 1111 1111</code> (success),{' '}
+            <code>4000 0000 0000 0002</code> (declined), <code>4000 0000 0000 0069</code> (expired).
+          </p>
+
+          <div className="credit-card-layout">
+            <div className="card-preview" data-testid="card-preview">
+              <div className="card-chip" />
+              <div className="card-number-display" data-testid="card-number-display">
+                {cardForm.cardNumber || '•••• •••• •••• ••••'}
+              </div>
+              <div className="card-meta">
+                <div>
+                  <div className="card-meta-label">Cardholder</div>
+                  <div className="card-meta-value" data-testid="card-name-display">
+                    {cardForm.cardholderName || 'YOUR NAME'}
+                  </div>
+                </div>
+                <div>
+                  <div className="card-meta-label">Expires</div>
+                  <div className="card-meta-value" data-testid="card-expiry-display">
+                    {cardForm.expiry || 'MM/YY'}
+                  </div>
+                </div>
+                <div className="card-type-badge">{cardType}</div>
+              </div>
+            </div>
+
+            <form className="qa-form cc-form" onSubmit={submitPayment} noValidate data-testid="payment-form">
+              <div className="form-group">
+                <label htmlFor="cardNumber">Card Number</label>
+                <input
+                  id="cardNumber"
+                  type="text"
+                  name="cardNumber"
+                  value={cardForm.cardNumber}
+                  onChange={handleCardInput}
+                  placeholder="1234 5678 9012 3456"
+                  inputMode="numeric"
+                  autoComplete="cc-number"
+                  data-testid="card-number-input"
+                />
+                {cardErrors.cardNumber && <span className="error">{cardErrors.cardNumber}</span>}
+              </div>
+
+              <div className="cc-row">
+                <div className="form-group">
+                  <label htmlFor="expiry">Expiry (MM/YY)</label>
+                  <input
+                    id="expiry"
+                    type="text"
+                    name="expiry"
+                    value={cardForm.expiry}
+                    onChange={handleCardInput}
+                    placeholder="MM/YY"
+                    inputMode="numeric"
+                    autoComplete="cc-exp"
+                    data-testid="expiry-input"
+                  />
+                  {cardErrors.expiry && <span className="error">{cardErrors.expiry}</span>}
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="cvv">
+                    CVV{' '}
+                    <button
+                      type="button"
+                      className="cvv-toggle"
+                      onClick={() => setCvvVisible((v) => !v)}
+                      aria-label={cvvVisible ? 'Hide CVV' : 'Show CVV'}
+                      data-testid="cvv-toggle"
+                    >
+                      {cvvVisible ? '🙈' : '👁'}
+                    </button>
+                  </label>
+                  <input
+                    id="cvv"
+                    type={cvvVisible ? 'text' : 'password'}
+                    name="cvv"
+                    value={cardForm.cvv}
+                    onChange={handleCardInput}
+                    placeholder="123"
+                    inputMode="numeric"
+                    autoComplete="cc-csc"
+                    data-testid="cvv-input"
+                  />
+                  {cardErrors.cvv && <span className="error">{cardErrors.cvv}</span>}
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="cardholderName">Cardholder Name</label>
+                <input
+                  id="cardholderName"
+                  type="text"
+                  name="cardholderName"
+                  value={cardForm.cardholderName}
+                  onChange={handleCardInput}
+                  placeholder="Jane Smith"
+                  autoComplete="cc-name"
+                  data-testid="cardholder-name-input"
+                />
+                {cardErrors.cardholderName && <span className="error">{cardErrors.cardholderName}</span>}
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="zip">Billing ZIP / Postal Code</label>
+                <input
+                  id="zip"
+                  type="text"
+                  name="zip"
+                  value={cardForm.zip}
+                  onChange={handleCardInput}
+                  placeholder="10001"
+                  inputMode="numeric"
+                  autoComplete="postal-code"
+                  data-testid="zip-input"
+                />
+                {cardErrors.zip && <span className="error">{cardErrors.zip}</span>}
+              </div>
+
+              <div className="cc-actions">
+                <button type="submit" className="cc-pay-btn" data-testid="pay-button">
+                  Pay $49.99
+                </button>
+                <button type="button" className="cc-reset-btn" onClick={resetCard} data-testid="reset-button">
+                  Reset
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      );
+    }
+
     return <div className="content-section">Select an option from the sidebar</div>;
   };
 
   return (
     <div className="qa-practice-container">
       <header className="qa-practice-header">
-        <button className="home-button" onClick={() => navigate('/')} aria-label="Go to home page">
-          ← Home
+        <button className="home-button" onClick={() => navigate('/qa-practice')} aria-label="Go to QA Practice">
+          ← Back
         </button>
         <h1>QA Practice</h1>
       </header>
       <div className="qa-practice-main">
-        <aside className="qa-practice-sidebar">
-          <nav className="sidebar-nav">
-            {sidebarOptions.map((option) => (
-              <button
-                key={option.id}
-                className={`sidebar-option ${selectedOption === option.id ? 'active' : ''}`}
-                onClick={() => navigate(`/qa-practice/${option.id}`)}
-              >
-                {option.label}
-              </button>
-            ))}
-          </nav>
-        </aside>
         <div className="qa-practice-content">{renderContent()}</div>
       </div>
 

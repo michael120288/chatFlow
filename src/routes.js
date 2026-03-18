@@ -3,6 +3,7 @@ import { Home } from '@pages/home';
 import SSOCallback from '@pages/auth/sso/SSOCallback';
 import Signout from '@pages/auth/signout/Signout';
 import { QAPractice } from '@pages/qa-practice';
+import QAPracticeLanding from '@pages/qa-practice/QAPracticeLanding';
 import Error from '@pages/error/Error';
 import ProtectedRoute from '@pages/ProtectedRoute';
 import { GameSection } from '@pages/game/GameSection';
@@ -45,8 +46,11 @@ export const AppRouter = () => {
     },
     {
       path: '/qa-practice',
-      element: <QAPractice />,
       children: [
+        {
+          index: true,
+          element: <QAPracticeLanding />
+        },
         {
           path: 'web-inputs',
           element: <QAPractice />
@@ -197,6 +201,10 @@ export const AppRouter = () => {
         },
         {
           path: 'websocket',
+          element: <QAPractice />
+        },
+        {
+          path: 'credit-card',
           element: <QAPractice />
         }
       ]

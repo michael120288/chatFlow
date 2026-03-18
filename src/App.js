@@ -7,11 +7,13 @@ import Toast from '@components/toast/Toast';
 import { useSelector } from 'react-redux';
 
 const App = () => {
-  const { notifications } = useSelector((state) => state);
+  const { notifications, user } = useSelector((state) => state);
 
   useEffect(() => {
-    socketService.setupSocketConnection();
-  }, []);
+    if (user?.token) {
+      socketService.setupSocketConnection();
+    }
+  }, [user?.token]);
 
   return (
     <>

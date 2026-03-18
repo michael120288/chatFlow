@@ -23,10 +23,11 @@ $transition: all 0.3s ease;
 
 // Main container
 .qa-practice-container {
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   background: linear-gradient(135deg, rgba($primary-color, 0.05) 0%, rgba($secondary-color, 0.05) 100%);
+  overflow: hidden;
 }
 
 // Header
@@ -70,6 +71,7 @@ $transition: all 0.3s ease;
 // Main content area
 .qa-practice-main {
   flex: 1;
+  min-height: 0;
   display: flex;
   gap: 0;
   max-width: 1600px;
@@ -154,6 +156,7 @@ $transition: all 0.3s ease;
   padding: 2rem;
   border-radius: 12px;
   box-shadow: $shadow-sm;
+  max-width: 560px;
 
   .form-group {
     margin-bottom: 1.5rem;
@@ -171,6 +174,8 @@ $transition: all 0.3s ease;
     input[type="password"],
     input[type="number"],
     input[type="date"],
+    input[type="tel"],
+    input[type="url"],
     select,
     textarea {
       width: 100%;
@@ -268,6 +273,33 @@ $transition: all 0.3s ease;
     display: flex;
     gap: 1rem;
     margin-top: 2rem;
+  }
+
+  .error {
+    display: block;
+    margin-top: 0.35rem;
+    font-size: 0.85rem;
+    color: $error-color;
+    font-weight: 500;
+  }
+
+  button[type='submit'] {
+    margin-top: 0.5rem;
+    padding: 0.75rem 2rem;
+    background: linear-gradient(135deg, $primary-color, $secondary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: $transition;
+
+    &:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba($primary-color, 0.4);
+    }
   }
 }
 
@@ -1827,7 +1859,7 @@ $transition: all 0.3s ease;
     }
   }
 
-  // Dots Loaders
+  // Dots Loaders5
   .dots-loader {
     display: flex;
     gap: 0.5rem;
@@ -5096,5 +5128,360 @@ $transition: all 0.3s ease;
     .step-label {
       font-size: 0.8rem;
     }
+  }
+}
+
+// ── Credit Card Payment ───────────────────────────────────────────────────────
+.credit-card-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 480px;
+}
+
+.card-preview {
+  background: linear-gradient(135deg, #1a1a3e 0%, #2d2d6b 50%, #1a1a3e 100%);
+  border-radius: 16px;
+  padding: 1.5rem 1.8rem;
+  color: #fff;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+  min-height: 160px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card-chip {
+  width: 42px;
+  height: 32px;
+  background: linear-gradient(135deg, #f0d060 0%, #c8a820 100%);
+  border-radius: 6px;
+  margin-bottom: 1.2rem;
+}
+
+.card-number-display {
+  font-family: 'Courier New', monospace;
+  font-size: 1.25rem;
+  letter-spacing: 0.2em;
+  margin-bottom: 1rem;
+  color: #e0e0ff;
+}
+
+.card-meta {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-end;
+}
+
+.card-meta-label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.55);
+  margin-bottom: 0.2rem;
+}
+
+.card-meta-value {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.card-type-badge {
+  margin-left: auto;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  align-self: flex-end;
+}
+
+.cc-form {
+  max-width: 480px;
+}
+
+.cc-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.cvv-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0 0.2rem;
+  vertical-align: middle;
+  line-height: 1;
+}
+
+.cc-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.cc-pay-btn {
+  flex: 1;
+  padding: 0.8rem 1.5rem;
+  background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: $transition;
+
+  &:hover:not(:disabled) {
+    opacity: 0.88;
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.cc-reset-btn {
+  padding: 0.8rem 1.2rem;
+  background: transparent;
+  color: $text-light;
+  border: 1px solid $border-color;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: $transition;
+
+  &:hover {
+    background: $bg-light;
+    color: $text-color;
+  }
+}
+
+// ── Payment intermediate pages (redirecting / processing / result) ────────────
+.payment-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: 2rem;
+}
+
+.payment-page-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+  text-align: center;
+  max-width: 420px;
+  width: 100%;
+}
+
+.payment-brand {
+  font-size: 1rem;
+  font-weight: 700;
+  color: $text-light;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.5rem;
+}
+
+.payment-page-spinner {
+  width: 52px;
+  height: 52px;
+  border: 4px solid rgba($info-color, 0.2);
+  border-top-color: $info-color;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+
+  &--green {
+    border-color: rgba($success-color, 0.2);
+    border-top-color: $success-color;
+  }
+}
+
+.payment-page-msg {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: $text-color;
+  margin: 0;
+}
+
+.payment-page-sub {
+  font-size: 0.85rem;
+  color: $text-light;
+  margin: 0;
+}
+
+.processing-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  text-align: left;
+  width: 100%;
+  max-width: 280px;
+  margin-top: 0.5rem;
+}
+
+.processing-step {
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  &--done {
+    color: $success-color;
+    font-weight: 500;
+  }
+
+  &--active {
+    color: $info-color;
+    font-weight: 600;
+  }
+
+  &--pending {
+    color: $text-light;
+  }
+}
+
+.step-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: $info-color;
+  animation: pulse 1s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+// ── Result page ───────────────────────────────────────────────────────────────
+.payment-result {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  max-width: 480px;
+  padding: 2rem;
+  background: $bg-white;
+  border-radius: 16px;
+  box-shadow: $shadow-md;
+}
+
+.payment-result-icon {
+  font-size: 3rem;
+  line-height: 1;
+}
+
+.payment-result-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin: 0;
+  color: $text-color;
+}
+
+.payment-result-subtitle {
+  font-size: 0.95rem;
+  color: $text-light;
+  margin: 0;
+  text-align: center;
+}
+
+.payment-result-reason {
+  font-size: 0.95rem;
+  color: $error-color;
+  margin: 0;
+  text-align: center;
+}
+
+.payment-result-actions {
+  margin-top: 0.5rem;
+  width: 100%;
+
+  .cc-pay-btn {
+    width: 100%;
+  }
+}
+
+// ── Receipt ───────────────────────────────────────────────────────────────────
+.receipt {
+  width: 100%;
+  border: 1px solid $border-color;
+  border-radius: 10px;
+  overflow: hidden;
+  font-size: 0.88rem;
+}
+
+.receipt-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.65rem 1rem;
+  background: $bg-light;
+  border-bottom: 1px solid $border-color;
+  font-weight: 600;
+}
+
+.receipt-label {
+  color: $text-light;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.75rem;
+}
+
+.receipt-status {
+  color: $success-color;
+  font-weight: 700;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.receipt-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.55rem 1rem;
+  border-bottom: 1px solid rgba($border-color, 0.6);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.receipt-key {
+  color: $text-light;
+  flex-shrink: 0;
+  margin-right: 1rem;
+}
+
+.receipt-val {
+  font-weight: 500;
+  color: $text-color;
+  text-align: right;
+  word-break: break-all;
+
+  &--amount {
+    color: darken($success-color, 8%);
+    font-weight: 700;
+    font-size: 1rem;
   }
 }

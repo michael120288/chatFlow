@@ -9,15 +9,18 @@ export function GameHome() {
   const [levels, setLevels] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { completedLevels, resetProgress } = useProgress();
+  const { completedLevels, trackXP, setTotalLevels, resetProgress } = useProgress();
 
   useEffect(() => {
     gameService
       .getLevels()
-      .then(setLevels)
+      .then((data) => {
+        setLevels(data);
+        setTotalLevels(data.length);
+      })
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
-  }, []);
+  }, [setTotalLevels]);
 
   const playwrightLevels = levels.filter((l) => l.category === 'ui' || l.category === 'api');
   const cypressLevels = levels.filter((l) => l.category === 'cypress-ui');
@@ -28,6 +31,32 @@ export function GameHome() {
   const playwrightTotalXP = playwrightLevels.reduce((sum, l) => sum + l.xpReward, 0);
   const cypressTotalXP = cypressLevels.reduce((sum, l) => sum + l.xpReward, 0);
   const grandTotalXP = playwrightTotalXP + cypressTotalXP;
+
+  const playwrightXPEarned =
+    trackXP.playwright ??
+    playwrightLevels.filter((l) => completedLevels.includes(l.id)).reduce((sum, l) => sum + l.xpReward, 0);
+  const cypressXPEarned =
+    trackXP['cypress-ui'] ??
+    cypressLevels.filter((l) => completedLevels.includes(l.id)).reduce((sum, l) => sum + l.xpReward, 0);
+
+  const xpTracks = [
+    {
+      label: 'Playwright',
+      icon: '🎭',
+      done: playwrightDone,
+      total: playwrightLevels.length,
+      xpEarned: playwrightXPEarned,
+      color: '#818cf8'
+    },
+    {
+      label: 'Cypress',
+      icon: '🌲',
+      done: cypressDone,
+      total: cypressLevels.length,
+      xpEarned: cypressXPEarned,
+      color: '#22c55e'
+    }
+  ];
 
   return (
     <div className="home-page">
@@ -53,7 +82,7 @@ export function GameHome() {
         </div>
       </div>
 
-      <XPBar />
+      <XPBar tracks={loading ? [] : xpTracks} />
 
       <div className="home-body">
         {loading && <div className="loading-msg">Loading levels...</div>}

@@ -56,6 +56,7 @@
   flex: 1;
   padding: 40px;
   display: flex;
+  justify-content: center;
   align-items: flex-start;
 }
 
@@ -73,10 +74,10 @@
 
 .tracks-row {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: 24px;
   width: 100%;
-  max-width: 1200px;
+  max-width: 720px;
   margin: 0 auto;
 }
 
@@ -105,6 +106,11 @@
     &:hover { border-color: #a78bfa; }
   }
 
+  &.track-playwright {
+    border-color: #1a2e5e;
+    &:hover { border-color: #818cf8; }
+  }
+
   &.track-cypress {
     border-color: #0d2e1a;
     &:hover { border-color: #22c55e; }
@@ -120,6 +126,7 @@
   font-weight: 700;
   margin: 0;
 
+  .track-playwright & { color: #818cf8; }
   .track-ui & { color: #4da6ff; }
   .track-api & { color: #a78bfa; }
   .track-cypress & { color: #22c55e; }
@@ -161,6 +168,7 @@
   border-radius: 2px;
   transition: width 0.4s ease;
 
+  .track-playwright & { background: #818cf8; }
   .track-ui & { background: #4da6ff; }
   .track-api & { background: #a78bfa; }
   .track-cypress & { background: #22c55e; }
@@ -179,6 +187,7 @@
 }
 
 .track-card:hover .tc-arrow { transform: translateX(3px); }
+.track-playwright:hover .tc-arrow { color: #818cf8; }
 .track-ui:hover .tc-arrow { color: #4da6ff; }
 .track-api:hover .tc-arrow { color: #a78bfa; }
 .track-cypress:hover .tc-arrow { color: #22c55e; }
