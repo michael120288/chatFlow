@@ -149,21 +149,24 @@ p {
 }
 
 .alerts {
-  padding: 0.5rem 1.25rem;
-  border-radius: 0.25rem;
+  padding: 0.65rem 0.9rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
   margin-bottom: 1rem;
+  border: 1px solid transparent;
 }
 
 .alert-error {
-  background-color: var(--red-7);
-  border-color: var(--red-8);
-  color: var(--red-6);
+  background: #fff1f0;
+  border-color: #fca5a5;
+  color: #b91c1c;
 }
 
 .alert-success {
-  color: var(--green-1);
-  background-color: var(--green-2);
-  border-color: var(--green-3);
+  background: #f0fdf4;
+  border-color: #86efac;
+  color: #166534;
 }
 
 .message-loading {
@@ -175,4 +178,10 @@ p {
     width: 30%;
     transform: none;
   }
+}
+
+.profanity-error {
+  color: #ef4444;
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
 }

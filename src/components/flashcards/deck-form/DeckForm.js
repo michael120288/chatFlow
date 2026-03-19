@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { FiX } from 'react-icons/fi';
+import { ProfanityFilter } from '@services/utils/profanity-filter.service';
 import './DeckForm.scss';
 
 const CATEGORIES = [
@@ -59,6 +60,13 @@ const DeckForm = ({ deck, onSubmit, onCancel }) => {
 
     if (formData.description && formData.description.length > 1000) {
       newErrors.description = 'Description cannot exceed 1000 characters';
+    }
+
+    if (ProfanityFilter.containsProfanity(formData.name)) {
+      newErrors.name = 'Deck name contains inappropriate language.';
+    }
+    if (ProfanityFilter.containsProfanity(formData.description)) {
+      newErrors.description = 'Description contains inappropriate language.';
     }
 
     if (!formData.category) {

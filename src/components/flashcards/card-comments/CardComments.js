@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { FiMessageCircle, FiSend, FiEdit2, FiTrash2, FiMoreHorizontal } from 'react-icons/fi';
+import { ProfanityFilter } from '@services/utils/profanity-filter.service';
 import './CardComments.scss';
 
 const CardComments = ({ cardId, comments, onAddComment, onEditComment, onDeleteComment, currentUser }) => {
@@ -8,21 +9,30 @@ const CardComments = ({ cardId, comments, onAddComment, onEditComment, onDeleteC
   const [editingCommentId, setEditingCommentId] = useState(null);
   const [editText, setEditText] = useState('');
   const [showOptions, setShowOptions] = useState(null);
+  const [profanityError, setProfanityError] = useState('');
 
   const handleSubmitComment = (e) => {
     e.preventDefault();
-    if (commentText.trim()) {
-      onAddComment(cardId, commentText);
-      setCommentText('');
+    if (!commentText.trim()) return;
+    if (ProfanityFilter.containsProfanity(commentText)) {
+      setProfanityError('Your comment contains inappropriate language.');
+      return;
     }
+    setProfanityError('');
+    onAddComment(cardId, commentText);
+    setCommentText('');
   };
 
   const handleEditSubmit = (commentId) => {
-    if (editText.trim()) {
-      onEditComment(commentId, editText);
-      setEditingCommentId(null);
-      setEditText('');
+    if (!editText.trim()) return;
+    if (ProfanityFilter.containsProfanity(editText)) {
+      setProfanityError('Your comment contains inappropriate language.');
+      return;
     }
+    setProfanityError('');
+    onEditComment(commentId, editText);
+    setEditingCommentId(null);
+    setEditText('');
   };
 
   const handleStartEdit = (comment) => {
@@ -139,6 +149,7 @@ const CardComments = ({ cardId, comments, onAddComment, onEditComment, onDeleteC
         )}
       </div>
 
+      {profanityError && <p className="profanity-error">{profanityError}</p>}
       <form className="comment-form" onSubmit={handleSubmitComment}>
         <div className="form-avatar" style={{ backgroundColor: currentUser?.avatarColor || '#9c27b0' }}>
           {currentUser?.profilePicture ? (

@@ -14,6 +14,7 @@ import { ImageUtils } from '@services/utils/image-utils.service';
 import Spinner from '@components/spinner/Spinner';
 import { find } from 'lodash';
 import { Utils } from '@services/utils/utils.service';
+import { ProfanityFilter } from '@services/utils/profanity-filter.service';
 
 const EditPost = () => {
   const { gifModalIsOpen, feeling } = useSelector((state) => state.modal);
@@ -153,6 +154,10 @@ const EditPost = () => {
   }, [post, postData, getFeeling, postInputData]);
 
   const updatePost = async () => {
+    if (ProfanityFilter.containsProfanity(postData.post)) {
+      Utils.dispatchNotification('Your post contains inappropriate language.', 'error', dispatch);
+      return;
+    }
     setLoading(!loading);
     setDisable(!disable);
     try {

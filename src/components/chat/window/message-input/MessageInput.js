@@ -8,9 +8,12 @@ import feeling from '@assets/images/feeling.png';
 import loadable from '@loadable/component';
 import '@components/chat/window/message-input/MessageInput.scss';
 import { useEffect, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import GiphyContainer from '@components/chat/giphy-container/GiphyContainer';
 import ImagePreview from '@components/chat/image-preview/ImagePreview';
 import { ImageUtils } from '@services/utils/image-utils.service';
+import { Utils } from '@services/utils/utils.service';
+import { ProfanityFilter } from '@services/utils/profanity-filter.service';
 
 const EmojiPickerComponent = loadable(() => import('./EmojiPicker'), {
   fallback: <p id="loading">Loading...</p>
@@ -18,6 +21,7 @@ const EmojiPickerComponent = loadable(() => import('./EmojiPicker'), {
 
 const MessageInput = ({ setChatMessage }) => {
   let [message, setMessage] = useState('');
+  const dispatch = useDispatch();
   const [showEmojiContainer, setShowEmojiContainer] = useState(false);
   const [showGifContainer, setShowGifContainer] = useState(false);
   const [showImagePreview, setShowImagePreview] = useState(false);
@@ -29,6 +33,10 @@ const MessageInput = ({ setChatMessage }) => {
 
   const handleClick = (event) => {
     event.preventDefault();
+    if (ProfanityFilter.containsProfanity(message)) {
+      Utils.dispatchNotification('Your message contains inappropriate language.', 'error', dispatch);
+      return;
+    }
     message = message || 'Sent an Image';
     setChatMessage(message.replace(/ +(?= )/g, ''), '', base64File);
     setMessage('');

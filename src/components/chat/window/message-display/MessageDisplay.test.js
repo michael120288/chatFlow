@@ -2,7 +2,7 @@ import MessageDisplay from '@components/chat/window/message-display/MessageDispl
 import useOnClickOutside from '@hooks/useDetectOutsideClick';
 import { messageData, messageDataTwo } from '@mocks/data/chat.mock';
 import { existingUser, existingUserFour } from '@mocks/data/user.mock';
-import { fireEvent, render, screen } from '@root/test.utils';
+import { act, fireEvent, render, screen } from '@root/test.utils';
 import { timeAgo } from '@services/utils/timeago.utils';
 import userEvent from '@testing-library/user-event';
 
@@ -89,5 +89,44 @@ describe('MessageDisplay', () => {
     userEvent.click(reactionImage[0]);
     const dialogContainer = await screen.findAllByTestId('dialog-container');
     expect(dialogContainer[0]).toBeInTheDocument();
+  });
+
+  describe('delete message dialog', () => {
+    it('opens delete dialog when message content is clicked', async () => {
+      props.chatMessages = [messageData];
+      render(<MessageDisplay {...props} deleteChatMessage={jest.fn()} />);
+      const messageContent = await screen.findAllByTestId('message-content');
+      act(() => { fireEvent.click(messageContent[0]); });
+      const dialog = await screen.findByTestId('dialog-container');
+      expect(dialog).toBeInTheDocument();
+      expect(screen.getByText('Delete message?')).toBeInTheDocument();
+    });
+
+    it('closes delete dialog when cancel is clicked', async () => {
+      props.chatMessages = [messageData];
+      render(<MessageDisplay {...props} deleteChatMessage={jest.fn()} />);
+      const messageContent = await screen.findAllByTestId('message-content');
+      act(() => { fireEvent.click(messageContent[0]); });
+      await screen.findByTestId('dialog-container');
+      act(() => { userEvent.click(screen.getByText('CANCEL')); });
+      expect(screen.queryByTestId('dialog-container')).not.toBeInTheDocument();
+    });
+
+    it('calls deleteChatMessage and closes dialog on confirm', async () => {
+      const deleteChatMessage = jest.fn();
+      props.chatMessages = [messageData];
+      render(<MessageDisplay {...props} deleteChatMessage={deleteChatMessage} />);
+      const messageContent = await screen.findAllByTestId('message-content');
+      act(() => { fireEvent.click(messageContent[0]); });
+      await screen.findByTestId('dialog-container');
+      act(() => { userEvent.click(screen.getByText('DELETE FOR EVERYONE')); });
+      expect(deleteChatMessage).toHaveBeenCalledWith(
+        messageData.senderId,
+        messageData.receiverId,
+        messageData._id,
+        'deleteForEveryone'
+      );
+      expect(screen.queryByTestId('dialog-container')).not.toBeInTheDocument();
+    });
   });
 });

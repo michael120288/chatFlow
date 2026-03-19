@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { FiImage, FiCode } from 'react-icons/fi';
+import { ProfanityFilter } from '@services/utils/profanity-filter.service';
 import './CardForm.scss';
 
 const CATEGORIES = [
@@ -45,6 +46,7 @@ const CardForm = ({ onSubmit, initialData = null }) => {
   const [showQuestionCode, setShowQuestionCode] = useState(false);
   const [showAnswerCode, setShowAnswerCode] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [profanityError, setProfanityError] = useState('');
 
   const questionImageRef = useRef();
   const answerImageRef = useRef();
@@ -99,6 +101,12 @@ const CardForm = ({ onSubmit, initialData = null }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const textFields = [formData.question, formData.answer, formData.questionCodeSnippet, formData.answerCodeSnippet];
+    if (textFields.some(ProfanityFilter.containsProfanity)) {
+      setProfanityError('Your card contains inappropriate language.');
+      return;
+    }
+    setProfanityError('');
     setIsSubmitting(true);
 
     try {
@@ -287,6 +295,7 @@ const CardForm = ({ onSubmit, initialData = null }) => {
         </div>
 
         <div className="card-form-footer">
+          {profanityError && <p className="profanity-error">{profanityError}</p>}
           <button type="submit" className="submit-button" disabled={isSubmitting}>
             {isSubmitting ? 'Creating...' : initialData ? 'Update Card' : 'Create Card'}
           </button>

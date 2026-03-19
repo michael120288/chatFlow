@@ -1,0 +1,57 @@
+const BANNED_WORDS = [
+  'fuck',
+  'fucker',
+  'fucking',
+  'fucked',
+  'fucks',
+  'shit',
+  'shitting',
+  'shitty',
+  'bullshit',
+  'bitch',
+  'bitches',
+  'bitching',
+  'bastard',
+  'bastards',
+  'asshole',
+  'assholes',
+  'ass',
+  'arse',
+  'dick',
+  'dicks',
+  'dickhead',
+  'cock',
+  'cocks',
+  'cunt',
+  'cunts',
+  'pussy',
+  'pussies',
+  'whore',
+  'whores',
+  'slut',
+  'sluts',
+  'nigger',
+  'niggers',
+  'nigga',
+  'faggot',
+  'faggots',
+  'fag',
+  'retard',
+  'retards',
+  'retarded',
+  'twat',
+  'twats',
+  'wanker',
+  'wankers',
+  'prick',
+  'pricks',
+  'motherfucker',
+  'motherfuckers'
+];
+
+export class ProfanityFilter {
+  static containsProfanity(text) {
+    if (!text || typeof text !== 'string') return false;
+    return BANNED_WORDS.some((word) => new RegExp(`\\b${word}\\b`, 'i').test(text));
+  }
+}

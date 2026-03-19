@@ -5,58 +5,56 @@ import { render, screen, waitFor } from '@root/test.utils';
 import userEvent from '@testing-library/user-event';
 
 describe('ForgotPassword', () => {
-  it('form should have email label', () => {
+  it('form should have email address label', () => {
     render(<ForgotPassword />);
-    const emailLabel = screen.getByLabelText('Email');
-    expect(emailLabel).toBeInTheDocument();
+    const emailInput = screen.getByLabelText('Email address');
+    expect(emailInput).toBeInTheDocument();
   });
 
-  it('should have "Back to Login" text', () => {
+  it('should have "Back to Sign In" navigation', () => {
     render(<ForgotPassword />);
-    const spanElement = screen.getByText('Back to Login');
-    expect(spanElement).toBeInTheDocument();
+    const backLinks = screen.getAllByText(/Back to Sign In/i);
+    expect(backLinks.length).toBeGreaterThanOrEqual(1);
   });
 
   describe('Button', () => {
-    it('button should be disabled', () => {
+    it('button should be disabled when email is empty', () => {
       render(<ForgotPassword />);
       const buttonElement = screen.getByRole('button');
       expect(buttonElement).toBeDisabled();
     });
 
-    it('should be enabled with input', () => {
+    it('should be enabled after typing an email', () => {
       render(<ForgotPassword />);
       const buttonElement = screen.getByRole('button');
       expect(buttonElement).toBeDisabled();
 
-      const emailElement = screen.getByLabelText('Email');
-      userEvent.type(emailElement, 'manny@test.com');
+      const emailInput = screen.getByLabelText('Email address');
+      userEvent.type(emailInput, 'manny@test.com');
       expect(buttonElement).toBeEnabled();
     });
 
-    it('should change label when clicked', async () => {
+    it('should show loading text while request is in flight', async () => {
       render(<ForgotPassword />);
       const buttonElement = screen.getByRole('button');
-      const emailElement = screen.getByLabelText('Email');
-      userEvent.type(emailElement, 'manny@test.com');
+      const emailInput = screen.getByLabelText('Email address');
+      userEvent.type(emailInput, 'manny@test.com');
 
       userEvent.click(buttonElement);
 
-      const newButtonElement = screen.getByRole('button');
-      expect(newButtonElement.textContent).toEqual('FORGOT PASSWORD IN PROGRESS...');
+      expect(screen.getByRole('button').textContent).toEqual('Sending reset link…');
       await waitFor(() => {
-        const newButtonElement1 = screen.getByRole('button');
-        expect(newButtonElement1.textContent).toEqual('FORGOT PASSWORD');
+        expect(screen.getByRole('button').textContent).toEqual('Send Reset Link');
       });
     });
   });
 
   describe('Success', () => {
-    it('should display success alert', async () => {
+    it('should display success alert on valid email', async () => {
       render(<ForgotPassword />);
       const buttonElement = screen.getByRole('button');
-      const emailElement = screen.getByLabelText('Email');
-      userEvent.type(emailElement, 'manny');
+      const emailInput = screen.getByLabelText('Email address');
+      userEvent.type(emailInput, 'manny@test.com');
       userEvent.click(buttonElement);
 
       const alert = await screen.findByRole('alert');
@@ -67,19 +65,19 @@ describe('ForgotPassword', () => {
   });
 
   describe('Error', () => {
-    it('should display error alert and border', async () => {
+    it('should display error alert and red border on failure', async () => {
       server.use(forgotPasswordMockError);
       render(<ForgotPassword />);
       const buttonElement = screen.getByRole('button');
-      const emailElement = screen.getByLabelText('Email');
-      userEvent.type(emailElement, 'manny');
+      const emailInput = screen.getByLabelText('Email address');
+      userEvent.type(emailInput, 'bad@email.com');
       userEvent.click(buttonElement);
 
       const alert = await screen.findByRole('alert');
       expect(alert).toBeInTheDocument();
-      await waitFor(() => expect(emailElement).toHaveStyle({ border: '1px solid #fa9b8a' }));
       expect(alert).toHaveClass('alert-error');
       expect(alert.textContent).toEqual('Field must be valid');
+      await waitFor(() => expect(emailInput).toHaveStyle({ border: '1.5px solid #fca5a5' }));
     });
   });
 });

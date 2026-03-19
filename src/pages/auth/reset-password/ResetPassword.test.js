@@ -8,72 +8,57 @@ import { createSearchParams } from 'react-router-dom';
 
 describe('ResetPassword', () => {
   beforeEach(() => {
-    const url = `/reset-password?${createSearchParams({
-      token: '1234567890'
-    })}`;
+    const url = `/reset-password?${createSearchParams({ token: '1234567890' })}`;
     const history = createBrowserHistory();
     history.push(url);
   });
 
-  it('should have password inputs', () => {
+  it('should render both password inputs', () => {
     render(<ResetPassword />);
-    const newPasswordLabel = screen.getByLabelText('New Password');
-    const confirmPasswordLabel = screen.getByLabelText('Confirm Password');
-    expect(newPasswordLabel).toBeInTheDocument();
-    expect(confirmPasswordLabel).toBeInTheDocument();
+    expect(screen.getByLabelText('New Password')).toBeInTheDocument();
+    expect(screen.getByLabelText('Confirm Password')).toBeInTheDocument();
   });
 
-  it('button should be disabled', () => {
+  it('submit button should be disabled when inputs are empty', () => {
     render(<ResetPassword />);
-    const buttonElement = screen.getByRole('button', { name: /reset password/i });
-    expect(buttonElement).toBeDisabled();
+    expect(screen.getByRole('button', { name: /reset password/i })).toBeDisabled();
   });
 
-  it('should have "Back to Login" text', () => {
+  it('should have "Back to Sign In" navigation', () => {
     render(<ResetPassword />);
-    const spanElement = screen.getByText('Back to Login');
-    expect(spanElement).toBeInTheDocument();
+    const backLinks = screen.getAllByText(/Back to Sign In/i);
+    expect(backLinks.length).toBeGreaterThanOrEqual(1);
   });
 
-  it('should be enabled with input', () => {
+  it('should enable button when both passwords are filled', () => {
     render(<ResetPassword />);
     const buttonElement = screen.getByRole('button', { name: /reset password/i });
     expect(buttonElement).toBeDisabled();
 
-    const newPasswordLabel = screen.getByLabelText('New Password');
-    const confirmPasswordLabel = screen.getByLabelText('Confirm Password');
-    userEvent.type(newPasswordLabel, 'qwerty1');
-    userEvent.type(confirmPasswordLabel, 'qwerty1');
+    userEvent.type(screen.getByLabelText('New Password'), 'qwerty1');
+    userEvent.type(screen.getByLabelText('Confirm Password'), 'qwerty1');
     expect(buttonElement).toBeEnabled();
   });
 
-  it('should change label when clicked', async () => {
+  it('should show loading text while request is in flight', async () => {
     render(<ResetPassword />);
-    const buttonElement = screen.getByRole('button', { name: /reset password/i });
-    const newPasswordLabel = screen.getByLabelText('New Password');
-    const confirmPasswordLabel = screen.getByLabelText('Confirm Password');
-    userEvent.type(newPasswordLabel, 'qwerty1');
-    userEvent.type(confirmPasswordLabel, 'qwerty1');
+    userEvent.type(screen.getByLabelText('New Password'), 'qwerty1');
+    userEvent.type(screen.getByLabelText('Confirm Password'), 'qwerty1');
 
-    userEvent.click(buttonElement);
+    userEvent.click(screen.getByRole('button', { name: /reset password/i }));
 
-    const newButtonElement = screen.getByRole('button', { name: /reset password/i });
-    expect(newButtonElement.textContent).toEqual('RESET PASSWORD IN PROGRESS...');
+    expect(screen.getByRole('button', { name: /reset/i }).textContent).toEqual('Resetting password…');
     await waitFor(() => {
-      const newButtonElement1 = screen.getByRole('button', { name: /reset password/i });
-      expect(newButtonElement1.textContent).toEqual('RESET PASSWORD');
+      expect(screen.getByRole('button', { name: /reset/i }).textContent).toEqual('Reset Password');
     });
   });
 
   describe('Success', () => {
-    it('should display success alert', async () => {
+    it('should display success alert after valid reset', async () => {
       render(<ResetPassword />);
-      const buttonElement = screen.getByRole('button', { name: /reset password/i });
-      const newPasswordLabel = screen.getByLabelText('New Password');
-      const confirmPasswordLabel = screen.getByLabelText('Confirm Password');
-      userEvent.type(newPasswordLabel, 'qwerty1');
-      userEvent.type(confirmPasswordLabel, 'qwerty1');
-      userEvent.click(buttonElement);
+      userEvent.type(screen.getByLabelText('New Password'), 'qwerty1');
+      userEvent.type(screen.getByLabelText('Confirm Password'), 'qwerty1');
+      userEvent.click(screen.getByRole('button', { name: /reset password/i }));
 
       const alert = await screen.findByRole('alert');
       expect(alert).toBeInTheDocument();
@@ -83,22 +68,18 @@ describe('ResetPassword', () => {
   });
 
   describe('Error', () => {
-    it('should display error alert and border', async () => {
+    it('should display error alert and red border on mismatch', async () => {
       server.use(resetPasswordMockError);
       render(<ResetPassword />);
-      const buttonElement = screen.getByRole('button', { name: /reset password/i });
-      const newPasswordLabel = screen.getByLabelText('New Password');
-      const confirmPasswordLabel = screen.getByLabelText('Confirm Password');
-      userEvent.type(newPasswordLabel, 'qwerty1');
-      userEvent.type(confirmPasswordLabel, 'qwerty');
-      userEvent.click(buttonElement);
+      userEvent.type(screen.getByLabelText('New Password'), 'qwerty1');
+      userEvent.type(screen.getByLabelText('Confirm Password'), 'qwerty');
+      userEvent.click(screen.getByRole('button', { name: /reset password/i }));
 
       const alert = await screen.findByRole('alert');
       expect(alert).toBeInTheDocument();
-      await waitFor(() => expect(newPasswordLabel).toHaveStyle({ border: '1px solid #fa9b8a' }));
-      await waitFor(() => expect(newPasswordLabel).toHaveStyle({ border: '1px solid #fa9b8a' }));
       expect(alert).toHaveClass('alert-error');
       expect(alert.textContent).toEqual('Passwords do not match');
+      await waitFor(() => expect(screen.getByLabelText('New Password')).toHaveStyle({ border: '1.5px solid #fca5a5' }));
     });
   });
 });

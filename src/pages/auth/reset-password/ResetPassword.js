@@ -4,8 +4,14 @@ import { FaArrowLeft } from 'react-icons/fa';
 import Input from '@components/input/Input';
 import Button from '@components/button/Button';
 import { Link, useSearchParams } from 'react-router-dom';
-import backgroundImage from '@assets/images/background.jpg';
 import { authService } from '@services/api/auth/auth.service';
+import { Utils } from '@services/utils/utils.service';
+
+const FEATURES = [
+  { icon: '🧪', text: '39 interactive UI scenarios' },
+  { icon: '💬', text: 'Real-time social platform to automate' },
+  { icon: '⚔️', text: 'Playwright & Cypress learning game' }
+];
 
 const ResetPassword = () => {
   const [password, setPassword] = useState('');
@@ -15,6 +21,7 @@ const ResetPassword = () => {
   const [alertType, setAlertType] = useState('');
   const [responseMessage, setResponseMessage] = useState('');
   const [searchParams] = useSearchParams();
+  const environment = Utils.appEnvironment();
 
   const resetPassword = async (event) => {
     setLoading(true);
@@ -37,61 +44,85 @@ const ResetPassword = () => {
   };
 
   return (
-    <div className="container-wrapper" style={{ backgroundImage: `url(${backgroundImage})` }}>
-      <div className="environment">DEV</div>
-      <div className="container-wrapper-auth">
-        <div className="tabs reset-password-tabs" style={{ height: `${responseMessage ? '400px' : ''}` }}>
-          <div className="tabs-auth">
-            <ul className="tab-group">
-              <li className="tab">
-                <div className="login reset-password">Reset Password</div>
-              </li>
-            </ul>
-            <div className="tab-item">
-              <div className="auth-inner">
-                {responseMessage && (
-                  <div className={`alerts ${alertType}`} role="alert">
-                    {responseMessage}
-                  </div>
-                )}
-                <form className="reset-password-form" onSubmit={resetPassword}>
-                  <div className="form-input-container">
-                    <Input
-                      id="password"
-                      name="password"
-                      type="password"
-                      value={password}
-                      labelText="New Password"
-                      placeholder="New Password"
-                      style={{ border: `${showAlert ? '1px solid #fa9b8a' : ''}` }}
-                      handleChange={(e) => setPassword(e.target.value)}
-                    />
-                    <Input
-                      id="cpassword"
-                      name="cpassword"
-                      type="password"
-                      value={confirmPassword}
-                      labelText="Confirm Password"
-                      placeholder="Confirm Password"
-                      style={{ border: `${showAlert ? '1px solid #fa9b8a' : ''}` }}
-                      handleChange={(e) => setConfirmPassword(e.target.value)}
-                    />
-                  </div>
-                  <Button
-                    label={`${loading ? 'RESET PASSWORD IN PROGRESS...' : 'RESET PASSWORD'}`}
-                    className="auth-button button"
-                    disabled={!password || !confirmPassword}
-                  />
-
-                  <Link to={'/auth'}>
-                    <span className="login">
-                      <FaArrowLeft className="arrow-left" /> Back to Login
-                    </span>
-                  </Link>
-                </form>
-              </div>
-            </div>
+    <div className="auth-page">
+      {/* Left branding panel */}
+      <div className="auth-left">
+        <div className="auth-left-top">
+          <div className="auth-brand">
+            <span className="auth-brand-dot" />
+            QA Hub
           </div>
+        </div>
+        <div className="auth-left-body">
+          <h1 className="auth-headline">Master QA Automation</h1>
+          <p className="auth-subline">
+            Your all-in-one playground for Playwright &amp; Cypress — practise on real UIs, automate a social platform,
+            and level up with interactive challenges.
+          </p>
+          <ul className="auth-features">
+            {FEATURES.map((f) => (
+              <li key={f.text} className="auth-feature-item">
+                <span className="auth-feature-icon">{f.icon}</span>
+                {f.text}
+              </li>
+            ))}
+          </ul>
+        </div>
+        {environment && <div className="auth-env-badge">{environment}</div>}
+      </div>
+
+      {/* Right form panel */}
+      <div className="auth-right">
+        <Link to="/auth" className="auth-home-btn" style={{ textDecoration: 'none' }}>
+          ← Back to Sign In
+        </Link>
+
+        <div className="auth-right-inner">
+          <div className="auth-right-header">
+            <h2 className="auth-right-title">Reset password</h2>
+            <p className="auth-right-subtitle">Choose a strong new password for your account.</p>
+          </div>
+
+          {responseMessage && (
+            <div className={`alerts ${alertType}`} role="alert">
+              {responseMessage}
+            </div>
+          )}
+
+          <form className="auth-form-shared" onSubmit={resetPassword}>
+            <div className="form-input-container">
+              <Input
+                id="password"
+                name="password"
+                type="password"
+                value={password}
+                labelText="New Password"
+                placeholder="Enter new password"
+                style={{ border: `${showAlert ? '1.5px solid #fca5a5' : ''}` }}
+                handleChange={(e) => setPassword(e.target.value)}
+              />
+              <Input
+                id="cpassword"
+                name="cpassword"
+                type="password"
+                value={confirmPassword}
+                labelText="Confirm Password"
+                placeholder="Confirm new password"
+                style={{ border: `${showAlert ? '1.5px solid #fca5a5' : ''}` }}
+                handleChange={(e) => setConfirmPassword(e.target.value)}
+              />
+            </div>
+            <Button
+              label={`${loading ? 'Resetting password…' : 'Reset Password'}`}
+              className="auth-button button"
+              disabled={!password || !confirmPassword}
+            />
+            <Link to="/auth">
+              <span className="back-to-login">
+                <FaArrowLeft size={11} /> Back to Sign In
+              </span>
+            </Link>
+          </form>
         </div>
       </div>
     </div>

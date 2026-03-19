@@ -8,6 +8,8 @@ import { bgColors } from '@services/utils/static.data';
 import ModalBoxSelection from '@components/posts/post-modal/modal-box-content/ModalBoxSelection';
 import Button from '@components/button/Button';
 import { PostUtils } from '@services/utils/post-utils.service';
+import { Utils } from '@services/utils/utils.service';
+import { ProfanityFilter } from '@services/utils/profanity-filter.service';
 import { closeModal, toggleGifModal } from '@redux/reducers/modal/modal.reducer';
 import Giphy from '@components/giphy/Giphy';
 import PropTypes from 'prop-types';
@@ -74,6 +76,10 @@ const AddPost = ({ selectedImage, selectedPostVideo }) => {
   };
 
   const createPost = async () => {
+    if (ProfanityFilter.containsProfanity(postData.post)) {
+      Utils.dispatchNotification('Your post contains inappropriate language.', 'error', dispatch);
+      return;
+    }
     setLoading(!loading);
     setDisable(!disable);
     try {

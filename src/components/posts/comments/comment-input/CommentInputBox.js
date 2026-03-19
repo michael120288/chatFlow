@@ -4,6 +4,7 @@ import '@components/posts/comments/comment-input/CommentInputBox.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useRef, useState } from 'react';
 import { Utils } from '@services/utils/utils.service';
+import { ProfanityFilter } from '@services/utils/profanity-filter.service';
 import { cloneDeep } from 'lodash';
 import { socketService } from '@services/socket/socket.service';
 import { postService } from '@services/api/post/post.service';
@@ -16,6 +17,10 @@ const CommentInputBox = ({ post }) => {
 
   const submitComment = async (event) => {
     event.preventDefault();
+    if (ProfanityFilter.containsProfanity(comment)) {
+      Utils.dispatchNotification('Your comment contains inappropriate language.', 'error', dispatch);
+      return;
+    }
     try {
       post = cloneDeep(post);
       post.commentsCount += 1;
