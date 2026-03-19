@@ -30,11 +30,27 @@ export function LevelComplete() {
 
   if (!level) return null;
 
+  const isJest = level.id.startsWith('jest-');
   const isCypress = level.id.startsWith('cy-');
-  const totalLevels = isCypress ? 560 : 365;
+
+  const trackConfig = isJest
+    ? { total: 255, label: 'Jest', master: 'Jest Master' }
+    : isCypress
+    ? { total: 560, label: 'Cypress', master: 'Cypress Master' }
+    : { total: 365, label: 'Playwright', master: 'Playwright Master' };
+
   const nextOrder = level.order + 1;
-  const isLastLevel = level.order >= totalLevels;
-  const nextId = isCypress ? `cy-${String(nextOrder).padStart(3, '0')}` : `level-${String(nextOrder).padStart(2, '0')}`;
+  const isLastLevel = level.order >= trackConfig.total;
+
+  const nextId = isJest
+    ? `jest-${String(nextOrder).padStart(2, '0')}`
+    : isCypress
+    ? `cy-${String(nextOrder).padStart(3, '0')}`
+    : `level-${String(nextOrder).padStart(2, '0')}`;
+
+  const trackLevelsCompleted = completedLevels.filter((id) =>
+    isJest ? id.startsWith('jest-') : isCypress ? id.startsWith('cy-') : id.startsWith('level-')
+  ).length;
 
   return (
     <div className="complete-page">
@@ -53,7 +69,7 @@ export function LevelComplete() {
 
         <div className="complete-badge">LEVEL {level.order} COMPLETE!</div>
         <h1 className="complete-title">{level.title}</h1>
-        <p className="complete-story">You have mastered this challenge, brave Playwright!</p>
+        <p className="complete-story">You have mastered this challenge!</p>
 
         <div className="xp-reward-display">
           <div className="xp-amount">+{animXP}</div>
@@ -62,7 +78,7 @@ export function LevelComplete() {
 
         <div className="total-xp">Total XP: {xp.toLocaleString()}</div>
         <div className="levels-done">
-          {completedLevels.length} / {totalLevels} Levels Complete
+          {trackLevelsCompleted} / {trackConfig.total} {trackConfig.label} Levels Complete
         </div>
 
         <div className="complete-actions">
@@ -71,7 +87,7 @@ export function LevelComplete() {
               Next Level → Level {nextOrder}
             </Link>
           ) : (
-            <div className="final-victory">🏆 You have completed ALL levels! True Playwright Master!</div>
+            <div className="final-victory">🏆 You have completed ALL levels! True {trackConfig.master}!</div>
           )}
           <Link to="/app/game" className="btn btn-map">
             Level Map

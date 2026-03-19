@@ -55,22 +55,22 @@ describe('LevelHeader', () => {
 
   // ── Back navigation ───────────────────────────────────────────────────────
 
-  it('links to the previous level when order > 1', () => {
+  it('always links to the track page, regardless of level order', () => {
     render(<LevelHeader level={LEVEL} />);
-    const backEl = screen.getByText(/← Back to Track/);
-    expect(backEl.closest('a')).toHaveAttribute('href', '/app/game/cy-04');
-  });
-
-  it('links to the track page when on the first level', () => {
-    render(<LevelHeader level={{ ...LEVEL, id: 'level-01', order: 1 }} />);
     const backEl = screen.getByText(/← Back to Track/);
     expect(backEl.closest('a')).toHaveAttribute('href', '/app/game/track/cypress-ui');
   });
 
-  it('works for cy- prefixed ids', () => {
-    render(<LevelHeader level={{ ...LEVEL, id: 'cy-03', order: 3 }} />);
+  it('links to the track page on the first level', () => {
+    render(<LevelHeader level={{ ...LEVEL, order: 1 }} />);
     const backEl = screen.getByText(/← Back to Track/);
-    expect(backEl.closest('a')).toHaveAttribute('href', '/app/game/cy-02');
+    expect(backEl.closest('a')).toHaveAttribute('href', '/app/game/track/cypress-ui');
+  });
+
+  it('links to the jest track for jest- prefixed levels', () => {
+    render(<LevelHeader level={{ ...LEVEL, id: 'jest-08', order: 8, category: 'jest' }} />);
+    const backEl = screen.getByText(/← Back to Track/);
+    expect(backEl.closest('a')).toHaveAttribute('href', '/app/game/track/jest');
   });
 
   // ── Different XP values ───────────────────────────────────────────────────
@@ -87,18 +87,18 @@ describe('LevelHeader', () => {
     expect(screen.queryByText('cy.get')).not.toBeInTheDocument();
   });
 
-  // ── High order numbers (network request levels cy-80+) ────────────────────
+  // ── High order numbers ────────────────────────────────────────────────────
 
-  it('links to the previous level for order 80 (cy-79, no zero-padding needed)', () => {
+  it('links to the track page for high order cypress levels', () => {
     render(<LevelHeader level={{ ...LEVEL, id: 'cy-80', order: 80 }} />);
     const backEl = screen.getByText(/← Back to Track/);
-    expect(backEl.closest('a')).toHaveAttribute('href', '/app/game/cy-79');
+    expect(backEl.closest('a')).toHaveAttribute('href', '/app/game/track/cypress-ui');
   });
 
-  it('links to the previous level for order 84 (cy-83)', () => {
+  it('links to the track page for order 84', () => {
     render(<LevelHeader level={{ ...LEVEL, id: 'cy-84', order: 84 }} />);
     const backEl = screen.getByText(/← Back to Track/);
-    expect(backEl.closest('a')).toHaveAttribute('href', '/app/game/cy-83');
+    expect(backEl.closest('a')).toHaveAttribute('href', '/app/game/track/cypress-ui');
   });
 
   // ── Playwright category remapping ─────────────────────────────────────────

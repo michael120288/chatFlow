@@ -3,10 +3,8 @@ import { Link } from 'react-router-dom';
 import './LevelHeader.scss';
 
 export function LevelHeader({ level }) {
-  const match = level.id.match(/^([a-z]+-)\d+$/);
-  const prevLevelId = level.order > 1 && match ? `${match[1]}${String(level.order - 1).padStart(2, '0')}` : null;
   const trackCategory = level.category === 'ui' || level.category === 'api' ? 'playwright' : level.category;
-  const backTo = prevLevelId ? `/app/game/${prevLevelId}` : `/app/game/track/${trackCategory}`;
+  const backTo = `/app/game/track/${trackCategory}`;
 
   return (
     <div className="level-header">

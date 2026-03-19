@@ -148,6 +148,139 @@ export function Track() {
         }
       ]
     },
+    jest: {
+      icon: '🃏',
+      title: 'Jest Unit Testing',
+      desc: 'Master unit testing with Jest — matchers, mocks, async testing, setup/teardown and more',
+      sections: [
+        {
+          title: 'Foundations',
+          icon: '🧱',
+          desc: 'First test, toBe, toEqual, truthiness matchers, toMatch, toContain, describe() and grouping',
+          orderRange: [1, 10]
+        },
+        {
+          title: 'Numeric & Object Matchers',
+          icon: '🔢',
+          desc: 'toBeGreaterThan, toBeLessThan, toBeCloseTo, toHaveLength, toHaveProperty, toMatchObject, toBeInstanceOf, expect.any/anything/arrayContaining',
+          orderRange: [11, 20]
+        },
+        {
+          title: 'Async Testing',
+          icon: '⚡',
+          desc: 'Promises, .resolves/.rejects matchers, expect.assertions(), async beforeEach, multiple awaits',
+          orderRange: [21, 26]
+        },
+        {
+          title: 'Mock Functions',
+          icon: '🎭',
+          desc: 'mock.calls, mockReturnValue, mockResolvedValue, mockRejectedValue, mockImplementation, toHaveBeenLastCalledWith, toHaveBeenNthCalledWith, toHaveReturned',
+          orderRange: [27, 34]
+        },
+        {
+          title: 'Spies & Spying',
+          icon: '🕵️',
+          desc: 'jest.spyOn basics, spy with mockReturnValue, spy on Math.random, mockClear vs mockReset',
+          orderRange: [35, 38]
+        },
+        {
+          title: 'Setup & Teardown',
+          icon: '🏗️',
+          desc: 'beforeAll, afterAll, nested describe scoping, test.skip and test.todo',
+          orderRange: [39, 42]
+        },
+        {
+          title: 'Timer Mocking',
+          icon: '⏱️',
+          desc: 'jest.useFakeTimers, advanceTimersByTime, setInterval, runOnlyPendingTimers',
+          orderRange: [43, 46]
+        },
+        {
+          title: 'Table-Driven Tests',
+          icon: '📋',
+          desc: 'test.each with arrays and objects, describe.each, edge cases with parameterized tests',
+          orderRange: [47, 50]
+        },
+        {
+          title: 'Advanced Patterns',
+          icon: '🚀',
+          desc: 'Class testing, spy on class methods, mockImplementationOnce, objectContaining, stringContaining, toStrictEqual, error types, async errors, state isolation, multiple spies',
+          orderRange: [51, 62]
+        },
+        {
+          title: 'Snapshots & .not Modifier',
+          icon: '📸',
+          desc: 'toMatchSnapshot, toMatchInlineSnapshot, object snapshots, .not.toBe, .not.toEqual, .not.toContain, toBeDefined, toBeUndefined',
+          orderRange: [63, 72]
+        },
+        {
+          title: 'Mock Calls & Modules',
+          icon: '🔗',
+          desc: 'toHaveBeenCalledWith, toHaveBeenCalledTimes, mockReturnValueOnce, mockResolvedValueOnce, mockClear, mockReset, error handling and custom error classes',
+          orderRange: [73, 84]
+        },
+        {
+          title: 'Collections & Async Advanced',
+          icon: '🗃️',
+          desc: 'toContainEqual, expect.not.arrayContaining, rejected promises, async try/catch, expect.assertions, spy on object methods',
+          orderRange: [85, 100]
+        },
+        {
+          title: 'Classes & Constructors',
+          icon: '🏗️',
+          desc: 'Testing constructors, class methods, getters, static methods, boss: class integration',
+          orderRange: [101, 110]
+        },
+        {
+          title: 'Callbacks & Functional',
+          icon: '🔄',
+          desc: 'done callback, error-first callbacks, toMatchObject partial, toContainEqual, toBeNaN, functional utils: reduce, find, every, flat, Object.keys',
+          orderRange: [111, 125]
+        },
+        {
+          title: 'Strings, Numbers & Closures',
+          icon: '🔤',
+          desc: 'String manipulation, regex validation, template literals, numeric boundaries, float precision, closures, HOFs, memoization, currying',
+          orderRange: [126, 150]
+        },
+        {
+          title: 'Data Structures',
+          icon: '📦',
+          desc: 'Set, Map, Queue, Stack, Cache, linked list, generators, iterators',
+          orderRange: [151, 165]
+        },
+        {
+          title: 'Design Patterns',
+          icon: '🎨',
+          desc: 'Observer, strategy, builder, singleton, decorator, command, state machine, repository, service layer',
+          orderRange: [166, 180]
+        },
+        {
+          title: 'TDD & Boundary Testing',
+          icon: '🔬',
+          desc: 'Red-green-refactor, FizzBuzz, boundary value analysis, equivalence partitioning, asymmetric matchers, custom matchers',
+          orderRange: [181, 200]
+        },
+        {
+          title: 'Algorithms & Data Structures',
+          icon: '⚙️',
+          desc: 'Binary search, Fibonacci, LRU cache, BFS traversal, cycle detection, deep equality, recursive data, sorting, pagination, groupBy',
+          orderRange: [201, 210]
+        },
+        {
+          title: 'Real-World Patterns',
+          icon: '🌐',
+          desc: 'HTTP client, auth middleware, cache-aside, circuit breaker, event sourcing, middleware chain, retry with backoff, pub/sub with history, functional lens',
+          orderRange: [211, 220]
+        },
+        {
+          title: 'Mock Deep Dive',
+          icon: '🎭',
+          desc: 'jest.fn() call tracking, mock.calls/results/instances, mockReturnValue, mockResolvedValue, mockRejectedValue, mockImplementation, spyOn patterns, clearAllMocks, chained mocks, throwing mocks',
+          orderRange: [221, 255]
+        }
+      ]
+    },
     'cypress-ui': {
       icon: '🌲',
       title: 'Cypress UI Testing',
@@ -381,12 +514,22 @@ export function Track() {
 
   const doneLevels = trackLevels.filter((l) => completedLevels.includes(l.id));
   const totalXP = trackLevels.reduce((sum, l) => sum + l.xpReward, 0);
-  const trackKey = category === 'cypress-ui' ? 'cypress-ui' : 'playwright';
+  const trackKey = category === 'cypress-ui' ? 'cypress-ui' : category === 'jest' ? 'jest' : 'playwright';
   const earnedXP = trackXP[trackKey] ?? doneLevels.reduce((sum, l) => sum + l.xpReward, 0);
   const nextLevel = trackLevels.find((l) => !completedLevels.includes(l.id));
 
   const [activeSection, setActiveSection] = useState(0);
   const sectionRefs = useRef([]);
+
+  // Restore scroll position after returning from a level
+  useEffect(() => {
+    if (loading) return;
+    const savedId = sessionStorage.getItem(`track-scroll-${category}`);
+    if (!savedId) return;
+    sessionStorage.removeItem(`track-scroll-${category}`);
+    const el = document.querySelector(`[data-level-id="${savedId}"]`);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, [loading, category]);
 
   useEffect(() => {
     if (!meta.sections) return;
@@ -513,7 +656,14 @@ export function Track() {
                               key={level.id}
                               to={unlocked ? `/app/game/${level.id}` : '#'}
                               className={`level-card ${done ? 'done' : ''} ${!unlocked ? 'locked' : ''}`}
-                              onClick={(e) => !unlocked && e.preventDefault()}
+                              data-level-id={level.id}
+                              onClick={(e) => {
+                                if (!unlocked) {
+                                  e.preventDefault();
+                                  return;
+                                }
+                                sessionStorage.setItem(`track-scroll-${category}`, level.id);
+                              }}
                             >
                               <div className="card-order">{String(idx + 1).padStart(2, '0')}</div>
                               <div className="card-status">{done ? '✓' : !unlocked ? '🔒' : '▶'}</div>
@@ -544,7 +694,14 @@ export function Track() {
                       key={level.id}
                       to={unlocked ? `/app/game/${level.id}` : '#'}
                       className={`level-card ${done ? 'done' : ''} ${!unlocked ? 'locked' : ''}`}
-                      onClick={(e) => !unlocked && e.preventDefault()}
+                      data-level-id={level.id}
+                      onClick={(e) => {
+                        if (!unlocked) {
+                          e.preventDefault();
+                          return;
+                        }
+                        sessionStorage.setItem(`track-scroll-${category}`, level.id);
+                      }}
                     >
                       <div className="card-order">{String(idx + 1).padStart(2, '0')}</div>
                       <div className="card-status">{done ? '✓' : !unlocked ? '🔒' : '▶'}</div>

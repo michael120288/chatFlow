@@ -220,15 +220,15 @@ const QAPracticeLanding = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="qa-practice-container">
-      <header className="qa-practice-header">
-        <button className="home-button" onClick={() => navigate('/')} aria-label="Go to home page">
+    <div className="qal-container">
+      <header className="qal-header">
+        <button className="qal-home-btn" onClick={() => navigate('/')} aria-label="Go to home page">
           ← Home
         </button>
         <h1>QA Practice</h1>
       </header>
-      <div className="qa-practice-main">
-        <div className="qa-practice-content">
+      <div className="qal-main">
+        <div className="qal-content">
           <div className="qa-landing">
             <div className="qa-landing-hero">
               <h2>39 Interactive Scenarios</h2>

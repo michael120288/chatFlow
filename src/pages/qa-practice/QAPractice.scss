@@ -6,14 +6,14 @@ $success-color: #10b981;
 $error-color: #ef4444;
 $warning-color: #f59e0b;
 $info-color: #3b82f6;
-$text-color: #333;
-$text-light: #666;
-$border-color: #e0e0e0;
-$bg-light: #f5f5f5;
-$bg-white: #ffffff;
-$shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
-$shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
-$shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
+$text-color: rgba(255, 255, 255, 0.88);
+$text-light: rgba(255, 255, 255, 0.5);
+$border-color: rgba(255, 255, 255, 0.1);
+$bg-light: #111220;
+$bg-white: #161724;
+$shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+$shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
+$shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.6);
 $transition: all 0.3s ease;
 
 // Reset and base styles
@@ -23,47 +23,53 @@ $transition: all 0.3s ease;
 
 // Main container
 .qa-practice-container {
-  height: 100vh;
+  position: fixed;
+  inset: 0;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(135deg, rgba($primary-color, 0.05) 0%, rgba($secondary-color, 0.05) 100%);
-  overflow: hidden;
+  background: #0d0e1a;
+  color: $text-color;
+  overflow-y: auto;
+  font-family: 'DM Sans', sans-serif;
 }
 
 // Header
 .qa-practice-header {
-  background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
-  color: white;
-  padding: 1.5rem 2rem;
-  box-shadow: $shadow-md;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   gap: 1rem;
+  padding: 1.25rem 2.5rem;
   position: sticky;
   top: 0;
   z-index: 100;
+  background: rgba(13, 14, 26, 0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 
   h1 {
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.15rem;
     font-weight: 700;
+    color: white;
+    letter-spacing: -0.01em;
   }
 
   .home-button {
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    padding: 0.5rem 1rem;
+    padding: 0.45rem 1rem;
     border-radius: 8px;
-    cursor: pointer;
-    font-size: 1rem;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 0.875rem;
     font-weight: 600;
+    cursor: pointer;
     transition: $transition;
+    white-space: nowrap;
 
     &:hover {
-      background: rgba(255, 255, 255, 0.3);
-      border-color: rgba(255, 255, 255, 0.5);
-      transform: translateX(-2px);
+      background: rgba(255, 255, 255, 0.12);
+      color: white;
     }
   }
 }
@@ -77,15 +83,14 @@ $transition: all 0.3s ease;
   max-width: 1600px;
   width: 100%;
   margin: 0 auto;
-  background: white;
-  box-shadow: $shadow-lg;
+  background: transparent;
 }
 
 // Sidebar
 .qa-practice-sidebar {
   width: 280px;
-  background: white;
-  border-right: 2px solid $border-color;
+  background: rgba(255, 255, 255, 0.03);
+  border-right: 1px solid rgba(255, 255, 255, 0.07);
   overflow-y: auto;
   position: sticky;
   top: 77px;
@@ -129,7 +134,7 @@ $transition: all 0.3s ease;
   flex: 1;
   padding: 2rem;
   overflow-y: auto;
-  background: $bg-light;
+  background: transparent;
 }
 
 .content-section {
@@ -152,7 +157,8 @@ $transition: all 0.3s ease;
 
 // Web Inputs Form
 .qa-form {
-  background: white;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   padding: 2rem;
   border-radius: 12px;
   box-shadow: $shadow-sm;
@@ -180,20 +186,30 @@ $transition: all 0.3s ease;
     textarea {
       width: 100%;
       padding: 0.75rem;
-      border: 2px solid $border-color;
+      border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 8px;
       font-size: 1rem;
       transition: $transition;
       font-family: inherit;
+      background: rgba(255, 255, 255, 0.06);
+      color: $text-color;
 
       &:focus {
         outline: none;
         border-color: $primary-color;
-        box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
+        box-shadow: 0 0 0 3px rgba($primary-color, 0.2);
       }
 
       &::placeholder {
-        color: #999;
+        color: rgba(255, 255, 255, 0.3);
+      }
+
+      &:-webkit-autofill,
+      &:-webkit-autofill:hover,
+      &:-webkit-autofill:focus {
+        -webkit-box-shadow: 0 0 0 1000px rgba(102, 126, 234, 0.15) inset !important;
+        -webkit-text-fill-color: rgba(255, 255, 255, 0.88) !important;
+        border-color: rgba(102, 126, 234, 0.4) !important;
       }
     }
 
@@ -204,7 +220,7 @@ $transition: all 0.3s ease;
 
     select {
       cursor: pointer;
-      background: white;
+      background: rgba(255, 255, 255, 0.06);
     }
 
     input[type="range"] {
@@ -314,7 +330,7 @@ $transition: all 0.3s ease;
     border-radius: 8px;
     font-size: 1rem;
     cursor: pointer;
-    background: white;
+    background: rgba(255, 255, 255, 0.04);
 
     &:focus {
       outline: none;
@@ -327,7 +343,7 @@ $transition: all 0.3s ease;
     position: absolute;
     top: calc(100% + 8px);
     left: 0;
-    background: white;
+    background: rgba(255, 255, 255, 0.04);
     border: 2px solid $border-color;
     border-radius: 12px;
     padding: 1.5rem;
@@ -391,7 +407,7 @@ $transition: all 0.3s ease;
         border-radius: 6px;
         font-size: 1rem;
         cursor: pointer;
-        background: white;
+        background: rgba(255, 255, 255, 0.04);
 
         &:focus {
           outline: none;
@@ -451,7 +467,7 @@ $transition: all 0.3s ease;
 }
 
 .reset-button {
-  background: white;
+  background: rgba(255, 255, 255, 0.04);
   color: $text-color;
   border: 2px solid $border-color;
 
@@ -478,7 +494,7 @@ $transition: all 0.3s ease;
 }
 
 .modal-content {
-  background: white;
+  background: rgba(255, 255, 255, 0.04);
   border-radius: 16px;
   max-width: 600px;
   width: 100%;
@@ -626,7 +642,7 @@ $transition: all 0.3s ease;
   }
 
   &.secondary {
-    background: white;
+    background: rgba(255, 255, 255, 0.04);
     color: $text-color;
     border: 2px solid $border-color;
 
@@ -647,7 +663,7 @@ $transition: all 0.3s ease;
 
 // Dynamic Table
 .table-container {
-  background: white;
+  background: rgba(255, 255, 255, 0.04);
   border-radius: 12px;
   box-shadow: $shadow-sm;
   padding: 1.5rem;
@@ -705,13 +721,15 @@ $transition: all 0.3s ease;
       input {
         width: 100%;
         padding: 0.5rem;
-        border: 2px solid $primary-color;
+        border: 1px solid $primary-color;
         border-radius: 6px;
         font-size: 1rem;
+        background: rgba(102, 126, 234, 0.1);
+        color: $text-color;
 
         &:focus {
           outline: none;
-          box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
+          box-shadow: 0 0 0 3px rgba($primary-color, 0.2);
         }
       }
     }
@@ -745,7 +763,7 @@ $transition: all 0.3s ease;
 
   .pagination-button {
     padding: 0.5rem 1rem;
-    background: white;
+    background: rgba(255, 255, 255, 0.04);
     color: $primary-color;
     border: 2px solid $primary-color;
     border-radius: 8px;
@@ -772,7 +790,7 @@ $transition: all 0.3s ease;
 
   .pagination-page {
     padding: 0.5rem 0.75rem;
-    background: white;
+    background: rgba(255, 255, 255, 0.04);
     color: $text-color;
     border: 2px solid $border-color;
     border-radius: 6px;
@@ -826,14 +844,18 @@ $transition: all 0.3s ease;
       flex: 1;
       min-width: 200px;
       padding: 0.75rem;
-      border: 2px solid $border-color;
+      border: 1px solid $border-color;
       border-radius: 8px;
       font-size: 1rem;
+      background: rgba(255, 255, 255, 0.06);
+      color: $text-color;
+
+      &::placeholder { color: rgba(255,255,255,0.3); }
 
       &:focus {
         outline: none;
         border-color: $primary-color;
-        box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
+        box-shadow: 0 0 0 3px rgba($primary-color, 0.2);
       }
     }
   }
@@ -878,7 +900,7 @@ $transition: all 0.3s ease;
 .drop-zone {
   min-height: 300px;
   padding: 1rem;
-  background: white;
+  background: rgba(255, 255, 255, 0.04);
   border: 3px dashed $border-color;
   border-radius: 12px;
   transition: $transition;
@@ -932,7 +954,7 @@ $transition: all 0.3s ease;
 
 // IFrame
 .iframe-controls {
-  background: white;
+  background: rgba(255, 255, 255, 0.04);
   padding: 1.5rem;
   border-radius: 12px;
   box-shadow: $shadow-sm;
@@ -954,7 +976,7 @@ $transition: all 0.3s ease;
     border-radius: 8px;
     font-size: 1rem;
     cursor: pointer;
-    background: white;
+    background: rgba(255, 255, 255, 0.04);
 
     &:focus {
       outline: none;
@@ -964,7 +986,7 @@ $transition: all 0.3s ease;
 }
 
 .iframe-container {
-  background: white;
+  background: rgba(255, 255, 255, 0.04);
   border-radius: 12px;
   box-shadow: $shadow-sm;
   overflow: hidden;
@@ -1009,7 +1031,7 @@ $transition: all 0.3s ease;
 
 // File Upload
 .file-upload-container {
-  background: white;
+  background: rgba(255, 255, 255, 0.04);
   padding: 2rem;
   border-radius: 12px;
   box-shadow: $shadow-sm;
@@ -1177,7 +1199,7 @@ $transition: all 0.3s ease;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: white;
+    background: rgba(255, 255, 255, 0.04);
     border-radius: 6px;
     color: $primary-color;
     flex-shrink: 0;
@@ -1311,7 +1333,7 @@ $transition: all 0.3s ease;
 
 .alerts-modals-content {
   .section-group {
-    background: white;
+    background: rgba(255, 255, 255, 0.04);
     padding: 2rem;
     border-radius: 12px;
     box-shadow: $shadow-sm;
@@ -1386,7 +1408,7 @@ $transition: all 0.3s ease;
 // Navigation
 .navigation-content {
   .nav-section {
-    background: white;
+    background: rgba(255, 255, 255, 0.04);
     padding: 2rem;
     border-radius: 12px;
     box-shadow: $shadow-sm;
@@ -1452,7 +1474,7 @@ $transition: all 0.3s ease;
   .nav-button-primary {
     padding: 0.75rem 1.5rem;
     border: 2px solid $primary-color;
-    background: white;
+    background: rgba(255, 255, 255, 0.04);
     color: $primary-color;
     border-radius: 8px;
     font-size: 1rem;
@@ -1484,7 +1506,7 @@ $transition: all 0.3s ease;
 // Tooltips
 .tooltips-content {
   .tooltip-section {
-    background: white;
+    background: rgba(255, 255, 255, 0.04);
     padding: 2rem;
     border-radius: 12px;
     box-shadow: $shadow-sm;
@@ -1716,7 +1738,7 @@ $transition: all 0.3s ease;
 // Loaders
 .loaders-content {
   .loader-section {
-    background: white;
+    background: rgba(255, 255, 255, 0.04);
     padding: 2rem;
     border-radius: 12px;
     box-shadow: $shadow-sm;
@@ -1987,7 +2009,7 @@ $transition: all 0.3s ease;
 // Accordion
 .accordion-content {
   .accordion-section {
-    background: white;
+    background: rgba(255, 255, 255, 0.04);
     padding: 2rem;
     border-radius: 12px;
     box-shadow: $shadow-sm;
@@ -2018,7 +2040,7 @@ $transition: all 0.3s ease;
 .accordion-header {
   width: 100%;
   padding: 1.25rem 1.5rem;
-  background: white;
+  background: rgba(255, 255, 255, 0.04);
   border: none;
   text-align: left;
   cursor: pointer;
@@ -2089,7 +2111,7 @@ $transition: all 0.3s ease;
 
 // Tabs
 .tabs-container {
-  background: white;
+  background: rgba(255, 255, 255, 0.04);
   border-radius: 12px;
   box-shadow: $shadow-sm;
   overflow: hidden;
@@ -2123,7 +2145,7 @@ $transition: all 0.3s ease;
   &.active {
     color: $primary-color;
     border-bottom-color: $primary-color;
-    background: white;
+    background: rgba(255, 255, 255, 0.04);
   }
 }
 
@@ -2149,7 +2171,7 @@ $transition: all 0.3s ease;
 
 // Carousel
 .carousel-content {
-  background: white;
+  background: rgba(255, 255, 255, 0.04);
   padding: 2rem;
   border-radius: 12px;
   box-shadow: $shadow-sm;
@@ -2222,7 +2244,7 @@ $transition: all 0.3s ease;
 .carousel-button {
   width: 50px;
   height: 50px;
-  background: white;
+  background: rgba(255, 255, 255, 0.04);
   color: $primary-color;
   border: 2px solid $primary-color;
   border-radius: 50%;
@@ -2283,7 +2305,7 @@ $transition: all 0.3s ease;
 
 // Search & Filters
 .search-filters-container {
-  background: white;
+  background: rgba(255, 255, 255, 0.04);
   padding: 2rem;
   border-radius: 12px;
   box-shadow: $shadow-sm;
@@ -2326,7 +2348,7 @@ $transition: all 0.3s ease;
     border-radius: 8px;
     font-size: 1rem;
     cursor: pointer;
-    background: white;
+    background: rgba(255, 255, 255, 0.04);
     transition: $transition;
 
     &:focus {
@@ -2392,7 +2414,7 @@ $transition: all 0.3s ease;
 // Breadcrumbs
 .breadcrumbs-examples {
   .breadcrumb-example {
-    background: white;
+    background: rgba(255, 255, 255, 0.04);
     padding: 2rem;
     border-radius: 12px;
     box-shadow: $shadow-sm;
@@ -2441,7 +2463,7 @@ $transition: all 0.3s ease;
 
 // Context Menu
 .context-menu-area {
-  background: white;
+  background: rgba(255, 255, 255, 0.04);
   padding: 4rem;
   border-radius: 12px;
   box-shadow: $shadow-sm;
@@ -2460,7 +2482,7 @@ $transition: all 0.3s ease;
 
 .custom-context-menu {
   position: fixed;
-  background: white;
+  background: rgba(255, 255, 255, 0.04);
   border: 2px solid $border-color;
   border-radius: 8px;
   box-shadow: $shadow-lg;
@@ -2472,7 +2494,7 @@ $transition: all 0.3s ease;
   .context-menu-item {
     width: 100%;
     padding: 0.75rem 1.5rem;
-    background: white;
+    background: rgba(255, 255, 255, 0.04);
     border: none;
     text-align: left;
     cursor: pointer;
@@ -2499,7 +2521,7 @@ $transition: all 0.3s ease;
   align-items: center;
   gap: 1rem;
   padding: 1.5rem;
-  background: white;
+  background: rgba(255, 255, 255, 0.04);
   border: 2px solid $border-color;
   border-radius: 12px;
   box-shadow: $shadow-sm;
@@ -2535,7 +2557,7 @@ $transition: all 0.3s ease;
 
 // Rating
 .rating-container {
-  background: white;
+  background: rgba(255, 255, 255, 0.04);
   padding: 3rem;
   border-radius: 12px;
   box-shadow: $shadow-sm;
@@ -2577,7 +2599,7 @@ $transition: all 0.3s ease;
 
 // Wizard
 .wizard-container {
-  background: white;
+  background: rgba(255, 255, 255, 0.04);
   padding: 2rem;
   border-radius: 12px;
   box-shadow: $shadow-sm;
@@ -2613,7 +2635,7 @@ $transition: all 0.3s ease;
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    background: white;
+    background: rgba(255, 255, 255, 0.04);
     border: 3px solid $border-color;
     display: flex;
     align-items: center;
@@ -2670,7 +2692,7 @@ $transition: all 0.3s ease;
 
   .wizard-button {
     padding: 0.75rem 2rem;
-    background: white;
+    background: rgba(255, 255, 255, 0.04);
     color: $text-color;
     border: 2px solid $border-color;
     border-radius: 8px;
@@ -2704,7 +2726,7 @@ $transition: all 0.3s ease;
 
 // Infinite Scroll
 .infinite-scroll-container {
-  background: white;
+  background: rgba(255, 255, 255, 0.04);
   padding: 2rem;
   border-radius: 12px;
   box-shadow: $shadow-sm;
@@ -2765,7 +2787,7 @@ $transition: all 0.3s ease;
 
 // Sticky Elements
 .sticky-demo {
-  background: white;
+  background: rgba(255, 255, 255, 0.04);
   border-radius: 12px;
   box-shadow: $shadow-sm;
   overflow: hidden;
@@ -3018,7 +3040,7 @@ $transition: all 0.3s ease;
 
 // Light Mode Theme Controls (to match structure)
 .theme-controls {
-  background: white;
+  background: rgba(255, 255, 255, 0.04);
   padding: 2rem;
   border-radius: 12px;
   box-shadow: $shadow-sm;
@@ -3083,7 +3105,7 @@ $transition: all 0.3s ease;
 
 // Nested Dropdowns
 .nested-dropdowns {
-  background: white;
+  background: rgba(255, 255, 255, 0.04);
   padding: 2.5rem;
   border-radius: 12px;
   box-shadow: $shadow-sm;
@@ -3098,7 +3120,7 @@ $transition: all 0.3s ease;
     font-size: 1.1rem;
     font-weight: 500;
     color: $text-color;
-    background: white;
+    background: rgba(255, 255, 255, 0.04);
     cursor: pointer;
     transition: $transition;
     margin-bottom: 1.5rem;
@@ -3163,7 +3185,7 @@ $transition: all 0.3s ease;
 
 // Disabled/Readonly States
 .state-controls {
-  background: white;
+  background: rgba(255, 255, 255, 0.04);
   padding: 2rem;
   border-radius: 12px;
   box-shadow: $shadow-sm;
@@ -3205,7 +3227,7 @@ $transition: all 0.3s ease;
 }
 
 .state-examples {
-  background: white;
+  background: rgba(255, 255, 255, 0.04);
   padding: 2.5rem;
   border-radius: 12px;
   box-shadow: $shadow-sm;
@@ -3254,7 +3276,7 @@ $transition: all 0.3s ease;
       font-size: 1rem;
       font-weight: 500;
       color: $text-color;
-      background: white;
+      background: rgba(255, 255, 255, 0.04);
       transition: $transition;
 
       &:focus:not(:disabled):not(:read-only) {
@@ -3327,7 +3349,7 @@ $transition: all 0.3s ease;
 
 // Progress Indicators
 .progress-section {
-  background: white;
+  background: rgba(255, 255, 255, 0.04);
   padding: 2.5rem;
   border-radius: 12px;
   box-shadow: $shadow-sm;
@@ -3459,7 +3481,7 @@ $transition: all 0.3s ease;
       width: 60px;
       height: 60px;
       border-radius: 50%;
-      background: white;
+      background: rgba(255, 255, 255, 0.04);
       border: 4px solid $border-color;
       display: flex;
       align-items: center;
@@ -3514,7 +3536,7 @@ $transition: all 0.3s ease;
 
 // Virtual Scroll
 .virtual-scroll-container {
-  background: white;
+  background: rgba(255, 255, 255, 0.04);
   border-radius: 12px;
   box-shadow: $shadow-sm;
   max-height: 600px;
@@ -3555,7 +3577,7 @@ $transition: all 0.3s ease;
       align-items: center;
       padding: 1rem 1.5rem;
       border-bottom: 1px solid $border-color;
-      background: white;
+      background: rgba(255, 255, 255, 0.04);
       transition: $transition;
       font-size: 1rem;
       font-weight: 500;
@@ -3588,7 +3610,7 @@ $transition: all 0.3s ease;
 .content-section > p:last-child {
   text-align: center;
   padding: 1rem 1.5rem;
-  background: white;
+  background: rgba(255, 255, 255, 0.04);
   border-radius: 10px;
   box-shadow: $shadow-sm;
   font-size: 1rem;
@@ -3611,7 +3633,7 @@ $transition: all 0.3s ease;
 
 // WebSocket
 .websocket-controls {
-  background: white;
+  background: rgba(255, 255, 255, 0.04);
   padding: 2rem;
   border-radius: 12px;
   box-shadow: $shadow-sm;
@@ -3693,7 +3715,7 @@ $transition: all 0.3s ease;
       font-size: 1rem;
       font-weight: 500;
       color: $text-color;
-      background: white;
+      background: rgba(255, 255, 255, 0.04);
       transition: $transition;
 
       &:focus {
@@ -3734,7 +3756,7 @@ $transition: all 0.3s ease;
 }
 
 .websocket-messages {
-  background: white;
+  background: rgba(255, 255, 255, 0.04);
   padding: 1.5rem;
   border-radius: 12px;
   box-shadow: $shadow-sm;
@@ -3832,7 +3854,7 @@ $transition: all 0.3s ease;
 
 // Date/Time Picker
 .datetime-picker {
-  background: white;
+  background: rgba(255, 255, 255, 0.04);
   padding: 2.5rem;
   border-radius: 12px;
   box-shadow: $shadow-sm;
@@ -3883,7 +3905,7 @@ $transition: all 0.3s ease;
       font-size: 1rem;
       font-weight: 500;
       color: $text-color;
-      background: white;
+      background: rgba(255, 255, 255, 0.04);
       cursor: pointer;
       transition: $transition;
 
@@ -3949,7 +3971,7 @@ $transition: all 0.3s ease;
   margin: 0 auto;
 
   .options-list {
-    background: white;
+    background: rgba(255, 255, 255, 0.04);
     padding: 2rem;
     border-radius: 12px;
     box-shadow: $shadow-sm;
@@ -4014,7 +4036,7 @@ $transition: all 0.3s ease;
   }
 
   .selected-items {
-    background: white;
+    background: rgba(255, 255, 255, 0.04);
     padding: 2rem;
     border-radius: 12px;
     box-shadow: $shadow-sm;
@@ -4109,7 +4131,7 @@ $transition: all 0.3s ease;
   position: relative;
   max-width: 600px;
   margin: 0 auto;
-  background: white;
+  background: rgba(255, 255, 255, 0.04);
   padding: 2.5rem;
   border-radius: 12px;
   box-shadow: $shadow-sm;
@@ -4123,7 +4145,7 @@ $transition: all 0.3s ease;
     font-size: 1.1rem;
     font-weight: 500;
     color: $text-color;
-    background: white;
+    background: rgba(255, 255, 255, 0.04);
     transition: $transition;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23667eea' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'%3E%3C/circle%3E%3Cpath d='m21 21-4.35-4.35'%3E%3C/path%3E%3C/svg%3E");
     background-repeat: no-repeat;
@@ -4157,7 +4179,7 @@ $transition: all 0.3s ease;
     margin: 0;
     padding: 0;
     list-style: none;
-    background: white;
+    background: rgba(255, 255, 255, 0.04);
     border: 2px solid $primary-color;
     border-radius: 0 0 12px 12px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
@@ -4241,7 +4263,7 @@ $transition: all 0.3s ease;
 
 // Download Files
 .download-controls {
-  background: white;
+  background: rgba(255, 255, 255, 0.04);
   padding: 3rem;
   border-radius: 12px;
   box-shadow: $shadow-sm;
@@ -4261,7 +4283,7 @@ $transition: all 0.3s ease;
     font-size: 1.1rem;
     font-weight: 600;
     color: $text-color;
-    background: white;
+    background: rgba(255, 255, 255, 0.04);
     cursor: pointer;
     transition: $transition;
     appearance: none;
@@ -4353,7 +4375,7 @@ $transition: all 0.3s ease;
 
 // Authentication
 .login-form {
-  background: white;
+  background: rgba(255, 255, 255, 0.04);
   padding: 3rem;
   border-radius: 12px;
   box-shadow: $shadow-md;
@@ -4411,7 +4433,7 @@ $transition: all 0.3s ease;
     font-size: 1.1rem;
     font-weight: 500;
     color: $text-color;
-    background: white;
+    background: rgba(255, 255, 255, 0.04);
     transition: $transition;
 
     &:focus {
@@ -4466,7 +4488,7 @@ $transition: all 0.3s ease;
 }
 
 .authenticated-content {
-  background: white;
+  background: rgba(255, 255, 255, 0.04);
   padding: 3rem;
   border-radius: 12px;
   box-shadow: $shadow-md;
@@ -4541,7 +4563,7 @@ $transition: all 0.3s ease;
 
 // API Testing
 .api-controls {
-  background: white;
+  background: rgba(255, 255, 255, 0.04);
   padding: 2.5rem;
   border-radius: 12px;
   box-shadow: $shadow-sm;
@@ -4611,18 +4633,18 @@ $transition: all 0.3s ease;
     background-repeat: no-repeat;
     background-position: left 1rem center;
     background-size: 24px;
-    background-color: white;
+    background-color: transparent;
 
     &:hover {
       border-color: lighten($primary-color, 20%);
-      background-color: white;
+      background-color: transparent;
     }
 
     &:focus {
       outline: none;
       border-color: $primary-color;
       box-shadow: 0 0 0 4px rgba($primary-color, 0.15);
-      background-color: white;
+      background-color: transparent;
     }
 
     &::placeholder {
@@ -4708,7 +4730,7 @@ $transition: all 0.3s ease;
 }
 
 .api-response {
-  background: white;
+  background: rgba(255, 255, 255, 0.04);
   padding: 2rem;
   border-radius: 12px;
   box-shadow: $shadow-sm;
@@ -4770,7 +4792,7 @@ $transition: all 0.3s ease;
 
 // LocalStorage/SessionStorage
 .storage-section {
-  background: white;
+  background: rgba(255, 255, 255, 0.04);
   padding: 2.5rem;
   border-radius: 12px;
   box-shadow: $shadow-sm;
@@ -4820,7 +4842,7 @@ $transition: all 0.3s ease;
       font-size: 1rem;
       font-weight: 500;
       color: $text-color;
-      background: white;
+      background: rgba(255, 255, 255, 0.04);
       transition: $transition;
       font-family: 'Courier New', monospace;
 
@@ -4915,7 +4937,7 @@ $transition: all 0.3s ease;
       justify-content: space-between;
       gap: 1rem;
       padding: 1rem 1.5rem;
-      background: white;
+      background: rgba(255, 255, 255, 0.04);
       border-radius: 8px;
       border: 2px solid $border-color;
       transition: $transition;

@@ -24,13 +24,16 @@ export function GameHome() {
 
   const playwrightLevels = levels.filter((l) => l.category === 'ui' || l.category === 'api');
   const cypressLevels = levels.filter((l) => l.category === 'cypress-ui');
+  const jestLevels = levels.filter((l) => l.category === 'jest');
 
   const playwrightDone = playwrightLevels.filter((l) => completedLevels.includes(l.id)).length;
   const cypressDone = cypressLevels.filter((l) => completedLevels.includes(l.id)).length;
+  const jestDone = jestLevels.filter((l) => completedLevels.includes(l.id)).length;
 
   const playwrightTotalXP = playwrightLevels.reduce((sum, l) => sum + l.xpReward, 0);
   const cypressTotalXP = cypressLevels.reduce((sum, l) => sum + l.xpReward, 0);
-  const grandTotalXP = playwrightTotalXP + cypressTotalXP;
+  const jestTotalXP = jestLevels.reduce((sum, l) => sum + l.xpReward, 0);
+  const grandTotalXP = playwrightTotalXP + cypressTotalXP + jestTotalXP;
 
   const playwrightXPEarned =
     trackXP.playwright ??
@@ -38,6 +41,8 @@ export function GameHome() {
   const cypressXPEarned =
     trackXP['cypress-ui'] ??
     cypressLevels.filter((l) => completedLevels.includes(l.id)).reduce((sum, l) => sum + l.xpReward, 0);
+  const jestXPEarned =
+    trackXP.jest ?? jestLevels.filter((l) => completedLevels.includes(l.id)).reduce((sum, l) => sum + l.xpReward, 0);
 
   const xpTracks = [
     {
@@ -55,6 +60,14 @@ export function GameHome() {
       total: cypressLevels.length,
       xpEarned: cypressXPEarned,
       color: '#22c55e'
+    },
+    {
+      label: 'Jest',
+      icon: '🃏',
+      done: jestDone,
+      total: jestLevels.length,
+      xpEarned: jestXPEarned,
+      color: '#f59e0b'
     }
   ];
 
@@ -76,7 +89,7 @@ export function GameHome() {
             <div className="stat-l">Total XP</div>
           </div>
           <div className="stat-card">
-            <div className="stat-n">2</div>
+            <div className="stat-n">3</div>
             <div className="stat-l">Tracks</div>
           </div>
         </div>
@@ -89,7 +102,7 @@ export function GameHome() {
         {error && <div className="error-msg">Failed to load levels: {error}</div>}
 
         {!loading && !error && (
-          <div className="tracks-row">
+          <div className="tracks-row tracks-row--three">
             <Link to="/app/game/track/playwright" className="track-card track-playwright">
               <div className="tc-icon">🎭</div>
               <div className="tc-body">
@@ -131,6 +144,30 @@ export function GameHome() {
                 </div>
                 <span className="tc-done">
                   {cypressDone} / {cypressLevels.length} complete
+                </span>
+              </div>
+              <div className="tc-arrow">→</div>
+            </Link>
+
+            <Link to="/app/game/track/jest" className="track-card track-jest">
+              <div className="tc-icon">🃏</div>
+              <div className="tc-body">
+                <h2 className="tc-title">Jest Unit Testing</h2>
+                <p className="tc-desc">
+                  Master unit testing with Jest — matchers, mocks, async testing, setup/teardown and more
+                </p>
+                <div className="tc-meta">
+                  <span className="tc-count">{jestLevels.length} Levels</span>
+                  <span className="tc-xp">{jestTotalXP.toLocaleString()} XP</span>
+                </div>
+                <div className="tc-progress-track">
+                  <div
+                    className="tc-progress-fill"
+                    style={{ width: `${jestLevels.length ? (jestDone / jestLevels.length) * 100 : 0}%` }}
+                  />
+                </div>
+                <span className="tc-done">
+                  {jestDone} / {jestLevels.length} complete
                 </span>
               </div>
               <div className="tc-arrow">→</div>
