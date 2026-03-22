@@ -31,13 +31,25 @@ const JEST_LEVELS = [
   { id: 'jest-12', order: 12, category: 'jest', xpReward: 140, title: 'Closeness',    tags: ['toBeCloseTo'] },
 ];
 
-// Playwright + Cypress levels — should never appear on the Jest track
-const OTHER_LEVELS = [
-  { id: 'level-01', order: 1, category: 'ui',         xpReward: 150, title: 'PW Level', tags: ['click'] },
-  { id: 'cy-01',    order: 1, category: 'cypress-ui', xpReward: 200, title: 'CY Level', tags: ['cy.get'] },
+// Playwright levels — ui + api categories, two sections: Foundations [1,35] and Browser Features [36,75]
+const PLAYWRIGHT_LEVELS = [
+  { id: 'level-01', order: 1,  category: 'ui',  xpReward: 150, title: 'First Click',   tags: ['click', 'locator'] },
+  { id: 'level-02', order: 2,  category: 'ui',  xpReward: 150, title: 'Fill Form',     tags: ['fill', 'type'] },
+  { id: 'level-03', order: 3,  category: 'ui',  xpReward: 150, title: 'Assertions',    tags: ['expect', 'toBeVisible'] },
+  { id: 'level-36', order: 36, category: 'ui',  xpReward: 160, title: 'Network Route', tags: ['route', 'fulfill'] },
+  { id: 'level-37', order: 37, category: 'api', xpReward: 160, title: 'API Mock',      tags: ['route', 'api'] },
 ];
 
-const ALL_LEVELS = [...JEST_LEVELS, ...OTHER_LEVELS];
+// Cypress levels — cypress-ui category, two sections: Core Cypress [1,75] and Intermediate [76,150]
+const CYPRESS_LEVELS = [
+  { id: 'cy-01', order: 1,  category: 'cypress-ui', xpReward: 200, title: 'First Selector', tags: ['cy.get', 'selectors'] },
+  { id: 'cy-02', order: 2,  category: 'cypress-ui', xpReward: 200, title: 'Click Action',   tags: ['cy.click', 'actions'] },
+  { id: 'cy-03', order: 3,  category: 'cypress-ui', xpReward: 200, title: 'Type Text',      tags: ['cy.type', 'forms'] },
+  { id: 'cy-76', order: 76, category: 'cypress-ui', xpReward: 210, title: 'DOM Traversal',  tags: ['cy.find', 'traversal'] },
+  { id: 'cy-77', order: 77, category: 'cypress-ui', xpReward: 210, title: 'Aliases',        tags: ['cy.as', 'alias'] },
+];
+
+const ALL_LEVELS = [...JEST_LEVELS, ...PLAYWRIGHT_LEVELS, ...CYPRESS_LEVELS];
 
 const defaultProgress = {
   completedLevels: [],
@@ -125,13 +137,13 @@ describe('Track — Jest track', () => {
     it('does not show Playwright levels on the jest track', async () => {
       renderTrack();
       await screen.findByText('Hello Jest');
-      expect(screen.queryByText('PW Level')).not.toBeInTheDocument();
+      expect(screen.queryByText('First Click')).not.toBeInTheDocument();
     });
 
     it('does not show Cypress levels on the jest track', async () => {
       renderTrack();
       await screen.findByText('Hello Jest');
-      expect(screen.queryByText('CY Level')).not.toBeInTheDocument();
+      expect(screen.queryByText('First Selector')).not.toBeInTheDocument();
     });
 
     it('shows only jest level cards', async () => {
@@ -480,6 +492,550 @@ describe('Track — Jest track', () => {
       await screen.findByText('Hello Jest');
       // Foundations: 0 done out of 3
       expect(screen.getByText('0/3')).toBeInTheDocument();
+    });
+  });
+});
+
+// ── Playwright track ───────────────────────────────────────────────────────────
+
+describe('Track — Playwright track', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    useProgress.mockReturnValue(defaultProgress);
+    gameService.getLevels.mockResolvedValue(ALL_LEVELS);
+  });
+
+  // ── Track metadata ─────────────────────────────────────────────────────────
+
+  describe('track metadata', () => {
+    it('shows the Playwright track title', async () => {
+      renderTrack('playwright');
+      expect(await screen.findByText('Playwright Testing')).toBeInTheDocument();
+    });
+
+    it('shows the Playwright track icon', async () => {
+      renderTrack('playwright');
+      expect(await screen.findByText('🎭')).toBeInTheDocument();
+    });
+
+    it('shows the Playwright track description', async () => {
+      renderTrack('playwright');
+      expect(await screen.findByText(/Master UI automation/)).toBeInTheDocument();
+    });
+
+    it('back link points to /app/game', async () => {
+      renderTrack('playwright');
+      await screen.findByText('Playwright Testing');
+      expect(screen.getByText('← Home').closest('a')).toHaveAttribute('href', '/app/game');
+    });
+  });
+
+  // ── Cross-track isolation ──────────────────────────────────────────────────
+
+  describe('cross-track isolation', () => {
+    it('does not show Jest levels on the playwright track', async () => {
+      renderTrack('playwright');
+      await screen.findByText('First Click');
+      expect(screen.queryByText('Hello Jest')).not.toBeInTheDocument();
+    });
+
+    it('does not show Cypress levels on the playwright track', async () => {
+      renderTrack('playwright');
+      await screen.findByText('First Click');
+      expect(screen.queryByText('First Selector')).not.toBeInTheDocument();
+    });
+
+    it('includes both ui and api category levels', async () => {
+      renderTrack('playwright');
+      await screen.findByText('First Click');
+      expect(screen.getByText('API Mock')).toBeInTheDocument();
+    });
+
+    it('shows only playwright level cards', async () => {
+      renderTrack('playwright');
+      await screen.findByText('First Click');
+      expect(document.querySelectorAll('.level-card').length).toBe(PLAYWRIGHT_LEVELS.length);
+    });
+  });
+
+  // ── Stats display ──────────────────────────────────────────────────────────
+
+  describe('stats display', () => {
+    it('shows 0/N levels done when nothing is complete', async () => {
+      renderTrack('playwright');
+      await screen.findByText('First Click');
+      expect(screen.getByText(`0/${PLAYWRIGHT_LEVELS.length}`)).toBeInTheDocument();
+    });
+
+    it('shows correct done count when levels are completed', async () => {
+      useProgress.mockReturnValue({ ...defaultProgress, completedLevels: ['level-01', 'level-02'] });
+      renderTrack('playwright');
+      await screen.findByText('First Click');
+      expect(screen.getByText(`2/${PLAYWRIGHT_LEVELS.length}`)).toBeInTheDocument();
+    });
+
+    it('shows total XP for the track', async () => {
+      // 150*3 + 160*2 = 770
+      const totalXP = PLAYWRIGHT_LEVELS.reduce((s, l) => s + l.xpReward, 0);
+      renderTrack('playwright');
+      await screen.findByText('First Click');
+      expect(screen.getByText(totalXP.toLocaleString())).toBeInTheDocument();
+    });
+
+    it('uses trackXP.playwright when available', async () => {
+      useProgress.mockReturnValue({
+        ...defaultProgress,
+        completedLevels: ['level-01'],
+        trackXP: { playwright: 8888 },
+      });
+      renderTrack('playwright');
+      await screen.findByText('First Click');
+      expect(screen.getByText('8,888')).toBeInTheDocument();
+    });
+  });
+
+  // ── CTA button ─────────────────────────────────────────────────────────────
+
+  describe('CTA button', () => {
+    it('shows "Begin Track" when no levels are completed', async () => {
+      renderTrack('playwright');
+      expect(await screen.findByText(/Begin Track/)).toBeInTheDocument();
+    });
+
+    it('CTA links to level-01 when nothing is done', async () => {
+      renderTrack('playwright');
+      const cta = await screen.findByText(/Begin Track/);
+      expect(cta.closest('a')).toHaveAttribute('href', '/app/game/level-01');
+    });
+
+    it('shows "Continue Track" after level-01 is completed', async () => {
+      useProgress.mockReturnValue({ ...defaultProgress, completedLevels: ['level-01'] });
+      renderTrack('playwright');
+      expect(await screen.findByText(/Continue Track/)).toBeInTheDocument();
+    });
+
+    it('CTA links to the first incomplete level', async () => {
+      useProgress.mockReturnValue({ ...defaultProgress, completedLevels: ['level-01'] });
+      renderTrack('playwright');
+      const cta = await screen.findByText(/Continue Track/);
+      expect(cta.closest('a')).toHaveAttribute('href', '/app/game/level-02');
+    });
+
+    it('hides CTA when all levels are complete', async () => {
+      useProgress.mockReturnValue({ ...defaultProgress, completedLevels: PLAYWRIGHT_LEVELS.map((l) => l.id) });
+      renderTrack('playwright');
+      await screen.findByText('First Click');
+      expect(screen.queryByText(/Begin Track|Continue Track/)).not.toBeInTheDocument();
+    });
+  });
+
+  // ── Section nav pills ──────────────────────────────────────────────────────
+
+  describe('section nav pills', () => {
+    it('renders 20 section nav pills for the playwright track', async () => {
+      renderTrack('playwright');
+      await screen.findByText('First Click');
+      expect(document.querySelectorAll('.section-nav-pill').length).toBe(20);
+    });
+
+    it('renders the Foundations section pill', async () => {
+      renderTrack('playwright');
+      await screen.findByText('First Click');
+      const pills = Array.from(document.querySelectorAll('.section-nav-pill'));
+      expect(pills.some((p) => p.textContent.includes('Foundations'))).toBe(true);
+    });
+
+    it('renders the Browser Features section pill', async () => {
+      renderTrack('playwright');
+      await screen.findByText('First Click');
+      const pills = Array.from(document.querySelectorAll('.section-nav-pill'));
+      expect(pills.some((p) => p.textContent.includes('Browser Features'))).toBe(true);
+    });
+
+    it('first pill starts as active', async () => {
+      renderTrack('playwright');
+      await screen.findByText('First Click');
+      expect(document.querySelectorAll('.section-nav-pill')[0]).toHaveClass('active');
+    });
+  });
+
+  // ── Level cards ────────────────────────────────────────────────────────────
+
+  describe('level cards', () => {
+    it('renders all playwright level titles', async () => {
+      renderTrack('playwright');
+      await screen.findByText('First Click');
+      expect(screen.getByText('Fill Form')).toBeInTheDocument();
+      expect(screen.getByText('Assertions')).toBeInTheDocument();
+      expect(screen.getByText('Network Route')).toBeInTheDocument();
+      expect(screen.getByText('API Mock')).toBeInTheDocument();
+    });
+
+    it('shows XP reward on level cards', async () => {
+      renderTrack('playwright');
+      await screen.findByText('First Click');
+      expect(screen.getAllByText('+150 XP').length).toBeGreaterThan(0);
+    });
+
+    it('shows tags on level cards', async () => {
+      renderTrack('playwright');
+      await screen.findByText('First Click');
+      expect(screen.getByText('click')).toBeInTheDocument();
+      expect(screen.getByText('locator')).toBeInTheDocument();
+    });
+  });
+
+  // ── isUnlocked logic ───────────────────────────────────────────────────────
+
+  describe('isUnlocked logic', () => {
+    it('level-01 is always unlocked', async () => {
+      renderTrack('playwright');
+      await screen.findByText('First Click');
+      const card = screen.getByText('First Click').closest('a');
+      expect(card).not.toHaveClass('locked');
+      expect(card).toHaveAttribute('href', '/app/game/level-01');
+    });
+
+    it('level-02 is locked when level-01 is not complete', async () => {
+      renderTrack('playwright');
+      await screen.findByText('Fill Form');
+      const card = screen.getByText('Fill Form').closest('a');
+      expect(card).toHaveClass('locked');
+      expect(within(card).getByText('🔒')).toBeInTheDocument();
+    });
+
+    it('level-02 is unlocked when level-01 is complete', async () => {
+      useProgress.mockReturnValue({ ...defaultProgress, completedLevels: ['level-01'] });
+      renderTrack('playwright');
+      await screen.findByText('Fill Form');
+      const card = screen.getByText('Fill Form').closest('a');
+      expect(card).not.toHaveClass('locked');
+      expect(card).toHaveAttribute('href', '/app/game/level-02');
+    });
+
+    it('level-36 is always unlocked — first card of Browser Features section', async () => {
+      renderTrack('playwright');
+      await screen.findByText('Network Route');
+      const card = screen.getByText('Network Route').closest('a');
+      expect(card).not.toHaveClass('locked');
+      expect(card).toHaveAttribute('href', '/app/game/level-36');
+    });
+
+    it('level-37 is locked when level-36 is not complete', async () => {
+      renderTrack('playwright');
+      await screen.findByText('API Mock');
+      const card = screen.getByText('API Mock').closest('a');
+      expect(card).toHaveClass('locked');
+    });
+
+    it('level-37 is unlocked when level-36 is complete', async () => {
+      useProgress.mockReturnValue({ ...defaultProgress, completedLevels: ['level-36'] });
+      renderTrack('playwright');
+      await screen.findByText('API Mock');
+      const card = screen.getByText('API Mock').closest('a');
+      expect(card).not.toHaveClass('locked');
+      expect(card).toHaveAttribute('href', '/app/game/level-37');
+    });
+  });
+
+  // ── Section headers ────────────────────────────────────────────────────────
+
+  describe('section headers', () => {
+    it('shows the Foundations section header', async () => {
+      renderTrack('playwright');
+      await screen.findByText('First Click');
+      const titles = Array.from(document.querySelectorAll('.section-title')).map((el) => el.textContent);
+      expect(titles).toContain('Foundations');
+    });
+
+    it('shows the Browser Features section header', async () => {
+      renderTrack('playwright');
+      await screen.findByText('First Click');
+      const titles = Array.from(document.querySelectorAll('.section-title')).map((el) => el.textContent);
+      expect(titles).toContain('Browser Features');
+    });
+
+    it('shows 0/3 for Foundations when nothing is done', async () => {
+      renderTrack('playwright');
+      await screen.findByText('First Click');
+      // Foundations has level-01, level-02, level-03
+      expect(screen.getByText('0/3')).toBeInTheDocument();
+    });
+
+    it('shows correct count when Foundations levels are completed', async () => {
+      useProgress.mockReturnValue({ ...defaultProgress, completedLevels: ['level-01', 'level-02'] });
+      renderTrack('playwright');
+      await screen.findByText('First Click');
+      expect(screen.getByText('2/3')).toBeInTheDocument();
+    });
+  });
+});
+
+// ── Cypress track ──────────────────────────────────────────────────────────────
+
+describe('Track — Cypress track', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    useProgress.mockReturnValue(defaultProgress);
+    gameService.getLevels.mockResolvedValue(ALL_LEVELS);
+  });
+
+  // ── Track metadata ─────────────────────────────────────────────────────────
+
+  describe('track metadata', () => {
+    it('shows the Cypress track title', async () => {
+      renderTrack('cypress-ui');
+      expect(await screen.findByText('Cypress UI Testing')).toBeInTheDocument();
+    });
+
+    it('shows the Cypress track icon', async () => {
+      renderTrack('cypress-ui');
+      expect(await screen.findByText('🌲')).toBeInTheDocument();
+    });
+
+    it('shows the Cypress track description', async () => {
+      renderTrack('cypress-ui');
+      expect(await screen.findByText(/Master cy\.get/)).toBeInTheDocument();
+    });
+
+    it('back link points to /app/game', async () => {
+      renderTrack('cypress-ui');
+      await screen.findByText('Cypress UI Testing');
+      expect(screen.getByText('← Home').closest('a')).toHaveAttribute('href', '/app/game');
+    });
+  });
+
+  // ── Cross-track isolation ──────────────────────────────────────────────────
+
+  describe('cross-track isolation', () => {
+    it('does not show Jest levels on the cypress track', async () => {
+      renderTrack('cypress-ui');
+      await screen.findByText('First Selector');
+      expect(screen.queryByText('Hello Jest')).not.toBeInTheDocument();
+    });
+
+    it('does not show Playwright levels on the cypress track', async () => {
+      renderTrack('cypress-ui');
+      await screen.findByText('First Selector');
+      expect(screen.queryByText('First Click')).not.toBeInTheDocument();
+    });
+
+    it('shows only cypress-ui level cards', async () => {
+      renderTrack('cypress-ui');
+      await screen.findByText('First Selector');
+      expect(document.querySelectorAll('.level-card').length).toBe(CYPRESS_LEVELS.length);
+    });
+  });
+
+  // ── Stats display ──────────────────────────────────────────────────────────
+
+  describe('stats display', () => {
+    it('shows 0/N levels done when nothing is complete', async () => {
+      renderTrack('cypress-ui');
+      await screen.findByText('First Selector');
+      expect(screen.getByText(`0/${CYPRESS_LEVELS.length}`)).toBeInTheDocument();
+    });
+
+    it('shows correct done count when levels are completed', async () => {
+      useProgress.mockReturnValue({ ...defaultProgress, completedLevels: ['cy-01', 'cy-02'] });
+      renderTrack('cypress-ui');
+      await screen.findByText('First Selector');
+      expect(screen.getByText(`2/${CYPRESS_LEVELS.length}`)).toBeInTheDocument();
+    });
+
+    it('shows total XP for the track', async () => {
+      // 200*3 + 210*2 = 1020
+      const totalXP = CYPRESS_LEVELS.reduce((s, l) => s + l.xpReward, 0);
+      renderTrack('cypress-ui');
+      await screen.findByText('First Selector');
+      expect(screen.getByText(totalXP.toLocaleString())).toBeInTheDocument();
+    });
+
+    it('uses trackXP.cypress-ui when available', async () => {
+      useProgress.mockReturnValue({
+        ...defaultProgress,
+        completedLevels: ['cy-01'],
+        trackXP: { 'cypress-ui': 7777 },
+      });
+      renderTrack('cypress-ui');
+      await screen.findByText('First Selector');
+      expect(screen.getByText('7,777')).toBeInTheDocument();
+    });
+  });
+
+  // ── CTA button ─────────────────────────────────────────────────────────────
+
+  describe('CTA button', () => {
+    it('shows "Begin Track" when no levels are completed', async () => {
+      renderTrack('cypress-ui');
+      expect(await screen.findByText(/Begin Track/)).toBeInTheDocument();
+    });
+
+    it('CTA links to cy-01 when nothing is done', async () => {
+      renderTrack('cypress-ui');
+      const cta = await screen.findByText(/Begin Track/);
+      expect(cta.closest('a')).toHaveAttribute('href', '/app/game/cy-01');
+    });
+
+    it('shows "Continue Track" after cy-01 is completed', async () => {
+      useProgress.mockReturnValue({ ...defaultProgress, completedLevels: ['cy-01'] });
+      renderTrack('cypress-ui');
+      expect(await screen.findByText(/Continue Track/)).toBeInTheDocument();
+    });
+
+    it('CTA links to the first incomplete level', async () => {
+      useProgress.mockReturnValue({ ...defaultProgress, completedLevels: ['cy-01'] });
+      renderTrack('cypress-ui');
+      const cta = await screen.findByText(/Continue Track/);
+      expect(cta.closest('a')).toHaveAttribute('href', '/app/game/cy-02');
+    });
+
+    it('hides CTA when all levels are complete', async () => {
+      useProgress.mockReturnValue({ ...defaultProgress, completedLevels: CYPRESS_LEVELS.map((l) => l.id) });
+      renderTrack('cypress-ui');
+      await screen.findByText('First Selector');
+      expect(screen.queryByText(/Begin Track|Continue Track/)).not.toBeInTheDocument();
+    });
+  });
+
+  // ── Section nav pills ──────────────────────────────────────────────────────
+
+  describe('section nav pills', () => {
+    it('renders 29 section nav pills for the cypress track', async () => {
+      renderTrack('cypress-ui');
+      await screen.findByText('First Selector');
+      expect(document.querySelectorAll('.section-nav-pill').length).toBe(29);
+    });
+
+    it('renders the Core Cypress section pill', async () => {
+      renderTrack('cypress-ui');
+      await screen.findByText('First Selector');
+      const pills = Array.from(document.querySelectorAll('.section-nav-pill'));
+      expect(pills.some((p) => p.textContent.includes('Core Cypress'))).toBe(true);
+    });
+
+    it('renders the Intermediate section pill', async () => {
+      renderTrack('cypress-ui');
+      await screen.findByText('First Selector');
+      const pills = Array.from(document.querySelectorAll('.section-nav-pill'));
+      expect(pills.some((p) => p.textContent.includes('Intermediate'))).toBe(true);
+    });
+
+    it('first pill starts as active', async () => {
+      renderTrack('cypress-ui');
+      await screen.findByText('First Selector');
+      expect(document.querySelectorAll('.section-nav-pill')[0]).toHaveClass('active');
+    });
+  });
+
+  // ── Level cards ────────────────────────────────────────────────────────────
+
+  describe('level cards', () => {
+    it('renders all cypress level titles', async () => {
+      renderTrack('cypress-ui');
+      await screen.findByText('First Selector');
+      expect(screen.getByText('Click Action')).toBeInTheDocument();
+      expect(screen.getByText('Type Text')).toBeInTheDocument();
+      expect(screen.getByText('DOM Traversal')).toBeInTheDocument();
+      expect(screen.getByText('Aliases')).toBeInTheDocument();
+    });
+
+    it('shows XP reward on level cards', async () => {
+      renderTrack('cypress-ui');
+      await screen.findByText('First Selector');
+      expect(screen.getAllByText('+200 XP').length).toBeGreaterThan(0);
+    });
+
+    it('shows tags on level cards', async () => {
+      renderTrack('cypress-ui');
+      await screen.findByText('First Selector');
+      expect(screen.getByText('cy.get')).toBeInTheDocument();
+      expect(screen.getByText('selectors')).toBeInTheDocument();
+    });
+  });
+
+  // ── isUnlocked logic ───────────────────────────────────────────────────────
+
+  describe('isUnlocked logic', () => {
+    it('cy-01 is always unlocked', async () => {
+      renderTrack('cypress-ui');
+      await screen.findByText('First Selector');
+      const card = screen.getByText('First Selector').closest('a');
+      expect(card).not.toHaveClass('locked');
+      expect(card).toHaveAttribute('href', '/app/game/cy-01');
+    });
+
+    it('cy-02 is locked when cy-01 is not complete', async () => {
+      renderTrack('cypress-ui');
+      await screen.findByText('Click Action');
+      const card = screen.getByText('Click Action').closest('a');
+      expect(card).toHaveClass('locked');
+      expect(within(card).getByText('🔒')).toBeInTheDocument();
+    });
+
+    it('cy-02 is unlocked when cy-01 is complete', async () => {
+      useProgress.mockReturnValue({ ...defaultProgress, completedLevels: ['cy-01'] });
+      renderTrack('cypress-ui');
+      await screen.findByText('Click Action');
+      const card = screen.getByText('Click Action').closest('a');
+      expect(card).not.toHaveClass('locked');
+      expect(card).toHaveAttribute('href', '/app/game/cy-02');
+    });
+
+    it('cy-76 is always unlocked — first card of Intermediate section', async () => {
+      renderTrack('cypress-ui');
+      await screen.findByText('DOM Traversal');
+      const card = screen.getByText('DOM Traversal').closest('a');
+      expect(card).not.toHaveClass('locked');
+      expect(card).toHaveAttribute('href', '/app/game/cy-76');
+    });
+
+    it('cy-77 is locked when cy-76 is not complete', async () => {
+      renderTrack('cypress-ui');
+      await screen.findByText('Aliases');
+      const card = screen.getByText('Aliases').closest('a');
+      expect(card).toHaveClass('locked');
+    });
+
+    it('cy-77 is unlocked when cy-76 is complete', async () => {
+      useProgress.mockReturnValue({ ...defaultProgress, completedLevels: ['cy-76'] });
+      renderTrack('cypress-ui');
+      await screen.findByText('Aliases');
+      const card = screen.getByText('Aliases').closest('a');
+      expect(card).not.toHaveClass('locked');
+      expect(card).toHaveAttribute('href', '/app/game/cy-77');
+    });
+  });
+
+  // ── Section headers ────────────────────────────────────────────────────────
+
+  describe('section headers', () => {
+    it('shows the Core Cypress section header', async () => {
+      renderTrack('cypress-ui');
+      await screen.findByText('First Selector');
+      const titles = Array.from(document.querySelectorAll('.section-title')).map((el) => el.textContent);
+      expect(titles).toContain('Core Cypress');
+    });
+
+    it('shows the Intermediate section header', async () => {
+      renderTrack('cypress-ui');
+      await screen.findByText('First Selector');
+      const titles = Array.from(document.querySelectorAll('.section-title')).map((el) => el.textContent);
+      expect(titles).toContain('Intermediate');
+    });
+
+    it('shows 0/3 for Core Cypress when nothing is done', async () => {
+      renderTrack('cypress-ui');
+      await screen.findByText('First Selector');
+      // Core Cypress has cy-01, cy-02, cy-03
+      expect(screen.getByText('0/3')).toBeInTheDocument();
+    });
+
+    it('shows correct count when Core Cypress levels are completed', async () => {
+      useProgress.mockReturnValue({ ...defaultProgress, completedLevels: ['cy-01', 'cy-02'] });
+      renderTrack('cypress-ui');
+      await screen.findByText('First Selector');
+      expect(screen.getByText('2/3')).toBeInTheDocument();
     });
   });
 });
