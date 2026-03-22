@@ -13,19 +13,16 @@ function ExplanationRenderer({ text }) {
   const blocks = text.split(/```/);
   return blocks.map((block, i) => {
     if (i % 2 === 1) {
-      // odd-indexed blocks are inside ``` fences → code block
       return (
         <code key={i} className="explanation-code">
           {block.trim()}
         </code>
       );
     }
-    // even-indexed blocks are plain text paragraphs
     return block
       .split(/\n\n+/)
       .filter(Boolean)
       .map((para, j) => {
-        // Render `inline code` within paragraphs
         const parts = para.split(/`([^`]+)`/);
         return (
           <p key={`${i}-${j}`} className="explanation-paragraph">
@@ -46,16 +43,36 @@ function ExplanationRenderer({ text }) {
 
 ExplanationRenderer.propTypes = { text: PropTypes.string.isRequired };
 
-export function LevelHeader({ level }) {
-  const [showExplanation, setShowExplanation] = useState(false);
+export function LevelHeader({ level, prevId, nextId }) {
+  // Auto-open explanation for early levels (first 10 in the track)
+  const [showExplanation, setShowExplanation] = useState(level.order <= 10);
   const trackCategory = level.category === 'ui' || level.category === 'api' ? 'playwright' : level.category;
   const backTo = `/app/game/track/${trackCategory}`;
 
   return (
     <div className="level-header">
-      <Link to={backTo} className="level-back-link">
-        ← Back to Track
-      </Link>
+      <div className="level-nav-row">
+        <Link to={backTo} className="level-back-link">
+          ← Back to Track
+        </Link>
+        <div className="level-step-nav">
+          {prevId ? (
+            <Link to={`/app/game/${prevId}`} className="step-nav-btn">
+              ← Prev
+            </Link>
+          ) : (
+            <span className="step-nav-btn step-nav-disabled">← Prev</span>
+          )}
+          {nextId ? (
+            <Link to={`/app/game/${nextId}`} className="step-nav-btn">
+              Next →
+            </Link>
+          ) : (
+            <span className="step-nav-btn step-nav-disabled">Next →</span>
+          )}
+        </div>
+      </div>
+
       <div className="level-meta">
         <span className="level-number">Level {level.order}</span>
         <span className="level-xp">+{level.xpReward} XP</span>
@@ -102,5 +119,7 @@ LevelHeader.propTypes = {
     story: PropTypes.string.isRequired,
     objective: PropTypes.string.isRequired,
     explanation: PropTypes.string
-  }).isRequired
+  }).isRequired,
+  prevId: PropTypes.string,
+  nextId: PropTypes.string
 };
