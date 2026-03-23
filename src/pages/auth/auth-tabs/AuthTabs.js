@@ -4,6 +4,7 @@ import Login from '@pages/auth/login/Login';
 import Register from '@pages/auth/register/Register';
 import useLocalStorage from '@hooks/useLocalStorage';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { Utils } from '@services/utils/utils.service';
 import PageLoader from '@components/page-loader/PageLoader';
 
@@ -18,16 +19,18 @@ const AuthTabs = () => {
   const keepLoggedIn = useLocalStorage('keepLoggedIn', 'get');
   const [environment, setEnvironment] = useState('');
   const navigate = useNavigate();
+  const { profile, token } = useSelector((state) => state.user);
+  const isActuallyLoggedIn = !!(profile && token);
 
   useEffect(() => {
     const env = Utils.appEnvironment();
     setEnvironment(env);
-    if (keepLoggedIn) navigate('/');
-  }, [keepLoggedIn, navigate]);
+    if (keepLoggedIn && isActuallyLoggedIn) navigate('/');
+  }, [keepLoggedIn, isActuallyLoggedIn, navigate]);
 
   return (
     <>
-      {keepLoggedIn ? (
+      {keepLoggedIn && isActuallyLoggedIn ? (
         <PageLoader />
       ) : (
         <div className="auth-page">
