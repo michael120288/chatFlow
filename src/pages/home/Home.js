@@ -1,5 +1,7 @@
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { clearUser } from '@redux/reducers/user/user.reducer';
+import { userService } from '@services/api/user/user.service';
 import '@pages/home/Home.scss';
 
 const features = [
@@ -36,15 +38,26 @@ const features = [
 ];
 
 const stats = [
+  { number: '1,180', label: 'Coding Challenges' },
   { number: '39', label: 'QA Scenarios' },
-  { number: '6', label: 'Categories' },
-  { number: '∞', label: 'Practice Runs' },
+  { number: '3', label: 'Test Tracks' },
   { number: '1', label: 'Platform' }
 ];
 
 const Home = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { profile, token } = useSelector((state) => state.user);
+  const isLoggedIn = !!(profile && token);
+
+  const handleSignOut = async () => {
+    try {
+      await userService.logoutUser();
+    } catch {
+      // ignore API errors
+    }
+    dispatch(clearUser());
+  };
 
   const handleFeatureClick = (feature) => {
     if (!feature.path) {
@@ -67,22 +80,14 @@ const Home = () => {
           QA Hub
         </div>
         <div className="home-landing-nav-actions">
-          {profile && token ? (
-            <button
-              className="home-landing-nav-btn home-landing-nav-btn--primary"
-              onClick={() => navigate('/app/social/streams')}
-            >
-              Dashboard
+          {isLoggedIn ? (
+            <button className="home-landing-nav-btn home-landing-nav-btn--ghost" onClick={handleSignOut}>
+              Sign Out
             </button>
           ) : (
-            <>
-              <button className="home-landing-nav-btn home-landing-nav-btn--ghost" onClick={() => navigate('/auth')}>
-                Sign In
-              </button>
-              <button className="home-landing-nav-btn home-landing-nav-btn--primary" onClick={() => navigate('/auth')}>
-                Get Started
-              </button>
-            </>
+            <button className="home-landing-nav-btn home-landing-nav-btn--primary" onClick={() => navigate('/auth')}>
+              Sign In
+            </button>
           )}
         </div>
       </nav>
@@ -102,8 +107,8 @@ const Home = () => {
             <span className="home-landing-title-accent">One Scenario at a Time</span>
           </h1>
           <p className="home-landing-subtitle">
-            A hands-on playground with 39 real UI scenarios, a social platform to automate, and interactive Playwright
-            &amp; Cypress learning games — all in one place.
+            A hands-on playground with 39 real UI scenarios, a social platform to automate, and 1,180 coding challenges
+            across Playwright, Cypress &amp; Jest learning tracks — all in one place.
           </p>
           <div className="home-landing-actions">
             <button
@@ -112,9 +117,15 @@ const Home = () => {
             >
               Start Practising →
             </button>
-            <button className="home-landing-hero-btn home-landing-hero-btn--ghost" onClick={() => navigate('/auth')}>
-              Sign In
-            </button>
+            {isLoggedIn ? (
+              <button className="home-landing-hero-btn home-landing-hero-btn--ghost" onClick={handleSignOut}>
+                Sign Out
+              </button>
+            ) : (
+              <button className="home-landing-hero-btn home-landing-hero-btn--ghost" onClick={() => navigate('/auth')}>
+                Sign In
+              </button>
+            )}
           </div>
         </div>
 

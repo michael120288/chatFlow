@@ -33,7 +33,7 @@ const SSOCallback = () => {
         if (returnUrl) {
           window.location.href = returnUrl;
         } else {
-          navigate('/app/social/streams');
+          navigate('/');
         }
       })
       .catch(() => navigate('/auth'));

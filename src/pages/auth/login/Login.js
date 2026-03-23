@@ -50,7 +50,7 @@ const Login = () => {
           localStorage.setItem('tq_sso_token', data.token);
           ssoRedirecting.current = true;
           window.location.href = `http://localhost:5173/sso?token=${data.token}&return=${encodeURIComponent(
-            'http://localhost:3000/app/social/streams'
+            'http://localhost:3000/'
           )}`;
         }
       } catch {
@@ -70,7 +70,7 @@ const Login = () => {
   useEffect(() => {
     if (ssoRedirecting.current) return;
     if (loading && !user) return;
-    if (user) navigate('/app/social/streams');
+    if (user) navigate('/');
   }, [loading, user, navigate]);
 
   return (

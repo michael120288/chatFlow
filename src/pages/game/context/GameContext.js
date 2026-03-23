@@ -43,13 +43,28 @@ export function GameProvider({ children }) {
   useEffect(() => {
     if (!isAuthenticated) {
       setServerLoaded(false);
+      setState(defaultState);
       return;
     }
     gameService
       .getProgress()
       .then(({ completedLevels, xp }) => {
-        setState((prev) => ({ ...prev, completedLevels, xp }));
-        setServerLoaded(true);
+        // Recompute trackXP from completed levels so stale localStorage data never bleeds across users
+        gameService
+          .getLevels()
+          .then((levels) => {
+            const trackXP = {};
+            for (const id of completedLevels) {
+              const lvl = levels.find((l) => l.id === id);
+              if (lvl) trackXP[lvl.category] = (trackXP[lvl.category] ?? 0) + (lvl.xp ?? 0);
+            }
+            setState((prev) => ({ ...prev, completedLevels, xp, trackXP }));
+            setServerLoaded(true);
+          })
+          .catch(() => {
+            setState((prev) => ({ ...prev, completedLevels, xp, trackXP: {} }));
+            setServerLoaded(true);
+          });
       })
       .catch(() => {
         setServerLoaded(true);
