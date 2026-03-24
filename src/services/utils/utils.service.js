@@ -1,6 +1,5 @@
 import { addNotification, clearNotification } from '@redux/reducers/notifications/notification.reducer';
 import { addUser, clearUser } from '@redux/reducers/user/user.reducer';
-import { APP_ENVIRONMENT } from '@services/axios';
 import { avatarColors } from '@services/utils/static.data';
 import { floor, random, some, findIndex } from 'lodash';
 import millify from 'millify';
@@ -53,13 +52,10 @@ export class Utils {
   }
 
   static appEnvironment() {
-    if (APP_ENVIRONMENT === 'local') {
+    if (process.env.NODE_ENV !== 'production') {
       return 'LOCAL';
-    } else if (APP_ENVIRONMENT === 'development') {
-      return 'DEV';
-    } else if (APP_ENVIRONMENT === 'staging') {
-      return 'STG';
     }
+    return '';
   }
 
   static mapSettingsDropdownItems(setSettings) {

@@ -1,19 +1,6 @@
 import axios from 'axios';
 
-export let BASE_ENDPOINT = '';
-
-// when developing locally, change this value to local
-export const APP_ENVIRONMENT = 'local';
-
-if (APP_ENVIRONMENT === 'local') {
-  BASE_ENDPOINT = 'http://localhost:5000';
-} else if (APP_ENVIRONMENT === 'development') {
-  BASE_ENDPOINT = 'https://api.dev.<your-backend-domain>';
-} else if (APP_ENVIRONMENT === 'staging') {
-  BASE_ENDPOINT = 'https://api.stg.<your-backend-domain>';
-} else if (APP_ENVIRONMENT === 'production') {
-  BASE_ENDPOINT = 'https://api.<your-backend-domain>';
-}
+export const BASE_ENDPOINT = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 const BASE_URL = `${BASE_ENDPOINT}/api/v1`;
 
