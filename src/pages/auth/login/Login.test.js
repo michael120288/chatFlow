@@ -90,21 +90,6 @@ describe('SigIn', () => {
 
       await waitFor(() => expect(mockedUsedNavigate).toHaveBeenCalledWith('/'));
     });
-
-    it('should store tq_sso_token in localStorage', async () => {
-      global.fetch = jest.fn().mockResolvedValueOnce({
-        json: async () => ({ token: 'mock-jwt' })
-      });
-      render(<Login />);
-      const usernameElement = screen.getByLabelText('Username');
-      const passwordElement = screen.getByLabelText('Password');
-      const buttonElement = screen.getByRole('button', { name: /signin/i });
-      userEvent.type(usernameElement, 'manny');
-      userEvent.type(passwordElement, 'qwerty');
-      userEvent.click(buttonElement);
-      await waitFor(() => expect(localStorage.getItem('tq_sso_token')).toBe('mock-jwt'));
-      delete global.fetch;
-    });
   });
 
   describe('Error', () => {

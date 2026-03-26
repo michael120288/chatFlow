@@ -85,24 +85,6 @@ describe('Register', () => {
 
       await waitFor(() => expect(mockedUseNavigate).toHaveBeenCalledWith('/app/social/streams'));
     });
-
-    it('should store tq_sso_token in localStorage', async () => {
-      jest.spyOn(Utils, 'generateAvatar').mockReturnValue('avatar image');
-      global.fetch = jest.fn().mockResolvedValueOnce({
-        json: async () => ({ token: 'mock-jwt' })
-      });
-      render(<Register />);
-      const usernameElement = screen.getByLabelText('Username');
-      const emailElement = screen.getByLabelText('Email');
-      const passwordElement = screen.getByLabelText('Password');
-      const buttonElement = screen.getByRole('button', { name: /signup/i });
-      userEvent.type(usernameElement, 'manny');
-      userEvent.type(emailElement, 'manny@test.com');
-      userEvent.type(passwordElement, 'qwerty');
-      userEvent.click(buttonElement);
-      await waitFor(() => expect(localStorage.getItem('tq_sso_token')).toBe('mock-jwt'));
-      delete global.fetch;
-    });
   });
 
   describe('Error', () => {

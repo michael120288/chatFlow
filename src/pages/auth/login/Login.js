@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { FaArrowRight } from 'react-icons/fa';
 import Input from '@components/input/Input';
 import Button from '@components/button/Button';
@@ -19,7 +19,6 @@ const Login = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [alertType, setAlertType] = useState('');
   const [user, setUser] = useState();
-  const ssoRedirecting = useRef(false);
   const [setStoredUsername] = useLocalStorage('username', 'set');
   const [setLoggedIn] = useLocalStorage('keepLoggedIn', 'set');
   const [pageReload] = useSessionStorage('pageReload', 'set');
@@ -39,23 +38,6 @@ const Login = () => {
       setHasError(false);
       setAlertType('alert-success');
       Utils.dispatchUser(result, pageReload, dispatch, setUser);
-      try {
-        const r = await fetch('http://localhost:4000/api/v1/auth/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username, password })
-        });
-        const data = await r.json();
-        if (data.token) {
-          localStorage.setItem('tq_sso_token', data.token);
-          ssoRedirecting.current = true;
-          window.location.href = `http://localhost:5173/sso?token=${data.token}&return=${encodeURIComponent(
-            'http://localhost:3000/'
-          )}`;
-        }
-      } catch {
-        // TQ fetch failed — fall through to normal navigation via useEffect
-      }
     } catch (error) {
       console.log('Login error:', error);
       console.log('Error response:', error?.response);
@@ -68,7 +50,6 @@ const Login = () => {
   };
 
   useEffect(() => {
-    if (ssoRedirecting.current) return;
     if (loading && !user) return;
     if (user) navigate('/');
   }, [loading, user, navigate]);
