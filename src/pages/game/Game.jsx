@@ -1,16 +1,17 @@
 import PropTypes from 'prop-types';
-import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo, lazy, Suspense } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useLevel } from './hooks/useLevel';
 import { useSubmission } from './hooks/useSubmission';
 import { useGame } from './context/GameContext';
 import { useLevelNavigation } from './hooks/useLevelNavigation';
-import { CodeEditor } from './components/editor/CodeEditor';
 import { EditorToolbar } from './components/editor/EditorToolbar';
 import { TargetPreview } from './components/preview/TargetPreview';
 import { ResultPanel } from './components/result/ResultPanel';
 import { LevelHeader } from './components/level/LevelHeader';
 import './Game.scss';
+
+const CodeEditor = lazy(() => import('./components/editor/CodeEditor').then((m) => ({ default: m.CodeEditor })));
 
 const TOOL_META = {
   'cypress-component': {
@@ -210,7 +211,9 @@ export function Game() {
             showingSolution={hasSavedSolution}
           />
           <div className="editor-area">
-            <CodeEditor value={code} onChange={setCode} readOnly={submitting} />
+            <Suspense fallback={<div>Loading editor...</div>}>
+              <CodeEditor value={code} onChange={setCode} readOnly={submitting} />
+            </Suspense>
           </div>
           <ResultPanel result={result} loading={submitting} error={submitError} />
         </div>

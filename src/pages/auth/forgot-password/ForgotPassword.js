@@ -90,7 +90,7 @@ const ForgotPassword = () => {
               <Input
                 id="email"
                 name="email"
-                type="text"
+                type="email"
                 value={email}
                 labelText="Email address"
                 placeholder="Enter your email"

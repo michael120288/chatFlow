@@ -21,7 +21,8 @@ const SSOCallback = () => {
       return;
     }
 
-    const returnUrl = params.get('return');
+    const rawReturn = params.get('return');
+    const safeReturn = rawReturn && rawReturn.startsWith('/') ? rawReturn : null;
 
     authService
       .ssoLogin(token)
@@ -30,8 +31,8 @@ const SSOCallback = () => {
         setLoggedIn(false);
         setStoredUsername(result.data.user.username);
         dispatch(addUser({ token: result.data.token, profile: result.data.user }));
-        if (returnUrl) {
-          window.location.href = returnUrl;
+        if (safeReturn) {
+          window.location.href = safeReturn;
         } else {
           navigate('/');
         }

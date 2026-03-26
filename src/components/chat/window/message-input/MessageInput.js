@@ -20,7 +20,7 @@ const EmojiPickerComponent = loadable(() => import('./EmojiPicker'), {
 });
 
 const MessageInput = ({ setChatMessage }) => {
-  let [message, setMessage] = useState('');
+  const [message, setMessage] = useState('');
   const dispatch = useDispatch();
   const [showEmojiContainer, setShowEmojiContainer] = useState(false);
   const [showGifContainer, setShowGifContainer] = useState(false);
@@ -37,8 +37,8 @@ const MessageInput = ({ setChatMessage }) => {
       Utils.dispatchNotification('Your message contains inappropriate language.', 'error', dispatch);
       return;
     }
-    message = message || 'Sent an Image';
-    setChatMessage(message.replace(/ +(?= )/g, ''), '', base64File);
+    const displayMessage = message || 'Sent an Image';
+    setChatMessage(displayMessage.replace(/ +(?= )/g, ''), '', base64File);
     setMessage('');
     reset();
   };
@@ -59,8 +59,8 @@ const MessageInput = ({ setChatMessage }) => {
   };
 
   const handleImageClick = () => {
-    message = message || 'Sent an Image';
-    setChatMessage(message.replace(/ +(?= )/g, ''), '', base64File);
+    const displayMessage = message || 'Sent an Image';
+    setChatMessage(displayMessage.replace(/ +(?= )/g, ''), '', base64File);
     reset();
   };
 

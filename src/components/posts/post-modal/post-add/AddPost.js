@@ -235,7 +235,7 @@ const AddPost = ({ selectedImage, selectedPostVideo }) => {
                   <div
                     data-testid="post-editable"
                     name="post"
-                    id="editable"
+                    id="editable-image"
                     ref={(el) => {
                       imageInputRef.current = el;
                       imageInputRef?.current?.focus();

@@ -12,7 +12,8 @@ const Signout = () => {
   const [deleteSessionPageReload] = useSessionStorage('pageReload', 'delete');
 
   useEffect(() => {
-    const returnUrl = new URLSearchParams(window.location.search).get('return') || '/auth';
+    const rawReturn = new URLSearchParams(window.location.search).get('return') || '/auth';
+    const returnUrl = rawReturn.startsWith('/') ? rawReturn : '/auth';
 
     userService
       .logoutUser()

@@ -24,7 +24,7 @@ const ChatList = () => {
   const [isSearching, setIsSearching] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [componentType, setComponentType] = useState('chatList');
-  let [chatMessageList, setChatMessageList] = useState([]);
+  const [chatMessageList, setChatMessageList] = useState([]);
   const [rendered, setRendered] = useState(false);
   const debouncedValue = useDebounce(search, 1000);
   const dispatch = useDispatch();
@@ -85,18 +85,18 @@ const ChatList = () => {
 
   const removeSelectedUserFromList = (event) => {
     event.stopPropagation();
-    chatMessageList = cloneDeep(chatMessageList);
-    const userIndex = findIndex(chatMessageList, ['receiverId', searchParams.get('id')]);
+    const updatedList = cloneDeep(chatMessageList);
+    const userIndex = findIndex(updatedList, ['receiverId', searchParams.get('id')]);
     if (userIndex > -1) {
-      chatMessageList.splice(userIndex, 1);
+      updatedList.splice(userIndex, 1);
       setSelectedUser(null);
-      setChatMessageList(chatMessageList);
+      setChatMessageList(updatedList);
       ChatUtils.updatedSelectedChatUser({
-        chatMessageList,
+        chatMessageList: updatedList,
         profile,
         username: searchParams.get('username'),
         setSelectedChatUser,
-        params: chatMessageList.length ? updateQueryParams(chatMessageList[0]) : null,
+        params: updatedList.length ? updateQueryParams(updatedList[0]) : null,
         pathname: location.pathname,
         navigate,
         dispatch

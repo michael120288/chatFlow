@@ -39,9 +39,6 @@ const Login = () => {
       setAlertType('alert-success');
       Utils.dispatchUser(result, pageReload, dispatch, setUser);
     } catch (error) {
-      console.log('Login error:', error);
-      console.log('Error response:', error?.response);
-      console.log('Error response data:', error?.response?.data);
       setLoading(false);
       setHasError(true);
       setAlertType('alert-error');

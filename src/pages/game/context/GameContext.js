@@ -57,6 +57,7 @@ export function GameProvider({ children }) {
               const lvl = levels.find((l) => l.id === id);
               if (lvl) trackXP[lvl.category] = (trackXP[lvl.category] ?? 0) + (lvl.xp ?? 0);
             }
+            setTotalLevels(levels.length);
             setState((prev) => ({ ...prev, completedLevels, xp, trackXP }));
             setServerLoaded(true);
           })
@@ -76,7 +77,7 @@ export function GameProvider({ children }) {
 
   useEffect(() => {
     if (!isAuthenticated || !serverLoaded) return;
-    gameService.saveProgress({ completedLevels: state.completedLevels, xp: state.xp }).catch(() => {});
+    gameService.saveProgress({ completedLevels: state.completedLevels, xp: state.xp }).catch((err) => { console.warn('Progress sync failed:', err?.message); });
   }, [state.completedLevels, state.xp, isAuthenticated, serverLoaded]);
 
   const addXP = useCallback((amount, track) => {

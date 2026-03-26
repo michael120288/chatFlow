@@ -42,9 +42,6 @@ const Register = () => {
       setAlertType('alert-success');
       Utils.dispatchUser(result, pageReload, dispatch, setUser);
     } catch (error) {
-      console.log('Registration error:', error);
-      console.log('Error response:', error?.response);
-      console.log('Error response data:', error?.response?.data);
       setLoading(false);
       setHasError(true);
       setAlertType('alert-error');
@@ -79,7 +76,7 @@ const Register = () => {
           <Input
             id="email"
             name="email"
-            type="text"
+            type="email"
             value={email}
             labelText="Email"
             placeholder="Enter Email"
