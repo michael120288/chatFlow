@@ -9,7 +9,7 @@ function renderToolbar(props = {}) {
     onReset: jest.fn(),
     hints: HINTS,
     loading: false,
-    showingSolution: false,
+    showingSolution: false
   };
   return render(<EditorToolbar {...defaults} {...props} />);
 }

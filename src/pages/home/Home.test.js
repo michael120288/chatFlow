@@ -14,11 +14,11 @@ describe('Home', () => {
   });
 
   describe('Test Quest button', () => {
-    it('navigates to /app/game when clicked', () => {
+    it('navigates to /auth when not logged in and Play Now is clicked', () => {
       render(<Home />);
-      const button = screen.getByRole('button', { name: /test quest/i });
+      const button = screen.getByRole('button', { name: /play now/i });
       fireEvent.click(button);
-      expect(mockedUsedNavigate).toHaveBeenCalledWith('/app/game');
+      expect(mockedUsedNavigate).toHaveBeenCalledWith('/auth');
     });
   });
 });

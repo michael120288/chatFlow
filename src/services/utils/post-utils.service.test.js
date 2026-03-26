@@ -124,16 +124,21 @@ describe('PostUtils', () => {
   describe('sendPostWithFileRequest', () => {
     it('sets apiResponse to success on image post success', async () => {
       server.use(
-        rest.post(`${BASE_URL}/post/image/post`, (req, res, ctx) =>
-          res(ctx.json({ message: 'Image post created' }))
-        )
+        rest.post(`${BASE_URL}/post/image/post`, (req, res, ctx) => res(ctx.json({ message: 'Image post created' })))
       );
       const setApiResponse = jest.fn();
       const setLoading = jest.fn();
       const dispatch = jest.fn();
       const imageInputRef = { current: { textContent: '' } };
 
-      await PostUtils.sendPostWithFileRequest('image', { post: 'hello' }, imageInputRef, setApiResponse, setLoading, dispatch);
+      await PostUtils.sendPostWithFileRequest(
+        'image',
+        { post: 'hello' },
+        imageInputRef,
+        setApiResponse,
+        setLoading,
+        dispatch
+      );
 
       expect(setApiResponse).toHaveBeenCalledWith('success');
       expect(setLoading).toHaveBeenCalledWith(false);
@@ -183,7 +188,14 @@ describe('PostUtils', () => {
       const setLoading = jest.fn();
       const dispatch = jest.fn();
 
-      await PostUtils.sendUpdatePostWithFileRequest('image', 'img-post-id', { post: 'updated' }, setApiResponse, setLoading, dispatch);
+      await PostUtils.sendUpdatePostWithFileRequest(
+        'image',
+        'img-post-id',
+        { post: 'updated' },
+        setApiResponse,
+        setLoading,
+        dispatch
+      );
 
       expect(dispatch).toHaveBeenCalled();
     });
@@ -198,7 +210,14 @@ describe('PostUtils', () => {
       const setLoading = jest.fn();
       const dispatch = jest.fn();
 
-      await PostUtils.sendUpdatePostWithFileRequest('image', 'bad-img-id', { post: 'x' }, setApiResponse, setLoading, dispatch);
+      await PostUtils.sendUpdatePostWithFileRequest(
+        'image',
+        'bad-img-id',
+        { post: 'x' },
+        setApiResponse,
+        setLoading,
+        dispatch
+      );
 
       expect(setApiResponse).toHaveBeenCalledWith('error');
     });

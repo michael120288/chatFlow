@@ -25,6 +25,7 @@ describe('useProgress', () => {
     localStorage.clear();
     jest.clearAllMocks();
     gameService.getProgress.mockResolvedValue({ completedLevels: [], xp: 0 });
+    gameService.getLevels.mockResolvedValue([]);
     gameService.saveProgress.mockResolvedValue(undefined);
   });
 

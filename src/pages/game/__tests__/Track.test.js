@@ -10,7 +10,7 @@ import { useProgress } from '../hooks/useProgress';
 jest.mock('@services/api/game/game.service');
 jest.mock('../hooks/useProgress');
 jest.mock('../components/progress/XPBar', () => ({
-  XPBar: () => <div data-testid="xp-bar" />,
+  XPBar: () => <div data-testid="xp-bar" />
 }));
 
 // IntersectionObserver is not implemented in JSDOM
@@ -24,36 +24,57 @@ global.IntersectionObserver = class {
 // Jest levels — use orders that align with trackMeta sections:
 //   Foundations: [1,10]  |  Numeric: [11,20]
 const JEST_LEVELS = [
-  { id: 'jest-01', order: 1,  category: 'jest', xpReward: 130, title: 'Hello Jest',   tags: ['toBe', 'test'] },
-  { id: 'jest-02', order: 2,  category: 'jest', xpReward: 130, title: 'Equality',     tags: ['toEqual', 'describe'] },
-  { id: 'jest-03', order: 3,  category: 'jest', xpReward: 130, title: 'Truthiness',   tags: ['toBeTruthy'] },
-  { id: 'jest-11', order: 11, category: 'jest', xpReward: 140, title: 'Numbers',      tags: ['toBeGreaterThan'] },
-  { id: 'jest-12', order: 12, category: 'jest', xpReward: 140, title: 'Closeness',    tags: ['toBeCloseTo'] },
+  { id: 'jest-01', order: 1, category: 'jest', xpReward: 130, title: 'Hello Jest', tags: ['toBe', 'test'] },
+  { id: 'jest-02', order: 2, category: 'jest', xpReward: 130, title: 'Equality', tags: ['toEqual', 'describe'] },
+  { id: 'jest-03', order: 3, category: 'jest', xpReward: 130, title: 'Truthiness', tags: ['toBeTruthy'] },
+  { id: 'jest-11', order: 11, category: 'jest', xpReward: 140, title: 'Numbers', tags: ['toBeGreaterThan'] },
+  { id: 'jest-12', order: 12, category: 'jest', xpReward: 140, title: 'Closeness', tags: ['toBeCloseTo'] }
 ];
 
 // Playwright levels — ui + api categories, two sections: Foundations [1,35] and Browser Features [36,75]
 const PLAYWRIGHT_LEVELS = [
-  { id: 'level-01', order: 1,  category: 'ui',  xpReward: 150, title: 'First Click',   tags: ['click', 'locator'] },
-  { id: 'level-02', order: 2,  category: 'ui',  xpReward: 150, title: 'Fill Form',     tags: ['fill', 'type'] },
-  { id: 'level-03', order: 3,  category: 'ui',  xpReward: 150, title: 'Assertions',    tags: ['expect', 'toBeVisible'] },
-  { id: 'level-36', order: 36, category: 'ui',  xpReward: 160, title: 'Network Route', tags: ['route', 'fulfill'] },
-  { id: 'level-37', order: 37, category: 'api', xpReward: 160, title: 'API Mock',      tags: ['route', 'api'] },
+  { id: 'level-01', order: 1, category: 'ui', xpReward: 150, title: 'First Click', tags: ['click', 'locator'] },
+  { id: 'level-02', order: 2, category: 'ui', xpReward: 150, title: 'Fill Form', tags: ['fill', 'type'] },
+  { id: 'level-03', order: 3, category: 'ui', xpReward: 150, title: 'Assertions', tags: ['expect', 'toBeVisible'] },
+  { id: 'level-36', order: 36, category: 'ui', xpReward: 160, title: 'Network Route', tags: ['route', 'fulfill'] },
+  { id: 'level-37', order: 37, category: 'api', xpReward: 160, title: 'API Mock', tags: ['route', 'api'] }
 ];
 
 // Cypress levels — cypress-ui category, two sections: Core Cypress [1,75] and Intermediate [76,150]
 const CYPRESS_LEVELS = [
-  { id: 'cy-01', order: 1,  category: 'cypress-ui', xpReward: 200, title: 'First Selector', tags: ['cy.get', 'selectors'] },
-  { id: 'cy-02', order: 2,  category: 'cypress-ui', xpReward: 200, title: 'Click Action',   tags: ['cy.click', 'actions'] },
-  { id: 'cy-03', order: 3,  category: 'cypress-ui', xpReward: 200, title: 'Type Text',      tags: ['cy.type', 'forms'] },
-  { id: 'cy-76', order: 76, category: 'cypress-ui', xpReward: 210, title: 'DOM Traversal',  tags: ['cy.find', 'traversal'] },
-  { id: 'cy-77', order: 77, category: 'cypress-ui', xpReward: 210, title: 'Aliases',        tags: ['cy.as', 'alias'] },
+  {
+    id: 'cy-01',
+    order: 1,
+    category: 'cypress-ui',
+    xpReward: 200,
+    title: 'First Selector',
+    tags: ['cy.get', 'selectors']
+  },
+  {
+    id: 'cy-02',
+    order: 2,
+    category: 'cypress-ui',
+    xpReward: 200,
+    title: 'Click Action',
+    tags: ['cy.click', 'actions']
+  },
+  { id: 'cy-03', order: 3, category: 'cypress-ui', xpReward: 200, title: 'Type Text', tags: ['cy.type', 'forms'] },
+  {
+    id: 'cy-76',
+    order: 76,
+    category: 'cypress-ui',
+    xpReward: 210,
+    title: 'DOM Traversal',
+    tags: ['cy.find', 'traversal']
+  },
+  { id: 'cy-77', order: 77, category: 'cypress-ui', xpReward: 210, title: 'Aliases', tags: ['cy.as', 'alias'] }
 ];
 
 const ALL_LEVELS = [...JEST_LEVELS, ...PLAYWRIGHT_LEVELS, ...CYPRESS_LEVELS];
 
 const defaultProgress = {
   completedLevels: [],
-  trackXP: {},
+  trackXP: {}
 };
 
 // ── Render helper ──────────────────────────────────────────────────────────────
@@ -166,7 +187,7 @@ describe('Track — Jest track', () => {
     it('shows correct done count when levels are completed', async () => {
       useProgress.mockReturnValue({
         ...defaultProgress,
-        completedLevels: ['jest-01', 'jest-02'],
+        completedLevels: ['jest-01', 'jest-02']
       });
       renderTrack();
       await screen.findByText('Hello Jest');
@@ -192,7 +213,7 @@ describe('Track — Jest track', () => {
       useProgress.mockReturnValue({
         ...defaultProgress,
         completedLevels: ['jest-01'],
-        trackXP: { jest: 9999 },
+        trackXP: { jest: 9999 }
       });
       renderTrack();
       await screen.findByText('Hello Jest');
@@ -216,7 +237,7 @@ describe('Track — Jest track', () => {
     it('shows "Continue Track" when at least one level is completed', async () => {
       useProgress.mockReturnValue({
         ...defaultProgress,
-        completedLevels: ['jest-01'],
+        completedLevels: ['jest-01']
       });
       renderTrack();
       expect(await screen.findByText(/Continue Track/)).toBeInTheDocument();
@@ -225,7 +246,7 @@ describe('Track — Jest track', () => {
     it('CTA links to the first incomplete level', async () => {
       useProgress.mockReturnValue({
         ...defaultProgress,
-        completedLevels: ['jest-01'],
+        completedLevels: ['jest-01']
       });
       renderTrack();
       const cta = await screen.findByText(/Continue Track/);
@@ -241,7 +262,7 @@ describe('Track — Jest track', () => {
     it('hides CTA when all levels are complete', async () => {
       useProgress.mockReturnValue({
         ...defaultProgress,
-        completedLevels: JEST_LEVELS.map((l) => l.id),
+        completedLevels: JEST_LEVELS.map((l) => l.id)
       });
       renderTrack();
       await screen.findByText('Hello Jest');
@@ -262,7 +283,7 @@ describe('Track — Jest track', () => {
     it('progress bar fill is 100% when all levels are done', async () => {
       useProgress.mockReturnValue({
         ...defaultProgress,
-        completedLevels: JEST_LEVELS.map((l) => l.id),
+        completedLevels: JEST_LEVELS.map((l) => l.id)
       });
       renderTrack();
       await screen.findByText('Hello Jest');
@@ -273,7 +294,7 @@ describe('Track — Jest track', () => {
     it('progress bar fill reflects partial completion', async () => {
       useProgress.mockReturnValue({
         ...defaultProgress,
-        completedLevels: ['jest-01', 'jest-02'], // 2 of 5
+        completedLevels: ['jest-01', 'jest-02'] // 2 of 5
       });
       renderTrack();
       await screen.findByText('Hello Jest');
@@ -357,7 +378,7 @@ describe('Track — Jest track', () => {
     it('shows ✓ on a completed card', async () => {
       useProgress.mockReturnValue({
         ...defaultProgress,
-        completedLevels: ['jest-01'],
+        completedLevels: ['jest-01']
       });
       renderTrack();
       await screen.findByText('Hello Jest');
@@ -368,7 +389,7 @@ describe('Track — Jest track', () => {
     it('adds "done" class to completed card', async () => {
       useProgress.mockReturnValue({
         ...defaultProgress,
-        completedLevels: ['jest-01'],
+        completedLevels: ['jest-01']
       });
       renderTrack();
       await screen.findByText('Hello Jest');
@@ -378,7 +399,7 @@ describe('Track — Jest track', () => {
     it('completed card links to the level', async () => {
       useProgress.mockReturnValue({
         ...defaultProgress,
-        completedLevels: ['jest-01'],
+        completedLevels: ['jest-01']
       });
       renderTrack();
       await screen.findByText('Hello Jest');
@@ -409,7 +430,7 @@ describe('Track — Jest track', () => {
     it('jest-02 is unlocked when jest-01 is complete', async () => {
       useProgress.mockReturnValue({
         ...defaultProgress,
-        completedLevels: ['jest-01'],
+        completedLevels: ['jest-01']
       });
       renderTrack();
       await screen.findByText('Equality');
@@ -437,7 +458,7 @@ describe('Track — Jest track', () => {
     it('jest-12 is unlocked when jest-11 is complete', async () => {
       useProgress.mockReturnValue({
         ...defaultProgress,
-        completedLevels: ['jest-11'],
+        completedLevels: ['jest-11']
       });
       renderTrack();
       await screen.findByText('Closeness');
@@ -479,7 +500,7 @@ describe('Track — Jest track', () => {
     it('shows the correct done/total count per section', async () => {
       useProgress.mockReturnValue({
         ...defaultProgress,
-        completedLevels: ['jest-01', 'jest-02'],
+        completedLevels: ['jest-01', 'jest-02']
       });
       renderTrack();
       await screen.findByText('Hello Jest');
@@ -586,7 +607,7 @@ describe('Track — Playwright track', () => {
       useProgress.mockReturnValue({
         ...defaultProgress,
         completedLevels: ['level-01'],
-        trackXP: { playwright: 8888 },
+        trackXP: { playwright: 8888 }
       });
       renderTrack('playwright');
       await screen.findByText('First Click');
@@ -855,7 +876,7 @@ describe('Track — Cypress track', () => {
       useProgress.mockReturnValue({
         ...defaultProgress,
         completedLevels: ['cy-01'],
-        trackXP: { 'cypress-ui': 7777 },
+        trackXP: { 'cypress-ui': 7777 }
       });
       renderTrack('cypress-ui');
       await screen.findByText('First Selector');

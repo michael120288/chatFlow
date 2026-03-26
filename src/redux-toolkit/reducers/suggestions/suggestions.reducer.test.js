@@ -34,10 +34,7 @@ describe('suggestions reducer', () => {
 
     it('should populate users and clear isLoading on fulfilled', () => {
       const users = [{ _id: 'u1' }, { _id: 'u2' }];
-      const result = reducer(
-        { ...initialState, isLoading: true },
-        getUserSuggestions.fulfilled({ users }, 'req-1')
-      );
+      const result = reducer({ ...initialState, isLoading: true }, getUserSuggestions.fulfilled({ users }, 'req-1'));
       expect(result).toEqual({ users, isLoading: false });
     });
 

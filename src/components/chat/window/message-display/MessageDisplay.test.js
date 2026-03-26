@@ -96,7 +96,9 @@ describe('MessageDisplay', () => {
       props.chatMessages = [messageData];
       render(<MessageDisplay {...props} deleteChatMessage={jest.fn()} />);
       const messageContent = await screen.findAllByTestId('message-content');
-      act(() => { fireEvent.click(messageContent[0]); });
+      act(() => {
+        fireEvent.click(messageContent[0]);
+      });
       const dialog = await screen.findByTestId('dialog-container');
       expect(dialog).toBeInTheDocument();
       expect(screen.getByText('Delete message?')).toBeInTheDocument();
@@ -106,9 +108,13 @@ describe('MessageDisplay', () => {
       props.chatMessages = [messageData];
       render(<MessageDisplay {...props} deleteChatMessage={jest.fn()} />);
       const messageContent = await screen.findAllByTestId('message-content');
-      act(() => { fireEvent.click(messageContent[0]); });
+      act(() => {
+        fireEvent.click(messageContent[0]);
+      });
       await screen.findByTestId('dialog-container');
-      act(() => { userEvent.click(screen.getByText('CANCEL')); });
+      act(() => {
+        userEvent.click(screen.getByText('CANCEL'));
+      });
       expect(screen.queryByTestId('dialog-container')).not.toBeInTheDocument();
     });
 
@@ -117,9 +123,13 @@ describe('MessageDisplay', () => {
       props.chatMessages = [messageData];
       render(<MessageDisplay {...props} deleteChatMessage={deleteChatMessage} />);
       const messageContent = await screen.findAllByTestId('message-content');
-      act(() => { fireEvent.click(messageContent[0]); });
+      act(() => {
+        fireEvent.click(messageContent[0]);
+      });
       await screen.findByTestId('dialog-container');
-      act(() => { userEvent.click(screen.getByText('DELETE FOR EVERYONE')); });
+      act(() => {
+        userEvent.click(screen.getByText('DELETE FOR EVERYONE'));
+      });
       expect(deleteChatMessage).toHaveBeenCalledWith(
         messageData.senderId,
         messageData.receiverId,

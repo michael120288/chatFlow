@@ -7,7 +7,7 @@ const PASS_RESULT = {
   xpAwarded: 150,
   stdout: 'All specs passed!',
   stderr: '',
-  exitCode: 0,
+  exitCode: 0
 };
 
 const FAIL_RESULT = {
@@ -16,7 +16,7 @@ const FAIL_RESULT = {
   xpAwarded: 0,
   stdout: '1 failing',
   stderr: 'AssertionError: expected false to equal true',
-  exitCode: 1,
+  exitCode: 1
 };
 
 describe('ResultPanel', () => {

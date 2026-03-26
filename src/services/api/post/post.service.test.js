@@ -17,13 +17,17 @@ describe('PostService', () => {
   });
 
   it('createPostWithImage sends to image post endpoint', async () => {
-    server.use(rest.post(`${BASE_URL}/post/image/post`, (req, res, ctx) => res(ctx.json({ message: 'Image post created' }))));
+    server.use(
+      rest.post(`${BASE_URL}/post/image/post`, (req, res, ctx) => res(ctx.json({ message: 'Image post created' })))
+    );
     const response = await postService.createPostWithImage({ post: 'img post' });
     expect(response.data.message).toBe('Image post created');
   });
 
   it('createPostWithVideo sends to video post endpoint', async () => {
-    server.use(rest.post(`${BASE_URL}/post/video/post`, (req, res, ctx) => res(ctx.json({ message: 'Video post created' }))));
+    server.use(
+      rest.post(`${BASE_URL}/post/video/post`, (req, res, ctx) => res(ctx.json({ message: 'Video post created' })))
+    );
     const response = await postService.createPostWithVideo({ post: 'vid post' });
     expect(response.data.message).toBe('Video post created');
   });
@@ -34,25 +38,37 @@ describe('PostService', () => {
   });
 
   it('updatePostWithImage sends to image update endpoint', async () => {
-    server.use(rest.put(`${BASE_URL}/post/image/:postId`, (req, res, ctx) => res(ctx.json({ message: 'Image post updated' }))));
+    server.use(
+      rest.put(`${BASE_URL}/post/image/:postId`, (req, res, ctx) => res(ctx.json({ message: 'Image post updated' })))
+    );
     const response = await postService.updatePostWithImage('p123', { post: 'img updated' });
     expect(response.data.message).toBe('Image post updated');
   });
 
   it('updatePostWithVideo sends to video update endpoint', async () => {
-    server.use(rest.put(`${BASE_URL}/post/video/:postId`, (req, res, ctx) => res(ctx.json({ message: 'Video post updated' }))));
+    server.use(
+      rest.put(`${BASE_URL}/post/video/:postId`, (req, res, ctx) => res(ctx.json({ message: 'Video post updated' })))
+    );
     const response = await postService.updatePostWithVideo('p123', { post: 'vid updated' });
     expect(response.data.message).toBe('Video post updated');
   });
 
   it('getReactionsByUsername returns reactions', async () => {
-    server.use(rest.get(`${BASE_URL}/post/reactions/username/:username`, (req, res, ctx) => res(ctx.json({ message: 'Reactions', reactions: [] }))));
+    server.use(
+      rest.get(`${BASE_URL}/post/reactions/username/:username`, (req, res, ctx) =>
+        res(ctx.json({ message: 'Reactions', reactions: [] }))
+      )
+    );
     const response = await postService.getReactionsByUsername('manny');
     expect(response.data.reactions).toEqual([]);
   });
 
   it('getPostReactions returns reactions for a post', async () => {
-    server.use(rest.get(`${BASE_URL}/post/reactions/:postId`, (req, res, ctx) => res(ctx.json({ message: 'Post reactions', reactions: [] }))));
+    server.use(
+      rest.get(`${BASE_URL}/post/reactions/:postId`, (req, res, ctx) =>
+        res(ctx.json({ message: 'Post reactions', reactions: [] }))
+      )
+    );
     const response = await postService.getPostReactions('p123');
     expect(response.data.reactions).toEqual([]);
   });
@@ -83,7 +99,11 @@ describe('PostService', () => {
   });
 
   it('getPostsWithVideos returns video posts', async () => {
-    server.use(rest.get(`${BASE_URL}/post/videos/:page`, (req, res, ctx) => res(ctx.json({ message: 'Posts with videos', posts: [] }))));
+    server.use(
+      rest.get(`${BASE_URL}/post/videos/:page`, (req, res, ctx) =>
+        res(ctx.json({ message: 'Posts with videos', posts: [] }))
+      )
+    );
     const response = await postService.getPostsWithVideos(1);
     expect(response.data.posts).toEqual([]);
   });

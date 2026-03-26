@@ -38,12 +38,11 @@ export function GameProvider({ children }) {
   const isAuthenticated = !!token;
   const [state, setState] = useState(loadState);
   const [serverLoaded, setServerLoaded] = useState(false);
-  const [totalLevels, setTotalLevels] = useState(0);
+  const [totalLevels, setTotalLevels] = useState(59);
 
   useEffect(() => {
     if (!isAuthenticated) {
       setServerLoaded(false);
-      setState(defaultState);
       return;
     }
     gameService

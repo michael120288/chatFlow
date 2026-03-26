@@ -72,7 +72,7 @@ describe('CardComments', () => {
       expect(screen.getByText('OtherUser')).toBeInTheDocument();
     });
 
-    it('does not show options button for another user\'s comment', () => {
+    it("does not show options button for another user's comment", () => {
       render(<CardComments {...defaultProps} comments={[mockComments[1]]} />);
       // options button is only rendered for own comments
       const buttons = screen.getAllByRole('button');

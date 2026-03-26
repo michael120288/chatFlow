@@ -37,7 +37,7 @@ describe('chatService', () => {
     await chatService.markMessagesAsRead('sender1', 'receiver1');
     expect(axios.put).toHaveBeenCalledWith('/chat/message/mark-as-read', {
       senderId: 'sender1',
-      receiverId: 'receiver1',
+      receiverId: 'receiver1'
     });
   });
 
@@ -58,8 +58,6 @@ describe('chatService', () => {
   it('markMessageAsDelete DELETEs the correct URL', async () => {
     axios.delete.mockResolvedValueOnce({ data: {} });
     await chatService.markMessageAsDelete('msg1', 'sender1', 'receiver1', 'deleteForMe');
-    expect(axios.delete).toHaveBeenCalledWith(
-      '/chat/message/mark-as-deleted/msg1/sender1/receiver1/deleteForMe'
-    );
+    expect(axios.delete).toHaveBeenCalledWith('/chat/message/mark-as-deleted/msg1/sender1/receiver1/deleteForMe');
   });
 });

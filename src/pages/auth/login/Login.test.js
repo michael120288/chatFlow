@@ -88,7 +88,7 @@ describe('SigIn', () => {
       userEvent.type(passwordElement, 'qwerty');
       userEvent.click(buttonElement);
 
-      await waitFor(() => expect(mockedUsedNavigate).toHaveBeenCalledWith('/app/social/streams'));
+      await waitFor(() => expect(mockedUsedNavigate).toHaveBeenCalledWith('/'));
     });
 
     it('should store tq_sso_token in localStorage', async () => {

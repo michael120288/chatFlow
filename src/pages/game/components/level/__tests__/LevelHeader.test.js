@@ -10,7 +10,7 @@ const LEVEL = {
   tags: ['cy.get', 'assertions', 'selectors'],
   title: 'The Selector Sage',
   story: 'A wizard needs to select elements wisely.',
-  objective: 'Use cy.get() to find every element on the page.',
+  objective: 'Use cy.get() to find every element on the page.'
 };
 
 describe('LevelHeader', () => {

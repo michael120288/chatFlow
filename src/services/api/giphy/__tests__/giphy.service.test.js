@@ -12,7 +12,7 @@ describe('giphyService', () => {
     axios.get.mockResolvedValueOnce({ data: { data: [] } });
     await giphyService.search('cats');
     expect(axios.get).toHaveBeenCalledWith(`${GIPHY_URL}/search`, {
-      params: { api_key: process.env.REACT_APP_GIPHY_API_KEY, q: 'cats' },
+      params: { api_key: process.env.REACT_APP_GIPHY_API_KEY, q: 'cats' }
     });
   });
 
@@ -20,7 +20,7 @@ describe('giphyService', () => {
     axios.get.mockResolvedValueOnce({ data: { data: [] } });
     await giphyService.trending();
     expect(axios.get).toHaveBeenCalledWith(`${GIPHY_URL}/trending`, {
-      params: { api_key: process.env.REACT_APP_GIPHY_API_KEY },
+      params: { api_key: process.env.REACT_APP_GIPHY_API_KEY }
     });
   });
 

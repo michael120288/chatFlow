@@ -18,7 +18,7 @@ const defaultProgress = {
   completedLevels: [],
   trackXP: {},
   setTotalLevels: jest.fn(),
-  resetProgress: mockResetProgress,
+  resetProgress: mockResetProgress
 };
 
 // ── Fixtures ───────────────────────────────────────────────────────────────────
@@ -26,17 +26,15 @@ const defaultProgress = {
 const JEST_LEVELS = [
   { id: 'jest-01', category: 'jest', xpReward: 130 },
   { id: 'jest-02', category: 'jest', xpReward: 130 },
-  { id: 'jest-03', category: 'jest', xpReward: 130 },
+  { id: 'jest-03', category: 'jest', xpReward: 130 }
 ];
 
 const PLAYWRIGHT_LEVELS = [
   { id: 'level-01', category: 'ui', xpReward: 150 },
-  { id: 'level-02', category: 'ui', xpReward: 150 },
+  { id: 'level-02', category: 'ui', xpReward: 150 }
 ];
 
-const CYPRESS_LEVELS = [
-  { id: 'cy-01', category: 'cypress-ui', xpReward: 200 },
-];
+const CYPRESS_LEVELS = [{ id: 'cy-01', category: 'cypress-ui', xpReward: 200 }];
 
 const ALL_LEVELS = [...PLAYWRIGHT_LEVELS, ...CYPRESS_LEVELS, ...JEST_LEVELS];
 
@@ -80,9 +78,7 @@ describe('GameHome', () => {
     it('shows an error message when the API call fails', async () => {
       gameService.getLevels.mockRejectedValue(new Error('Network error'));
       renderGameHome();
-      await waitFor(() =>
-        expect(screen.getByText(/Failed to load levels: Network error/)).toBeInTheDocument()
-      );
+      await waitFor(() => expect(screen.getByText(/Failed to load levels: Network error/)).toBeInTheDocument());
     });
 
     it('does not show track cards when there is an error', async () => {
@@ -103,9 +99,7 @@ describe('GameHome', () => {
 
     it('shows total level count in hero stats after load', async () => {
       renderGameHome();
-      await waitFor(() =>
-        expect(screen.getByText(ALL_LEVELS.length.toString())).toBeInTheDocument()
-      );
+      await waitFor(() => expect(screen.getByText(ALL_LEVELS.length.toString())).toBeInTheDocument());
     });
 
     it('shows "3 Tracks" in hero stats', async () => {
@@ -170,7 +164,7 @@ describe('GameHome', () => {
     it('shows correct completion count when some jest levels are done', async () => {
       useProgress.mockReturnValue({
         ...defaultProgress,
-        completedLevels: ['jest-01', 'jest-02'],
+        completedLevels: ['jest-01', 'jest-02']
       });
       renderGameHome();
       await waitFor(() => expect(screen.getByText('Jest Unit Testing')).toBeInTheDocument());
@@ -188,7 +182,7 @@ describe('GameHome', () => {
     it('progress bar reflects partial completion', async () => {
       useProgress.mockReturnValue({
         ...defaultProgress,
-        completedLevels: ['jest-01'], // 1 of 3 = 33.33%
+        completedLevels: ['jest-01'] // 1 of 3 = 33.33%
       });
       renderGameHome();
       await waitFor(() => expect(screen.getByText('Jest Unit Testing')).toBeInTheDocument());
@@ -201,7 +195,7 @@ describe('GameHome', () => {
     it('progress bar reaches 100% when all jest levels are completed', async () => {
       useProgress.mockReturnValue({
         ...defaultProgress,
-        completedLevels: JEST_LEVELS.map((l) => l.id),
+        completedLevels: JEST_LEVELS.map((l) => l.id)
       });
       renderGameHome();
       await waitFor(() => expect(screen.getByText('Jest Unit Testing')).toBeInTheDocument());
@@ -213,7 +207,7 @@ describe('GameHome', () => {
     it('only counts jest- level IDs toward jest completion (not playwright or cypress)', async () => {
       useProgress.mockReturnValue({
         ...defaultProgress,
-        completedLevels: ['level-01', 'cy-01', 'jest-01'], // only jest-01 is jest
+        completedLevels: ['level-01', 'cy-01', 'jest-01'] // only jest-01 is jest
       });
       renderGameHome();
       await waitFor(() => expect(screen.getByText('Jest Unit Testing')).toBeInTheDocument());
@@ -224,7 +218,7 @@ describe('GameHome', () => {
       useProgress.mockReturnValue({
         ...defaultProgress,
         completedLevels: ['jest-01'],
-        trackXP: { jest: 9999 },
+        trackXP: { jest: 9999 }
       });
       renderGameHome();
       await waitFor(() => expect(screen.getByText('Jest Unit Testing')).toBeInTheDocument());

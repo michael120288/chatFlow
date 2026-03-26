@@ -9,15 +9,11 @@ describe('Utils', () => {
 
   describe('appImageUrl', () => {
     it('builds a cloudinary image URL from version and id', () => {
-      expect(Utils.appImageUrl('1234', 'abc')).toBe(
-        'https://res.cloudinary.com/dhcw9nswr/image/upload/v1234/abc'
-      );
+      expect(Utils.appImageUrl('1234', 'abc')).toBe('https://res.cloudinary.com/dhcw9nswr/image/upload/v1234/abc');
     });
 
     it('strips surrounding double quotes from version and id', () => {
-      expect(Utils.appImageUrl('"5678"', '"xyz"')).toBe(
-        'https://res.cloudinary.com/dhcw9nswr/image/upload/v5678/xyz'
-      );
+      expect(Utils.appImageUrl('"5678"', '"xyz"')).toBe('https://res.cloudinary.com/dhcw9nswr/image/upload/v5678/xyz');
     });
   });
 

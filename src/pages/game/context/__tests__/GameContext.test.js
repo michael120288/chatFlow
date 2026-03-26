@@ -7,8 +7,7 @@ import { gameService } from '@services/api/game/game.service';
 jest.mock('@services/api/game/game.service');
 
 // Build a minimal Redux store with a controllable token
-const makeStore = (token = null) =>
-  configureStore({ reducer: { user: () => ({ token }) } });
+const makeStore = (token = null) => configureStore({ reducer: { user: () => ({ token }) } });
 
 const makeWrapper = (store) =>
   function Wrapper({ children }) {
@@ -24,6 +23,7 @@ describe('GameContext', () => {
     localStorage.clear();
     jest.clearAllMocks();
     gameService.getProgress.mockResolvedValue({ completedLevels: [], xp: 0 });
+    gameService.getLevels.mockResolvedValue([]);
     gameService.saveProgress.mockResolvedValue(undefined);
   });
 

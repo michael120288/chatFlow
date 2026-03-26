@@ -6,8 +6,8 @@ jest.mock('../../../hooks/useProgress', () => ({
   useProgress: () => ({
     xp: 750,
     completedLevels: ['cy-01', 'cy-02', 'cy-03'],
-    totalLevels: 59,
-  }),
+    totalLevels: 59
+  })
 }));
 
 describe('XPBar', () => {

@@ -38,13 +38,21 @@ describe('useSubmission', () => {
 
   it('sets loading=true while the request is in flight', async () => {
     let resolve;
-    gameService.submitCode.mockReturnValue(new Promise((r) => { resolve = r; }));
+    gameService.submitCode.mockReturnValue(
+      new Promise((r) => {
+        resolve = r;
+      })
+    );
     const { result } = renderHook(() => useSubmission(), { wrapper: Wrapper });
 
-    act(() => { result.current.submit('cy-01', 'code'); });
+    act(() => {
+      result.current.submit('cy-01', 'code');
+    });
     expect(result.current.loading).toBe(true);
 
-    await act(async () => { resolve({ passed: false, xpAwarded: 0, message: 'fail' }); });
+    await act(async () => {
+      resolve({ passed: false, xpAwarded: 0, message: 'fail' });
+    });
     expect(result.current.loading).toBe(false);
   });
 
@@ -55,7 +63,9 @@ describe('useSubmission', () => {
     gameService.submitCode.mockResolvedValue(mockResult);
     const { result } = renderHook(() => useSubmission(), { wrapper: Wrapper });
 
-    await act(async () => { await result.current.submit('cy-01', 'bad code'); });
+    await act(async () => {
+      await result.current.submit('cy-01', 'bad code');
+    });
     expect(result.current.result).toEqual(mockResult);
     expect(result.current.error).toBeNull();
   });
@@ -64,7 +74,9 @@ describe('useSubmission', () => {
     gameService.submitCode.mockResolvedValue({ passed: false, xpAwarded: 0, message: 'fail' });
     const { result } = renderHook(() => useSubmission(), { wrapper: Wrapper });
 
-    await act(async () => { await result.current.submit('cy-01', 'bad code'); });
+    await act(async () => {
+      await result.current.submit('cy-01', 'bad code');
+    });
     expect(result.current.result.passed).toBe(false);
     // xpAwarded in result reflects what server returned
     expect(result.current.result.xpAwarded).toBe(0);
@@ -77,7 +89,9 @@ describe('useSubmission', () => {
     gameService.submitCode.mockResolvedValue(mockResult);
     const { result } = renderHook(() => useSubmission(), { wrapper: Wrapper });
 
-    await act(async () => { await result.current.submit('cy-01', 'good code'); });
+    await act(async () => {
+      await result.current.submit('cy-01', 'good code');
+    });
     expect(result.current.result.passed).toBe(true);
     expect(result.current.result.xpAwarded).toBe(100);
   });
@@ -88,11 +102,15 @@ describe('useSubmission', () => {
     const { result } = renderHook(() => useSubmission(), { wrapper: Wrapper });
 
     // First pass — XP should be awarded
-    await act(async () => { await result.current.submit('cy-01', 'good code'); });
+    await act(async () => {
+      await result.current.submit('cy-01', 'good code');
+    });
     expect(result.current.result.passed).toBe(true);
 
     // Second pass — already completed, XP should NOT be added again
-    await act(async () => { await result.current.submit('cy-01', 'good code again'); });
+    await act(async () => {
+      await result.current.submit('cy-01', 'good code again');
+    });
     expect(result.current.result.passed).toBe(true);
     // The test verifies the hook doesn't crash on repeat; XP guard is in GameContext
   });
@@ -103,7 +121,9 @@ describe('useSubmission', () => {
     const { result } = renderHook(() => useSubmission(), { wrapper: Wrapper });
 
     let returned;
-    await act(async () => { returned = await result.current.submit('cy-02', 'code'); });
+    await act(async () => {
+      returned = await result.current.submit('cy-02', 'code');
+    });
     expect(returned).toEqual(mockResult);
   });
 
@@ -113,7 +133,9 @@ describe('useSubmission', () => {
     gameService.submitCode.mockRejectedValue(new Error('Network timeout'));
     const { result } = renderHook(() => useSubmission(), { wrapper: Wrapper });
 
-    await act(async () => { await result.current.submit('cy-01', 'code'); });
+    await act(async () => {
+      await result.current.submit('cy-01', 'code');
+    });
     expect(result.current.error).toBe('Network timeout');
     expect(result.current.result).toBeNull();
     expect(result.current.loading).toBe(false);
@@ -123,7 +145,9 @@ describe('useSubmission', () => {
     gameService.submitCode.mockRejectedValue('string error');
     const { result } = renderHook(() => useSubmission(), { wrapper: Wrapper });
 
-    await act(async () => { await result.current.submit('cy-01', 'code'); });
+    await act(async () => {
+      await result.current.submit('cy-01', 'code');
+    });
     expect(result.current.error).toBe('Submission failed');
   });
 
@@ -132,7 +156,9 @@ describe('useSubmission', () => {
     const { result } = renderHook(() => useSubmission(), { wrapper: Wrapper });
 
     let returned;
-    await act(async () => { returned = await result.current.submit('cy-01', 'code'); });
+    await act(async () => {
+      returned = await result.current.submit('cy-01', 'code');
+    });
     expect(returned).toBeNull();
   });
 
@@ -142,7 +168,9 @@ describe('useSubmission', () => {
     gameService.submitCode.mockResolvedValue({ passed: false, xpAwarded: 0, message: 'fail' });
     const { result } = renderHook(() => useSubmission(), { wrapper: Wrapper });
 
-    await act(async () => { await result.current.submit('cy-01', 'code'); });
+    await act(async () => {
+      await result.current.submit('cy-01', 'code');
+    });
     expect(result.current.result).not.toBeNull();
 
     act(() => result.current.reset());
@@ -154,7 +182,9 @@ describe('useSubmission', () => {
     gameService.submitCode.mockRejectedValue(new Error('fail'));
     const { result } = renderHook(() => useSubmission(), { wrapper: Wrapper });
 
-    await act(async () => { await result.current.submit('cy-01', 'code'); });
+    await act(async () => {
+      await result.current.submit('cy-01', 'code');
+    });
     expect(result.current.error).toBeTruthy();
 
     act(() => result.current.reset());

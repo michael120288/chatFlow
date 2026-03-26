@@ -1,24 +1,36 @@
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { renderHook } from '@root/test.utils';
 
-const bodyRef = { current: document.createElement('div') };
-const bottomLineRef = { current: document.createElement('div') };
-const mockCallback = jest.fn();
-
-const bodyAddEventListenerSpy = jest.spyOn(bodyRef.current, 'addEventListener');
-const bodyRemoveEventListenerSpy = jest.spyOn(bodyRef.current, 'removeEventListener');
-
 describe('useInfiniteScroll', () => {
-  it('should call addEventListener', () => {
-    renderHook(() => useInfiniteScroll(bodyRef, bottomLineRef, mockCallback));
-    expect(bodyAddEventListenerSpy).toHaveBeenCalledTimes(1);
-    expect(bodyRemoveEventListenerSpy).toHaveBeenCalledTimes(0);
+  let observeMock;
+  let disconnectMock;
+
+  beforeEach(() => {
+    observeMock = jest.fn();
+    disconnectMock = jest.fn();
+    global.IntersectionObserver = jest.fn().mockImplementation(() => ({
+      observe: observeMock,
+      disconnect: disconnectMock,
+      unobserve: jest.fn()
+    }));
   });
 
-  it('should call removeEventListener', () => {
-    const { unmount } = renderHook(() => useInfiniteScroll(bodyRef, bottomLineRef, mockCallback));
+  it('should call observe when mounted', () => {
+    const bodyRef = { current: document.createElement('div') };
+    const bottomLineRef = { current: document.createElement('div') };
+    const callback = jest.fn();
+    renderHook(() => useInfiniteScroll(bodyRef, bottomLineRef, callback));
+    expect(observeMock).toHaveBeenCalledTimes(1);
+    expect(observeMock).toHaveBeenCalledWith(bottomLineRef.current);
+  });
+
+  it('should call disconnect when unmounted', () => {
+    const bodyRef = { current: document.createElement('div') };
+    const bottomLineRef = { current: document.createElement('div') };
+    const callback = jest.fn();
+    const { unmount } = renderHook(() => useInfiniteScroll(bodyRef, bottomLineRef, callback));
+    expect(observeMock).toHaveBeenCalledTimes(1);
     unmount();
-    expect(bodyAddEventListenerSpy).toHaveBeenCalledTimes(1);
-    expect(bodyRemoveEventListenerSpy).toHaveBeenCalledTimes(1);
+    expect(disconnectMock).toHaveBeenCalledTimes(1);
   });
 });

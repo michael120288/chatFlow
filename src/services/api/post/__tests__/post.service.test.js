@@ -103,9 +103,7 @@ describe('postService', () => {
     axios.delete.mockResolvedValueOnce({ data: {} });
     const reactions = { like: 5 };
     await postService.removeReaction('p1', 'like', reactions);
-    expect(axios.delete).toHaveBeenCalledWith(
-      `/post/reaction/p1/like/${JSON.stringify(reactions)}`
-    );
+    expect(axios.delete).toHaveBeenCalledWith(`/post/reaction/p1/like/${JSON.stringify(reactions)}`);
   });
 
   it('addComment POSTs to /post/comment', async () => {

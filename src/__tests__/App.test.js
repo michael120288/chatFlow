@@ -5,12 +5,12 @@ import App from '../App';
 
 // Prevent socket.io from trying to connect in tests
 jest.mock('@services/socket/socket.service', () => ({
-  socketService: { setupSocketConnection: jest.fn() },
+  socketService: { setupSocketConnection: jest.fn() }
 }));
 
 // Prevent lazy-loaded pages from failing in jsdom
 jest.mock('@root/routes', () => ({
-  AppRouter: () => <div data-testid="app-router">Router</div>,
+  AppRouter: () => <div data-testid="app-router">Router</div>
 }));
 
 const renderApp = () =>
@@ -26,10 +26,10 @@ describe('App', () => {
     expect(screen.getByTestId('app-router')).toBeInTheDocument();
   });
 
-  it('calls socketService.setupSocketConnection on mount', () => {
+  it('does not call socketService.setupSocketConnection on mount without a token', () => {
     const { socketService } = require('@services/socket/socket.service');
     renderApp();
-    expect(socketService.setupSocketConnection).toHaveBeenCalledTimes(1);
+    expect(socketService.setupSocketConnection).toHaveBeenCalledTimes(0);
   });
 
   it('does not render Toast when there are no notifications', () => {

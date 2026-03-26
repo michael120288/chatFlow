@@ -4,7 +4,7 @@ import BackgroundHeaderSkeleton from '../BackgroundHeaderSkeleton';
 const tabItems = [
   { key: 'Timeline', show: true },
   { key: 'Followers', show: true },
-  { key: 'Gallery', show: false },
+  { key: 'Gallery', show: false }
 ];
 
 describe('BackgroundHeaderSkeleton', () => {

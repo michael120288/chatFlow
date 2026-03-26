@@ -47,10 +47,7 @@ describe('chat reducer', () => {
         { _id: 'c2', createdAt: '2022-06-01' },
         { _id: 'c3', createdAt: '2022-03-01' }
       ];
-      const result = reducer(
-        { ...initialState, isLoading: true },
-        getConversationList.fulfilled({ list }, 'req-1')
-      );
+      const result = reducer({ ...initialState, isLoading: true }, getConversationList.fulfilled({ list }, 'req-1'));
       expect(result.isLoading).toBe(false);
       expect(result.chatList[0]._id).toBe('c2');
       expect(result.chatList[1]._id).toBe('c3');

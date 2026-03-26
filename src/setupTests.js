@@ -5,6 +5,16 @@
 import '@testing-library/jest-dom';
 import 'jest-canvas-mock';
 
+// IntersectionObserver is not available in jsdom
+class IntersectionObserverMock {
+  constructor() {
+    this.observe = jest.fn();
+    this.disconnect = jest.fn();
+    this.unobserve = jest.fn();
+  }
+}
+global.IntersectionObserver = IntersectionObserverMock;
+
 import { server } from '@mocks/server';
 
 // Suppress socket.io-client CORS errors emitted in jsdom environment

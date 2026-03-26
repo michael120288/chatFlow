@@ -17,14 +17,26 @@ describe('CardForm', () => {
     });
 
     it('renders edit mode when initialData is provided', () => {
-      const initialData = { question: 'What is React?', answer: 'A JS library', category: 'React', privacy: 'public', difficulty: 'easy' };
+      const initialData = {
+        question: 'What is React?',
+        answer: 'A JS library',
+        category: 'React',
+        privacy: 'public',
+        difficulty: 'easy'
+      };
       render(<CardForm onSubmit={onSubmit} initialData={initialData} />);
       expect(screen.getByText('Edit Card')).toBeInTheDocument();
       expect(screen.getByRole('button', { name: 'Update Card' })).toBeInTheDocument();
     });
 
     it('pre-fills fields from initialData', () => {
-      const initialData = { question: 'What is React?', answer: 'A JS library', category: 'React', privacy: 'public', difficulty: 'easy' };
+      const initialData = {
+        question: 'What is React?',
+        answer: 'A JS library',
+        category: 'React',
+        privacy: 'public',
+        difficulty: 'easy'
+      };
       render(<CardForm onSubmit={onSubmit} initialData={initialData} />);
       expect(screen.getByDisplayValue('What is React?')).toBeInTheDocument();
       expect(screen.getByDisplayValue('A JS library')).toBeInTheDocument();
