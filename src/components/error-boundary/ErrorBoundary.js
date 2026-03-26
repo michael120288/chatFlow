@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -19,7 +20,7 @@ class ErrorBoundary extends React.Component {
       return (
         this.props.fallback || (
           <div style={{ padding: '2rem', textAlign: 'center' }}>
-            Something went wrong.{' '}
+            Something went wrong.
             <button onClick={() => this.setState({ hasError: false })}>Try again</button>
           </div>
         )
@@ -28,5 +29,14 @@ class ErrorBoundary extends React.Component {
     return this.props.children;
   }
 }
+
+ErrorBoundary.propTypes = {
+  fallback: PropTypes.node,
+  children: PropTypes.node.isRequired
+};
+
+ErrorBoundary.defaultProps = {
+  fallback: null
+};
 
 export default ErrorBoundary;

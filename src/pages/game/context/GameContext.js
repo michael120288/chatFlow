@@ -77,7 +77,9 @@ export function GameProvider({ children }) {
 
   useEffect(() => {
     if (!isAuthenticated || !serverLoaded) return;
-    gameService.saveProgress({ completedLevels: state.completedLevels, xp: state.xp }).catch((err) => { console.warn('Progress sync failed:', err?.message); });
+    gameService.saveProgress({ completedLevels: state.completedLevels, xp: state.xp }).catch((err) => {
+      console.warn('Progress sync failed:', err?.message);
+    });
   }, [state.completedLevels, state.xp, isAuthenticated, serverLoaded]);
 
   const addXP = useCallback((amount, track) => {

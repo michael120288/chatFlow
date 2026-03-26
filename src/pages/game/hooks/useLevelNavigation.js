@@ -24,7 +24,9 @@ export function useLevelNavigation(levelId, category) {
         setPrevId(idx > 0 ? track[idx - 1].id : null);
         setNextId(idx < track.length - 1 ? track[idx + 1].id : null);
       })
-      .catch((err) => { console.warn('Level navigation error:', err?.message); });
+      .catch((err) => {
+        console.warn('Level navigation error:', err?.message);
+      });
   }, [levelId, category]);
 
   return { prevId, nextId };
