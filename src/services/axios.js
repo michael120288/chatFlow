@@ -1,4 +1,5 @@
 import axios from 'axios';
+import logger from '@services/utils/logger';
 
 export const BASE_ENDPOINT = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
@@ -10,14 +11,24 @@ const axiosInstance = axios.create({
   withCredentials: true
 });
 
-// Response interceptor to handle 401 errors globally
+axiosInstance.interceptors.request.use((config) => {
+  logger.debug(`→ ${config.method?.toUpperCase()} ${config.url}`);
+  return config;
+});
+
 axiosInstance.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    logger.debug(`← ${response.status} ${response.config.url}`);
+    return response;
+  },
   (error) => {
+    const status = error.response?.status;
+    const url = error.config?.url;
     // If we get a 401 and we're logging out, don't throw the error
-    if (error.response?.status === 401 && error.config?.url === '/signout') {
+    if (status === 401 && url === '/signout') {
       return Promise.resolve({ data: { message: 'Logged out successfully' } });
     }
+    logger.error(`← ${status ?? 'ERR'} ${url}`, error.message);
     return Promise.reject(error);
   }
 );
