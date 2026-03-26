@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { clearUser } from '@redux/reducers/user/user.reducer';
+import { useEffect } from 'react';
+import { clearUser, addUser } from '@redux/reducers/user/user.reducer';
 import { userService } from '@services/api/user/user.service';
 import '@pages/home/Home.scss';
 
@@ -49,6 +50,21 @@ const Home = () => {
   const dispatch = useDispatch();
   const { profile, token } = useSelector((state) => state.user);
   const isLoggedIn = !!(profile && token);
+
+  useEffect(() => {
+    if (!token) {
+      userService
+        .checkCurrentUser()
+        .then((res) => {
+          if (res.data.token) {
+            dispatch(addUser({ token: res.data.token, profile: res.data.user }));
+          }
+        })
+        .catch(() => {
+          // Not authenticated — stay on home with Sign In
+        });
+    }
+  }, []);
 
   const handleSignOut = async () => {
     try {
