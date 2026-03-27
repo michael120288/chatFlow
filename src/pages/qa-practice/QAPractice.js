@@ -13,10 +13,12 @@ const ShadowDOMWidget = ({ onInput }) => {
     shadow.innerHTML = `
       <style>
         :host { display: block; }
-        .sw-wrap { padding: 16px; border: 2px dashed #667eea; border-radius: 8px; background: #f8f8ff; }
+        :host { color: rgba(255,255,255,0.88); }
+        .sw-wrap { padding: 16px; border: 2px dashed #667eea; border-radius: 8px; background: rgba(102,126,234,0.12); }
         button { padding: 8px 16px; background: #667eea; color: #fff; border: none; border-radius: 4px; cursor: pointer; margin-right: 8px; }
-        input { padding: 8px; border: 1px solid #ccc; border-radius: 4px; width: 220px; }
-        .result { margin-top: 10px; color: #2d7a2d; font-weight: 600; min-height: 20px; }
+        input { padding: 8px; border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; width: 220px; background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.88); }
+        input::placeholder { color: rgba(255,255,255,0.35); }
+        .result { margin-top: 10px; color: #6ee7b7; font-weight: 600; min-height: 20px; }
       </style>
       <div class="sw-wrap">
         <p>👋 This content lives inside a Shadow DOM.</p>
@@ -4171,18 +4173,26 @@ const QAPractice = () => {
           </div>
 
           <h3 style={{ marginTop: 24 }}>Shadow DOM (needs pierce selector)</h3>
-          <p style={{ fontSize: 13, color: '#666', marginBottom: 8 }}>
+          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.55)', marginBottom: 8 }}>
             The host element below has a shadow root attached. The button and input inside it are invisible to{' '}
             <code>document.querySelector</code> but reachable via Playwright&apos;s pierce selectors.
           </p>
           <ShadowDOMWidget onInput={(val) => setShadowInputVal(val)} />
           {shadowInputVal && (
-            <p data-testid="shadow-typed-mirror" style={{ marginTop: 8, color: '#333' }}>
+            <p data-testid="shadow-typed-mirror" style={{ marginTop: 8, color: 'rgba(255,255,255,0.88)' }}>
               Mirrored from shadow input: <strong>{shadowInputVal}</strong>
             </p>
           )}
 
-          <div style={{ marginTop: 24, background: '#f0f4ff', borderRadius: 8, padding: 16 }}>
+          <div
+            style={{
+              marginTop: 24,
+              background: 'rgba(255,255,255,0.06)',
+              borderRadius: 8,
+              padding: 16,
+              border: '1px solid rgba(255,255,255,0.1)'
+            }}
+          >
             <strong>Playwright snippet:</strong>
             <pre style={{ margin: '8px 0 0', fontSize: 13, overflowX: 'auto' }}>{`// Pierce the shadow root
 const shadowBtn = page.locator('pierce/[data-testid="shadow-btn"]');
@@ -4273,10 +4283,19 @@ await expect(page.locator('[data-testid="shadow-typed-mirror"]'))
           <h3>Action log</h3>
           <div
             data-testid="popup-log"
-            style={{ minHeight: 60, background: '#f7f7fb', borderRadius: 6, padding: 12, fontSize: 13 }}
+            style={{
+              minHeight: 60,
+              background: 'rgba(255,255,255,0.05)',
+              borderRadius: 6,
+              padding: 12,
+              fontSize: 13,
+              border: '1px solid rgba(255,255,255,0.1)'
+            }}
           >
             {popupLog.length === 0 ? (
-              <span style={{ color: '#aaa', fontStyle: 'italic' }}>No actions yet — click a button above.</span>
+              <span style={{ color: 'rgba(255,255,255,0.4)', fontStyle: 'italic' }}>
+                No actions yet — click a button above.
+              </span>
             ) : (
               <ul style={{ margin: 0, padding: '0 0 0 16px' }}>
                 {popupLog.map((entry, i) => (
@@ -4288,7 +4307,15 @@ await expect(page.locator('[data-testid="shadow-typed-mirror"]'))
             )}
           </div>
 
-          <div style={{ marginTop: 24, background: '#f0f4ff', borderRadius: 8, padding: 16 }}>
+          <div
+            style={{
+              marginTop: 24,
+              background: 'rgba(255,255,255,0.06)',
+              borderRadius: 8,
+              padding: 16,
+              border: '1px solid rgba(255,255,255,0.1)'
+            }}
+          >
             <strong>Playwright snippet:</strong>
             <pre
               style={{ margin: '8px 0 0', fontSize: 13, overflowX: 'auto' }}
@@ -4388,8 +4415,8 @@ await newTab.waitForLoadState('domcontentloaded');`}</pre>
                 key={c}
                 data-testid={`card-${c.toLowerCase().replace(' ', '-')}`}
                 style={{
-                  background: '#f7f7fb',
-                  border: '1px solid #e2e8f0',
+                  background: 'rgba(255,255,255,0.06)',
+                  border: '1px solid rgba(255,255,255,0.12)',
                   borderRadius: 8,
                   padding: 16,
                   textAlign: 'center'
@@ -4400,7 +4427,15 @@ await newTab.waitForLoadState('domcontentloaded');`}</pre>
             ))}
           </div>
 
-          <div style={{ marginTop: 24, background: '#f0f4ff', borderRadius: 8, padding: 16 }}>
+          <div
+            style={{
+              marginTop: 24,
+              background: 'rgba(255,255,255,0.06)',
+              borderRadius: 8,
+              padding: 16,
+              border: '1px solid rgba(255,255,255,0.1)'
+            }}
+          >
             <strong>Playwright snippet:</strong>
             <pre
               style={{ margin: '8px 0 0', fontSize: 13, overflowX: 'auto' }}
@@ -4445,9 +4480,9 @@ expect(cols).toBe(1);`}</pre>
                 flexWrap: 'wrap',
                 gap: 4,
                 padding: '8px 12px',
-                border: '1px solid #ddd',
+                border: '1px solid rgba(255,255,255,0.15)',
                 borderRadius: '6px 6px 0 0',
-                background: '#f7f7fb'
+                background: 'rgba(255,255,255,0.07)'
               }}
             >
               {[
@@ -4474,16 +4509,16 @@ expect(cols).toBe(1);`}</pre>
                   style={{
                     ...style,
                     padding: '4px 10px',
-                    border: '1px solid #ddd',
+                    border: '1px solid rgba(255,255,255,0.2)',
                     borderRadius: 4,
                     cursor: 'pointer',
-                    background: '#fff'
+                    background: 'rgba(255,255,255,0.1)'
                   }}
                 >
                   {label}
                 </button>
               ))}
-              <span style={{ margin: '0 4px', color: '#ddd' }}>|</span>
+              <span style={{ margin: '0 4px', color: 'rgba(255,255,255,0.3)' }}>|</span>
               {[
                 { cmd: 'formatBlock', value: 'H1', label: 'H1', testId: 'btn-h1' },
                 { cmd: 'formatBlock', value: 'H2', label: 'H2', testId: 'btn-h2' },
@@ -4499,16 +4534,16 @@ expect(cols).toBe(1);`}</pre>
                   }}
                   style={{
                     padding: '4px 10px',
-                    border: '1px solid #ddd',
+                    border: '1px solid rgba(255,255,255,0.2)',
                     borderRadius: 4,
                     cursor: 'pointer',
-                    background: '#fff'
+                    background: 'rgba(255,255,255,0.1)'
                   }}
                 >
                   {label}
                 </button>
               ))}
-              <span style={{ margin: '0 4px', color: '#ddd' }}>|</span>
+              <span style={{ margin: '0 4px', color: 'rgba(255,255,255,0.3)' }}>|</span>
               <button
                 data-testid="btn-clear"
                 aria-label="Clear"
@@ -4542,7 +4577,7 @@ expect(cols).toBe(1);`}</pre>
               onInput={() => setRteHtml(rteRef.current ? rteRef.current.innerHTML : '')}
               style={{
                 minHeight: 160,
-                border: '1px solid #ddd',
+                border: '1px solid rgba(255,255,255,0.15)',
                 borderTop: 'none',
                 borderRadius: '0 0 6px 6px',
                 padding: 16,
@@ -4552,12 +4587,12 @@ expect(cols).toBe(1);`}</pre>
               }}
             />
 
-            <p style={{ margin: '16px 0 4px', fontSize: 13, color: '#666' }}>Raw HTML output:</p>
+            <p style={{ margin: '16px 0 4px', fontSize: 13, color: 'rgba(255,255,255,0.55)' }}>Raw HTML output:</p>
             <pre
               data-testid="rte-html-output"
               style={{
-                background: '#f7f7fb',
-                border: '1px solid #e2e8f0',
+                background: 'rgba(255,255,255,0.05)',
+                border: '1px solid rgba(255,255,255,0.1)',
                 borderRadius: 6,
                 padding: 12,
                 fontSize: 12,
@@ -4567,10 +4602,18 @@ expect(cols).toBe(1);`}</pre>
                 minHeight: 40
               }}
             >
-              {rteHtml || <span style={{ color: '#aaa' }}>(empty — type something above)</span>}
+              {rteHtml || <span style={{ color: 'rgba(255,255,255,0.35)' }}>(empty — type something above)</span>}
             </pre>
 
-            <div style={{ marginTop: 16, background: '#f0f4ff', borderRadius: 8, padding: 16 }}>
+            <div
+              style={{
+                marginTop: 16,
+                background: 'rgba(255,255,255,0.06)',
+                borderRadius: 8,
+                padding: 16,
+                border: '1px solid rgba(255,255,255,0.1)'
+              }}
+            >
               <strong>Playwright snippet:</strong>
               <pre
                 style={{ margin: '8px 0 0', fontSize: 13, overflowX: 'auto' }}
