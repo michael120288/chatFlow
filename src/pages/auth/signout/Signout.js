@@ -22,7 +22,7 @@ const Signout = () => {
         Utils.clearStore({ dispatch, deleteStorageUsername, deleteSessionPageReload, setLoggedIn });
         window.location.href = returnUrl;
       });
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return null;
 };
