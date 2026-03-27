@@ -4183,27 +4183,6 @@ const QAPractice = () => {
               Mirrored from shadow input: <strong>{shadowInputVal}</strong>
             </p>
           )}
-
-          <div
-            style={{
-              marginTop: 24,
-              background: 'rgba(255,255,255,0.06)',
-              borderRadius: 8,
-              padding: 16,
-              border: '1px solid rgba(255,255,255,0.1)'
-            }}
-          >
-            <strong>Playwright snippet:</strong>
-            <pre style={{ margin: '8px 0 0', fontSize: 13, overflowX: 'auto' }}>{`// Pierce the shadow root
-const shadowBtn = page.locator('pierce/[data-testid="shadow-btn"]');
-await shadowBtn.click();
-
-const shadowInput = page.locator('pierce/[data-testid="shadow-input"]');
-await shadowInput.fill('Hello from Playwright');
-
-await expect(page.locator('[data-testid="shadow-typed-mirror"]'))
-  .toContainText('Hello from Playwright');`}</pre>
-          </div>
         </div>
       );
     }
@@ -4306,34 +4285,6 @@ await expect(page.locator('[data-testid="shadow-typed-mirror"]'))
               </ul>
             )}
           </div>
-
-          <div
-            style={{
-              marginTop: 24,
-              background: 'rgba(255,255,255,0.06)',
-              borderRadius: 8,
-              padding: 16,
-              border: '1px solid rgba(255,255,255,0.1)'
-            }}
-          >
-            <strong>Playwright snippet:</strong>
-            <pre
-              style={{ margin: '8px 0 0', fontSize: 13, overflowX: 'auto' }}
-            >{`// Capture popup before the click triggers it
-const [popup] = await Promise.all([
-  page.waitForEvent('popup'),
-  page.locator('[data-testid="open-popup-btn"]').click(),
-]);
-await popup.waitForLoadState();
-expect(popup.url()).toContain('playwright.dev');
-
-// Capture new tab from anchor
-const [newTab] = await Promise.all([
-  page.waitForEvent('popup'),
-  page.locator('[data-testid="new-tab-link"]').click(),
-]);
-await newTab.waitForLoadState('domcontentloaded');`}</pre>
-          </div>
         </div>
       );
     }
@@ -4425,29 +4376,6 @@ await newTab.waitForLoadState('domcontentloaded');`}</pre>
                 {c}
               </div>
             ))}
-          </div>
-
-          <div
-            style={{
-              marginTop: 24,
-              background: 'rgba(255,255,255,0.06)',
-              borderRadius: 8,
-              padding: 16,
-              border: '1px solid rgba(255,255,255,0.1)'
-            }}
-          >
-            <strong>Playwright snippet:</strong>
-            <pre
-              style={{ margin: '8px 0 0', fontSize: 13, overflowX: 'auto' }}
-            >{`await page.setViewportSize({ width: 375, height: 667 });
-await expect(page.locator('[data-testid="breakpoint-badge"]'))
-  .toHaveAttribute('data-breakpoint', 'xs-mobile');
-
-// Assert 1-column grid on mobile
-const cols = await page.locator('[data-testid="responsive-grid"]').evaluate(
-  el => getComputedStyle(el).gridTemplateColumns.split(' ').length
-);
-expect(cols).toBe(1);`}</pre>
           </div>
         </div>
       );
@@ -4604,31 +4532,6 @@ expect(cols).toBe(1);`}</pre>
             >
               {rteHtml || <span style={{ color: 'rgba(255,255,255,0.35)' }}>(empty — type something above)</span>}
             </pre>
-
-            <div
-              style={{
-                marginTop: 16,
-                background: 'rgba(255,255,255,0.06)',
-                borderRadius: 8,
-                padding: 16,
-                border: '1px solid rgba(255,255,255,0.1)'
-              }}
-            >
-              <strong>Playwright snippet:</strong>
-              <pre
-                style={{ margin: '8px 0 0', fontSize: 13, overflowX: 'auto' }}
-              >{`const editor = page.locator('[data-testid="rte-editor"]');
-await editor.click();
-await editor.type('Hello World');
-
-// Select all and make it bold
-await page.keyboard.press('Control+A');
-await page.locator('[data-testid="btn-bold"]').click();
-
-// Assert HTML contains bold markup
-const html = await page.locator('[data-testid="rte-html-output"]').textContent();
-expect(html).toMatch(/<b>|<strong>/i);`}</pre>
-            </div>
           </div>
         </div>
       );
