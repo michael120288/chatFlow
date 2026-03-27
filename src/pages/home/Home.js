@@ -64,7 +64,7 @@ const Home = () => {
           // Not authenticated — stay on home with Sign In
         });
     }
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSignOut = async () => {
     try {

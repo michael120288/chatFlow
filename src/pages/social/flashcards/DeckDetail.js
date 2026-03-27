@@ -50,7 +50,7 @@ const DeckDetail = () => {
       studyCount: 42,
       username: profile?.username,
       avatarColor: profile?.avatarColor,
-      deckId: deckId,
+      deckId,
       createdAt: new Date()
     },
     {
@@ -66,7 +66,7 @@ const DeckDetail = () => {
       studyCount: 67,
       username: profile?.username,
       avatarColor: profile?.avatarColor,
-      deckId: deckId,
+      deckId,
       createdAt: new Date()
     },
     {
@@ -82,7 +82,7 @@ const DeckDetail = () => {
       studyCount: 55,
       username: profile?.username,
       avatarColor: profile?.avatarColor,
-      deckId: deckId,
+      deckId,
       createdAt: new Date()
     }
   ];

@@ -206,6 +206,22 @@ export const AppRouter = () => {
         {
           path: 'credit-card',
           element: <QAPractice />
+        },
+        {
+          path: 'shadow-dom',
+          element: <QAPractice />
+        },
+        {
+          path: 'multi-tab',
+          element: <QAPractice />
+        },
+        {
+          path: 'viewport',
+          element: <QAPractice />
+        },
+        {
+          path: 'rich-text-editor',
+          element: <QAPractice />
         }
       ]
     },
