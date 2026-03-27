@@ -1,6 +1,46 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import '@pages/qa-practice/QAPractice.scss';
+
+// Helper: mounts a real Shadow DOM inside a host div
+const ShadowDOMWidget = ({ onInput }) => {
+  const hostRef = useRef(null);
+  useEffect(() => {
+    const host = hostRef.current;
+    if (!host || host.shadowRoot) return;
+    const shadow = host.attachShadow({ mode: 'open' });
+    shadow.innerHTML = `
+      <style>
+        :host { display: block; }
+        :host { color: rgba(255,255,255,0.88); }
+        .sw-wrap { padding: 16px; border: 2px dashed #667eea; border-radius: 8px; background: rgba(102,126,234,0.12); }
+        button { padding: 8px 16px; background: #667eea; color: #fff; border: none; border-radius: 4px; cursor: pointer; margin-right: 8px; }
+        input { padding: 8px; border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; width: 220px; background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.88); }
+        input::placeholder { color: rgba(255,255,255,0.35); }
+        .result { margin-top: 10px; color: #6ee7b7; font-weight: 600; min-height: 20px; }
+      </style>
+      <div class="sw-wrap">
+        <p>👋 This content lives inside a Shadow DOM.</p>
+        <button data-testid="shadow-btn">Click me</button>
+        <input type="text" data-testid="shadow-input" placeholder="Type here (shadow DOM)…" />
+        <div class="result" data-testid="shadow-result"></div>
+      </div>
+    `;
+    shadow.querySelector('button').addEventListener('click', () => {
+      shadow.querySelector('[data-testid="shadow-result"]').textContent = 'Shadow button clicked ✓';
+    });
+    shadow.querySelector('input').addEventListener('input', (e) => {
+      shadow.querySelector('[data-testid="shadow-result"]').textContent = `Typed: ${e.target.value}`;
+      onInput(e.target.value);
+    });
+  }, [onInput]);
+  return <div ref={hostRef} data-testid="shadow-host" id="shadow-host" />;
+};
+
+ShadowDOMWidget.propTypes = {
+  onInput: PropTypes.func.isRequired
+};
 
 const QAPractice = () => {
   const navigate = useNavigate();
@@ -190,6 +230,25 @@ const QAPractice = () => {
   const [paymentStep, setPaymentStep] = useState('form');
   const [cvvVisible, setCvvVisible] = useState(false);
   const [transactionData, setTransactionData] = useState(null);
+
+  // Shadow DOM state
+  const [shadowClicked, setShadowClicked] = useState(false);
+  const [shadowInputVal, setShadowInputVal] = useState('');
+
+  // Multi-tab state
+  const [popupLog, setPopupLog] = useState([]);
+
+  // Viewport state
+  const [viewportSize, setViewportSize] = useState({ w: window.innerWidth, h: window.innerHeight });
+  useEffect(() => {
+    const onResize = () => setViewportSize({ w: window.innerWidth, h: window.innerHeight });
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
+
+  // Rich Text Editor state
+  const [rteHtml, setRteHtml] = useState('');
+  const rteRef = useRef(null);
 
   // IFrame state
   const [selectedIframe, setSelectedIframe] = useState('custom1');
@@ -530,6 +589,14 @@ const QAPractice = () => {
       setSelectedOption('websocket');
     } else if (path.includes('credit-card')) {
       setSelectedOption('credit-card');
+    } else if (path.includes('shadow-dom')) {
+      setSelectedOption('shadow-dom');
+    } else if (path.includes('multi-tab')) {
+      setSelectedOption('multi-tab');
+    } else if (path.includes('viewport')) {
+      setSelectedOption('viewport');
+    } else if (path.includes('rich-text-editor')) {
+      setSelectedOption('rich-text-editor');
     }
   }, [location.pathname, navigate]);
 
@@ -4077,6 +4144,491 @@ const QAPractice = () => {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      );
+    }
+
+    // ── Shadow DOM ──────────────────────────────────────────────────────────
+    if (selectedOption === 'shadow-dom') {
+      return (
+        <div className="content-section">
+          <h2>Shadow DOM</h2>
+          <p className="section-description">
+            Web components encapsulate their internals in a Shadow DOM. Standard selectors cannot pierce it — in
+            Playwright use <code>{'locator(\'pierce/[data-testid="shadow-btn"]\')'}</code>.
+          </p>
+
+          <h3>Regular DOM (selectable normally)</h3>
+          <div className="shadow-box" data-testid="regular-dom-box">
+            <p>This paragraph is in the regular DOM.</p>
+            <button data-testid="regular-btn" onClick={() => setShadowClicked(true)} className="qa-btn">
+              Regular DOM button
+            </button>
+            {shadowClicked && (
+              <p data-testid="regular-result" style={{ color: 'green', marginTop: 8 }}>
+                Regular button clicked ✓
+              </p>
+            )}
+          </div>
+
+          <h3 style={{ marginTop: 24 }}>Shadow DOM (needs pierce selector)</h3>
+          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.55)', marginBottom: 8 }}>
+            The host element below has a shadow root attached. The button and input inside it are invisible to{' '}
+            <code>document.querySelector</code> but reachable via Playwright&apos;s pierce selectors.
+          </p>
+          <ShadowDOMWidget onInput={(val) => setShadowInputVal(val)} />
+          {shadowInputVal && (
+            <p data-testid="shadow-typed-mirror" style={{ marginTop: 8, color: 'rgba(255,255,255,0.88)' }}>
+              Mirrored from shadow input: <strong>{shadowInputVal}</strong>
+            </p>
+          )}
+
+          <div
+            style={{
+              marginTop: 24,
+              background: 'rgba(255,255,255,0.06)',
+              borderRadius: 8,
+              padding: 16,
+              border: '1px solid rgba(255,255,255,0.1)'
+            }}
+          >
+            <strong>Playwright snippet:</strong>
+            <pre style={{ margin: '8px 0 0', fontSize: 13, overflowX: 'auto' }}>{`// Pierce the shadow root
+const shadowBtn = page.locator('pierce/[data-testid="shadow-btn"]');
+await shadowBtn.click();
+
+const shadowInput = page.locator('pierce/[data-testid="shadow-input"]');
+await shadowInput.fill('Hello from Playwright');
+
+await expect(page.locator('[data-testid="shadow-typed-mirror"]'))
+  .toContainText('Hello from Playwright');`}</pre>
+          </div>
+        </div>
+      );
+    }
+
+    // ── Multi-tab / Popup ───────────────────────────────────────────────────
+    if (selectedOption === 'multi-tab') {
+      const logEntry = (msg) => setPopupLog((prev) => [`${new Date().toLocaleTimeString()} — ${msg}`, ...prev]);
+      return (
+        <div className="content-section">
+          <h2>Multi-tab &amp; Popup</h2>
+          <p className="section-description">
+            Practice handling new tabs and popup windows. In Playwright use{' '}
+            <code>page.waitForEvent(&apos;popup&apos;)</code> to capture the new context before clicking.
+          </p>
+
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+              gap: 16,
+              marginBottom: 24
+            }}
+          >
+            <div className="shadow-box">
+              <h3>New Tab — anchor link</h3>
+              <p style={{ fontSize: 13 }}>
+                A plain <code>{'<a target="_blank">'}</code> — the most common case.
+              </p>
+              <a
+                href="https://playwright.dev"
+                target="_blank"
+                rel="noopener noreferrer"
+                data-testid="new-tab-link"
+                className="qa-btn"
+                style={{ display: 'inline-block', textDecoration: 'none' }}
+                onClick={() => logEntry('Anchor link clicked → playwright.dev')}
+              >
+                Open Playwright docs ↗
+              </a>
+            </div>
+
+            <div className="shadow-box">
+              <h3>Popup window</h3>
+              <p style={{ fontSize: 13 }}>
+                Opens a 600×400 popup via <code>window.open()</code>.
+              </p>
+              <button
+                data-testid="open-popup-btn"
+                className="qa-btn"
+                onClick={() => {
+                  window.open('https://playwright.dev', 'pw-popup', 'width=600,height=400');
+                  logEntry('Popup window opened (600×400)');
+                }}
+              >
+                Open popup window
+              </button>
+            </div>
+
+            <div className="shadow-box">
+              <h3>Blank tab</h3>
+              <p style={{ fontSize: 13 }}>
+                Opens a new tab with <code>about:blank</code> — useful for navigation testing.
+              </p>
+              <button
+                data-testid="open-blank-tab-btn"
+                className="qa-btn"
+                onClick={() => {
+                  window.open('about:blank', '_blank');
+                  logEntry('Blank tab opened via window.open()');
+                }}
+              >
+                Open blank tab
+              </button>
+            </div>
+          </div>
+
+          <h3>Action log</h3>
+          <div
+            data-testid="popup-log"
+            style={{
+              minHeight: 60,
+              background: 'rgba(255,255,255,0.05)',
+              borderRadius: 6,
+              padding: 12,
+              fontSize: 13,
+              border: '1px solid rgba(255,255,255,0.1)'
+            }}
+          >
+            {popupLog.length === 0 ? (
+              <span style={{ color: 'rgba(255,255,255,0.4)', fontStyle: 'italic' }}>
+                No actions yet — click a button above.
+              </span>
+            ) : (
+              <ul style={{ margin: 0, padding: '0 0 0 16px' }}>
+                {popupLog.map((entry, i) => (
+                  <li key={i} data-testid={`log-entry-${i}`}>
+                    {entry}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          <div
+            style={{
+              marginTop: 24,
+              background: 'rgba(255,255,255,0.06)',
+              borderRadius: 8,
+              padding: 16,
+              border: '1px solid rgba(255,255,255,0.1)'
+            }}
+          >
+            <strong>Playwright snippet:</strong>
+            <pre
+              style={{ margin: '8px 0 0', fontSize: 13, overflowX: 'auto' }}
+            >{`// Capture popup before the click triggers it
+const [popup] = await Promise.all([
+  page.waitForEvent('popup'),
+  page.locator('[data-testid="open-popup-btn"]').click(),
+]);
+await popup.waitForLoadState();
+expect(popup.url()).toContain('playwright.dev');
+
+// Capture new tab from anchor
+const [newTab] = await Promise.all([
+  page.waitForEvent('popup'),
+  page.locator('[data-testid="new-tab-link"]').click(),
+]);
+await newTab.waitForLoadState('domcontentloaded');`}</pre>
+          </div>
+        </div>
+      );
+    }
+
+    // ── Viewport / Responsive ───────────────────────────────────────────────
+    if (selectedOption === 'viewport') {
+      const bp =
+        viewportSize.w < 480
+          ? 'xs-mobile'
+          : viewportSize.w < 768
+          ? 'mobile'
+          : viewportSize.w < 1024
+          ? 'tablet'
+          : 'desktop';
+      const bpColor = { 'xs-mobile': '#e53e3e', mobile: '#ed8936', tablet: '#3182ce', desktop: '#38a169' }[bp];
+
+      return (
+        <div className="content-section">
+          <h2>Viewport &amp; Responsive</h2>
+          <p className="section-description">
+            Test responsive layouts at different sizes. In Playwright use{' '}
+            <code>{'page.setViewportSize({ width: 375, height: 812 })'}</code> or device emulation via{' '}
+            <code>devices[&apos;iPhone 14&apos;]</code>.
+          </p>
+
+          <div style={{ marginBottom: 16 }}>
+            <span
+              data-testid="breakpoint-badge"
+              data-breakpoint={bp}
+              style={{
+                background: bpColor,
+                color: '#fff',
+                display: 'inline-block',
+                padding: '6px 16px',
+                borderRadius: 20,
+                fontWeight: 700,
+                fontSize: 14,
+                marginRight: 12
+              }}
+            >
+              {bp.toUpperCase()}
+            </span>
+            <span data-testid="viewport-info" style={{ fontFamily: 'monospace', fontSize: 13 }}>
+              <span data-testid="viewport-width">{viewportSize.w}px</span>
+              {' × '}
+              <span data-testid="viewport-height">{viewportSize.h}px</span>
+            </span>
+          </div>
+
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 24 }}>
+            {[
+              { label: 'XS Mobile', w: 375, h: 667, testId: 'preset-xs' },
+              { label: 'Mobile', w: 430, h: 932, testId: 'preset-mobile' },
+              { label: 'Tablet', w: 768, h: 1024, testId: 'preset-tablet' },
+              { label: 'Desktop', w: 1440, h: 900, testId: 'preset-desktop' }
+            ].map((p) => (
+              <button
+                key={p.label}
+                data-testid={p.testId}
+                className="qa-btn qa-btn--sm"
+                onClick={() => setViewportSize({ w: p.w, h: p.h })}
+              >
+                {p.label} ({p.w}×{p.h})
+              </button>
+            ))}
+          </div>
+
+          <div
+            data-testid="responsive-grid"
+            style={{
+              display: 'grid',
+              gridTemplateColumns:
+                viewportSize.w < 480 ? '1fr' : viewportSize.w < 768 ? 'repeat(2,1fr)' : 'repeat(3,1fr)',
+              gap: 12
+            }}
+          >
+            {['Card A', 'Card B', 'Card C', 'Card D', 'Card E', 'Card F'].map((c) => (
+              <div
+                key={c}
+                data-testid={`card-${c.toLowerCase().replace(' ', '-')}`}
+                style={{
+                  background: 'rgba(255,255,255,0.06)',
+                  border: '1px solid rgba(255,255,255,0.12)',
+                  borderRadius: 8,
+                  padding: 16,
+                  textAlign: 'center'
+                }}
+              >
+                {c}
+              </div>
+            ))}
+          </div>
+
+          <div
+            style={{
+              marginTop: 24,
+              background: 'rgba(255,255,255,0.06)',
+              borderRadius: 8,
+              padding: 16,
+              border: '1px solid rgba(255,255,255,0.1)'
+            }}
+          >
+            <strong>Playwright snippet:</strong>
+            <pre
+              style={{ margin: '8px 0 0', fontSize: 13, overflowX: 'auto' }}
+            >{`await page.setViewportSize({ width: 375, height: 667 });
+await expect(page.locator('[data-testid="breakpoint-badge"]'))
+  .toHaveAttribute('data-breakpoint', 'xs-mobile');
+
+// Assert 1-column grid on mobile
+const cols = await page.locator('[data-testid="responsive-grid"]').evaluate(
+  el => getComputedStyle(el).gridTemplateColumns.split(' ').length
+);
+expect(cols).toBe(1);`}</pre>
+          </div>
+        </div>
+      );
+    }
+
+    // ── Rich Text Editor ────────────────────────────────────────────────────
+    if (selectedOption === 'rich-text-editor') {
+      const execCmd = (cmd, value = null) => {
+        rteRef.current && rteRef.current.focus();
+        document.execCommand(cmd, false, value);
+        setRteHtml(rteRef.current ? rteRef.current.innerHTML : '');
+      };
+
+      return (
+        <div className="content-section">
+          <h2>Rich Text Editor</h2>
+          <p className="section-description">
+            <code>contentEditable</code> editors (TinyMCE, Quill, ProseMirror) require special handling in Playwright.
+            Practice typing, applying formatting, and asserting the HTML output.
+          </p>
+
+          <div className="rte-demo">
+            <div
+              data-testid="rte-toolbar"
+              role="toolbar"
+              aria-label="Text formatting"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                flexWrap: 'wrap',
+                gap: 4,
+                padding: '8px 12px',
+                border: '1px solid rgba(255,255,255,0.15)',
+                borderRadius: '6px 6px 0 0',
+                background: 'rgba(255,255,255,0.07)'
+              }}
+            >
+              {[
+                { cmd: 'bold', label: 'B', title: 'Bold', testId: 'btn-bold', style: { fontWeight: 'bold' } },
+                { cmd: 'italic', label: 'I', title: 'Italic', testId: 'btn-italic', style: { fontStyle: 'italic' } },
+                {
+                  cmd: 'underline',
+                  label: 'U',
+                  title: 'Underline',
+                  testId: 'btn-underline',
+                  style: { textDecoration: 'underline' }
+                },
+                { cmd: 'strikeThrough', label: 'S̶', title: 'Strikethrough', testId: 'btn-strikethrough', style: {} }
+              ].map(({ cmd, label, title, testId, style }) => (
+                <button
+                  key={cmd}
+                  title={title}
+                  data-testid={testId}
+                  aria-label={title}
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    execCmd(cmd);
+                  }}
+                  style={{
+                    ...style,
+                    padding: '4px 10px',
+                    border: '1px solid rgba(255,255,255,0.2)',
+                    borderRadius: 4,
+                    cursor: 'pointer',
+                    background: 'rgba(255,255,255,0.1)'
+                  }}
+                >
+                  {label}
+                </button>
+              ))}
+              <span style={{ margin: '0 4px', color: 'rgba(255,255,255,0.3)' }}>|</span>
+              {[
+                { cmd: 'formatBlock', value: 'H1', label: 'H1', testId: 'btn-h1' },
+                { cmd: 'formatBlock', value: 'H2', label: 'H2', testId: 'btn-h2' },
+                { cmd: 'formatBlock', value: 'P', label: 'P', testId: 'btn-paragraph' }
+              ].map(({ cmd, value, label, testId }) => (
+                <button
+                  key={value}
+                  data-testid={testId}
+                  aria-label={label}
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    execCmd(cmd, value);
+                  }}
+                  style={{
+                    padding: '4px 10px',
+                    border: '1px solid rgba(255,255,255,0.2)',
+                    borderRadius: 4,
+                    cursor: 'pointer',
+                    background: 'rgba(255,255,255,0.1)'
+                  }}
+                >
+                  {label}
+                </button>
+              ))}
+              <span style={{ margin: '0 4px', color: 'rgba(255,255,255,0.3)' }}>|</span>
+              <button
+                data-testid="btn-clear"
+                aria-label="Clear"
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  if (rteRef.current) {
+                    rteRef.current.innerHTML = '';
+                    setRteHtml('');
+                  }
+                }}
+                style={{
+                  padding: '4px 10px',
+                  border: '1px solid #ddd',
+                  borderRadius: 4,
+                  cursor: 'pointer',
+                  background: '#fff'
+                }}
+              >
+                Clear
+              </button>
+            </div>
+
+            <div
+              ref={rteRef}
+              contentEditable="true"
+              suppressContentEditableWarning
+              data-testid="rte-editor"
+              aria-label="Rich text editor"
+              role="textbox"
+              aria-multiline="true"
+              onInput={() => setRteHtml(rteRef.current ? rteRef.current.innerHTML : '')}
+              style={{
+                minHeight: 160,
+                border: '1px solid rgba(255,255,255,0.15)',
+                borderTop: 'none',
+                borderRadius: '0 0 6px 6px',
+                padding: 16,
+                outline: 'none',
+                fontSize: 15,
+                lineHeight: 1.6
+              }}
+            />
+
+            <p style={{ margin: '16px 0 4px', fontSize: 13, color: 'rgba(255,255,255,0.55)' }}>Raw HTML output:</p>
+            <pre
+              data-testid="rte-html-output"
+              style={{
+                background: 'rgba(255,255,255,0.05)',
+                border: '1px solid rgba(255,255,255,0.1)',
+                borderRadius: 6,
+                padding: 12,
+                fontSize: 12,
+                overflowX: 'auto',
+                whiteSpace: 'pre-wrap',
+                wordBreak: 'break-word',
+                minHeight: 40
+              }}
+            >
+              {rteHtml || <span style={{ color: 'rgba(255,255,255,0.35)' }}>(empty — type something above)</span>}
+            </pre>
+
+            <div
+              style={{
+                marginTop: 16,
+                background: 'rgba(255,255,255,0.06)',
+                borderRadius: 8,
+                padding: 16,
+                border: '1px solid rgba(255,255,255,0.1)'
+              }}
+            >
+              <strong>Playwright snippet:</strong>
+              <pre
+                style={{ margin: '8px 0 0', fontSize: 13, overflowX: 'auto' }}
+              >{`const editor = page.locator('[data-testid="rte-editor"]');
+await editor.click();
+await editor.type('Hello World');
+
+// Select all and make it bold
+await page.keyboard.press('Control+A');
+await page.locator('[data-testid="btn-bold"]').click();
+
+// Assert HTML contains bold markup
+const html = await page.locator('[data-testid="rte-html-output"]').textContent();
+expect(html).toMatch(/<b>|<strong>/i);`}</pre>
+            </div>
           </div>
         </div>
       );

@@ -41,6 +41,12 @@ const categories = [
         id: 'credit-card',
         label: 'Credit Card Payment',
         description: 'Payment form with card number formatting, expiry/CVV validation, and mock payment processing.'
+      },
+      {
+        id: 'rich-text-editor',
+        label: 'Rich Text Editor',
+        description:
+          'contentEditable WYSIWYG editor — type text, apply bold/italic/headings, and assert the HTML output.'
       }
     ]
   },
@@ -152,6 +158,16 @@ const categories = [
         id: 'error-boundary',
         label: 'Error Boundary',
         description: 'Trigger a React error boundary and assert the fallback UI.'
+      },
+      {
+        id: 'multi-tab',
+        label: 'Multi-tab & Popup',
+        description: 'Handle new tabs and popup windows — practice page.waitForEvent("popup") and switching contexts.'
+      },
+      {
+        id: 'viewport',
+        label: 'Viewport & Responsive',
+        description: 'Test responsive layouts at different sizes using page.setViewportSize() and device emulation.'
       }
     ]
   },
@@ -211,6 +227,12 @@ const categories = [
         id: 'loaders',
         label: 'Loaders & Spinners',
         description: 'Wait for loading indicators to appear and disappear before asserting.'
+      },
+      {
+        id: 'shadow-dom',
+        label: 'Shadow DOM',
+        description:
+          'Interact with elements inside a Shadow DOM — use Playwright pierce selectors to reach encapsulated content.'
       }
     ]
   }
@@ -231,7 +253,7 @@ const QAPracticeLanding = () => {
         <div className="qal-content">
           <div className="qa-landing">
             <div className="qa-landing-hero">
-              <h2>39 Interactive Scenarios</h2>
+              <h2>43 Interactive Scenarios</h2>
               <p>
                 A hands-on playground for practising Playwright end-to-end testing. Each scenario gives you a real,
                 interactive UI element to automate — from basic form inputs to WebSockets and virtual scroll. Pick a
@@ -239,7 +261,7 @@ const QAPracticeLanding = () => {
               </p>
               <div className="qa-landing-stats">
                 <div className="stat">
-                  <span className="stat-number">39</span>
+                  <span className="stat-number">43</span>
                   <span className="stat-label">Scenarios</span>
                 </div>
                 <div className="stat">
