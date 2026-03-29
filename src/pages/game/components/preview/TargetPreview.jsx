@@ -7,8 +7,12 @@ export function TargetPreview({ targetUrl, levelTitle }) {
   const [source, setSource] = useState(null);
   const [sourceLoading, setSourceLoading] = useState(false);
 
-  // Proxy strips the host so /pages/* is forwarded to the backend by CRA's dev server
-  const iframeSrc = targetUrl.replace(/https?:\/\/localhost:\d+/, '');
+  // In development, strip the host so CRA's dev proxy forwards /pages/* to the backend.
+  // In production, replace localhost with the actual API URL.
+  const apiBase = process.env.REACT_APP_API_URL || '';
+  const iframeSrc = apiBase
+    ? targetUrl.replace(/https?:\/\/localhost:\d+/, apiBase)
+    : targetUrl.replace(/https?:\/\/localhost:\d+/, '');
 
   useEffect(() => {
     // Reset tab when level changes
