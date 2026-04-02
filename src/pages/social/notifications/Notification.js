@@ -57,8 +57,10 @@ const Notification = () => {
   });
 
   useEffect(() => {
-    NotificationUtils.socketIONotification(profile, notifications, setNotifications, 'notificationPage');
-  }, [profile, notifications]);
+    if (!profile) return;
+    const cleanup = NotificationUtils.socketIONotification(profile, setNotifications, 'notificationPage', () => {});
+    return cleanup;
+  }, [profile]);
 
   return (
     <>

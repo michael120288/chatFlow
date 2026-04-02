@@ -55,12 +55,12 @@ const Sidebar = () => {
     [chatList, profile]
   );
 
-  const markMessagesAsRad = useCallback(
+  const markMessagesAsRead = useCallback(
     async (user) => {
       try {
         const receiverId = user?.receiverUsername !== profile?.username ? user?.receiverId : user?.senderId;
         if (user?.receiverUsername === profile?.username && !user.isRead) {
-          await chatService.markMessagesAsRad(profile?._id, receiverId);
+          await chatService.markMessagesAsRead(profile?._id, receiverId);
         }
         const userTwoName =
           user?.receiverUsername !== profile?.username ? user?.receiverUsername : user?.senderUsername;
@@ -93,10 +93,10 @@ const Sidebar = () => {
       const url = createChatUrlParams('/app/social/chat/messages');
       navigate(url);
       if (chatList.length && !chatList[0].isRead) {
-        markMessagesAsRad(chatList[0]);
+        markMessagesAsRead(chatList[0]);
       }
     }
-  }, [chatList, chatPageName, createChatUrlParams, markMessagesAsRad, navigate]);
+  }, [chatList, chatPageName, createChatUrlParams, markMessagesAsRead, navigate]);
 
   return (
     <div className="app-side-menu">

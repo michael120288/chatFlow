@@ -13,7 +13,15 @@ const Signout = () => {
 
   useEffect(() => {
     const rawReturn = new URLSearchParams(window.location.search).get('return') || '/auth';
-    const returnUrl = rawReturn.startsWith('/') ? rawReturn : '/auth';
+    let returnUrl = '/auth';
+    try {
+      const parsed = new URL(rawReturn, window.location.origin);
+      if (parsed.origin === window.location.origin) {
+        returnUrl = parsed.pathname + parsed.search + parsed.hash;
+      }
+    } catch {
+      // invalid URL — fall back to /auth
+    }
 
     userService
       .logoutUser()

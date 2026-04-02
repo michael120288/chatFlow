@@ -5,7 +5,7 @@ import { FaSearch, FaTimes } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import '@components/chat/list/ChatList.scss';
 import SearchList from '@components/chat/list/search-list/SearchList';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { userService } from '@services/api/user/user.service';
 import useDebounce from '@hooks/useDebounce';
 import { ChatUtils } from '@services/utils/chat-utils.service';
@@ -25,7 +25,7 @@ const ChatList = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [componentType, setComponentType] = useState('chatList');
   const [chatMessageList, setChatMessageList] = useState([]);
-  const [rendered, setRendered] = useState(false);
+  const rendered = useRef(false);
   const debouncedValue = useDebounce(search, 1000);
   const dispatch = useDispatch();
   const location = useLocation();
@@ -153,11 +153,13 @@ const ChatList = () => {
   }, [chatList]);
 
   useEffect(() => {
-    if (rendered) {
-      ChatUtils.socketIOChatList(profile, chatMessageList, setChatMessageList);
+    if (!rendered.current) {
+      rendered.current = true;
+      return;
     }
-    if (!rendered) setRendered(true);
-  }, [chatMessageList, profile, rendered]);
+    const cleanup = ChatUtils.socketIOChatList(profile, setChatMessageList);
+    return cleanup;
+  }, [profile]);
 
   return (
     <div data-testid="chatList">
@@ -207,7 +209,7 @@ const ChatList = () => {
             <div className="conversation">
               {chatMessageList.map((data) => (
                 <div
-                  key={Utils.generateString(10)}
+                  key={data.conversationId || data.receiverId}
                   data-testid="conversation-item"
                   className={`conversation-item ${
                     searchParams.get('username') === data?.receiverUsername.toLowerCase() ||

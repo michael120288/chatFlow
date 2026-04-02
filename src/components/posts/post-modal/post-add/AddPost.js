@@ -80,8 +80,8 @@ const AddPost = ({ selectedImage, selectedPostVideo }) => {
       Utils.dispatchNotification('Your post contains inappropriate language.', 'error', dispatch);
       return;
     }
-    setLoading(!loading);
-    setDisable(!disable);
+    setLoading(true);
+    setDisable(true);
     try {
       if (Object.keys(feeling).length) {
         postData.feelings = feeling?.name;

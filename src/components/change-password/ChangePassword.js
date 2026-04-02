@@ -14,7 +14,9 @@ const ChangePassword = () => {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [type, setType] = useState('password');
+  const [currentType, setCurrentType] = useState('password');
+  const [newType, setNewType] = useState('password');
+  const [confirmType, setConfirmType] = useState('password');
   const [togglePassword, setTogglePassword] = useState(false);
   const [deleteStorageUsername] = useLocalStorage('username', 'delete');
   const [setLoggedIn] = useLocalStorage('keepLoggedIn', 'set');
@@ -23,9 +25,12 @@ const ChangePassword = () => {
   const navigate = useNavigate();
 
   const togglePasswordDisplay = () => {
-    setTogglePassword(!togglePassword);
-    const inputType = type === 'password' ? 'text' : 'password';
-    setType(inputType);
+    const next = !togglePassword;
+    setTogglePassword(next);
+    const inputType = next ? 'text' : 'password';
+    setCurrentType(inputType);
+    setNewType(inputType);
+    setConfirmType(inputType);
   };
 
   const changePassword = async (event) => {
@@ -42,13 +47,17 @@ const ChangePassword = () => {
       if (response) {
         Utils.dispatchNotification(response.data.message, 'success', dispatch);
         setTimeout(async () => {
+          try {
+            await userService.logoutUser();
+          } catch {
+            // ignore logout errors
+          }
           Utils.clearStore({
             dispatch,
             deleteStorageUsername,
             deleteSessionPageReload,
             setLoggedIn
           });
-          await userService.logoutUser();
           navigate('/');
         }, 3000);
       }
@@ -64,7 +73,7 @@ const ChangePassword = () => {
           <Input
             id="currentPassword"
             name="currentPassword"
-            type={type}
+            type={currentType}
             value={currentPassword}
             labelText="Current Password"
             placeholder=""
@@ -75,7 +84,7 @@ const ChangePassword = () => {
           <Input
             id="newPassword"
             name="newPassword"
-            type={type}
+            type={newType}
             value={newPassword}
             labelText="New Password"
             placeholder=""
@@ -86,7 +95,7 @@ const ChangePassword = () => {
           <Input
             id="confirmPassword"
             name="confirmPassword"
-            type={type}
+            type={confirmType}
             value={confirmPassword}
             labelText="Confirm Password"
             placeholder=""

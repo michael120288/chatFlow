@@ -62,7 +62,15 @@ export class PostUtils {
     Utils.dispatchNotification(message, type, dispatch);
   }
 
-  static async sendPostWithFileRequest(type, postData, imageInputRef, setApiResponse, setLoading, dispatch) {
+  static async sendPostWithFileRequest(
+    type,
+    postData,
+    imageInputRef,
+    setApiResponse,
+    setLoading,
+    setDisable,
+    dispatch
+  ) {
     try {
       if (imageInputRef?.current) {
         imageInputRef.current.textContent = postData.post;
@@ -74,6 +82,7 @@ export class PostUtils {
       if (response) {
         setApiResponse('success');
         setLoading(false);
+        setDisable(false);
       }
     } catch (error) {
       PostUtils.dispatchNotification(error.response.data.message, 'error', setApiResponse, setLoading, dispatch);
@@ -130,41 +139,69 @@ export class PostUtils {
     element.focus();
   }
 
-  static socketIOPost(posts, setPosts) {
-    posts = cloneDeep(posts);
-    socketService?.socket?.on('add post', (post) => {
-      posts = [post, ...posts];
-      setPosts(posts);
-    });
+  static socketIOPost(setPosts) {
+    const onAddPost = (post) => {
+      setPosts((prev) => [post, ...prev]);
+    };
 
-    socketService?.socket?.on('update post', (post) => {
-      PostUtils.updateSinglePost(posts, post, setPosts);
-    });
+    const onUpdatePost = (post) => {
+      setPosts((prev) => {
+        const posts = cloneDeep(prev);
+        const index = findIndex(posts, ['_id', post?._id]);
+        if (index > -1) {
+          posts.splice(index, 1, post);
+        }
+        return posts;
+      });
+    };
 
-    socketService?.socket?.on('delete post', (postId) => {
-      const index = findIndex(posts, (postData) => postData._id === postId);
-      if (index > -1) {
-        posts = cloneDeep(posts);
+    const onDeletePost = (postId) => {
+      setPosts((prev) => {
+        const posts = cloneDeep(prev);
         remove(posts, { _id: postId });
-        setPosts(posts);
-      }
-    });
+        return posts;
+      });
+    };
 
-    socketService?.socket?.on('update like', (reactionData) => {
-      const postData = find(posts, (post) => post._id === reactionData?.postId);
-      if (postData) {
-        postData.reactions = reactionData.postReactions;
-        PostUtils.updateSinglePost(posts, postData, setPosts);
-      }
-    });
+    const onUpdateLike = (reactionData) => {
+      setPosts((prev) => {
+        const posts = cloneDeep(prev);
+        const postData = find(posts, (post) => post._id === reactionData?.postId);
+        if (postData) {
+          postData.reactions = reactionData.postReactions;
+          const index = findIndex(posts, ['_id', postData._id]);
+          if (index > -1) posts.splice(index, 1, postData);
+        }
+        return posts;
+      });
+    };
 
-    socketService?.socket?.on('update comment', (commentData) => {
-      const postData = find(posts, (post) => post._id === commentData?.postId);
-      if (postData) {
-        postData.commentsCount = commentData.commentsCount;
-        PostUtils.updateSinglePost(posts, postData, setPosts);
-      }
-    });
+    const onUpdateComment = (commentData) => {
+      setPosts((prev) => {
+        const posts = cloneDeep(prev);
+        const postData = find(posts, (post) => post._id === commentData?.postId);
+        if (postData) {
+          postData.commentsCount = commentData.commentsCount;
+          const index = findIndex(posts, ['_id', postData._id]);
+          if (index > -1) posts.splice(index, 1, postData);
+        }
+        return posts;
+      });
+    };
+
+    socketService?.socket?.on('add post', onAddPost);
+    socketService?.socket?.on('update post', onUpdatePost);
+    socketService?.socket?.on('delete post', onDeletePost);
+    socketService?.socket?.on('update like', onUpdateLike);
+    socketService?.socket?.on('update comment', onUpdateComment);
+
+    return () => {
+      socketService?.socket?.off('add post', onAddPost);
+      socketService?.socket?.off('update post', onUpdatePost);
+      socketService?.socket?.off('delete post', onDeletePost);
+      socketService?.socket?.off('update like', onUpdateLike);
+      socketService?.socket?.off('update comment', onUpdateComment);
+    };
   }
 
   static updateSinglePost(posts, post, setPosts) {

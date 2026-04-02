@@ -25,7 +25,6 @@ const Streams = () => {
   const [totalPostsCount, setTotalPostsCount] = useState(0);
   const bodyRef = useRef(null);
   const bottomLineRef = useRef();
-  let appPosts = useRef([]);
   const dispatch = useDispatch();
   const storedUsername = useLocalStorage('username', 'get');
   const [deleteSelectedPostId] = useLocalStorage('selectedPostId', 'delete');
@@ -45,10 +44,10 @@ const Streams = () => {
     try {
       const response = await postService.getAllPosts(currentPage);
       if (response.data.posts.length > 0) {
-        appPosts = [...posts, ...response.data.posts];
-        const allPosts = uniqBy(appPosts, '_id');
-        const orderedPosts = orderBy(allPosts, ['createdAt'], ['desc']);
-        setPosts(orderedPosts);
+        setPosts((prev) => {
+          const merged = uniqBy([...prev, ...response.data.posts], '_id');
+          return orderBy(merged, ['createdAt'], ['desc']);
+        });
       }
       setLoading(false);
     } catch (error) {
@@ -90,8 +89,9 @@ const Streams = () => {
   }, [allPosts]);
 
   useEffect(() => {
-    PostUtils.socketIOPost(posts, setPosts);
-  }, [posts]);
+    const cleanup = PostUtils.socketIOPost(setPosts);
+    return cleanup;
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="streams" data-testid="streams">

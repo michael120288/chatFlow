@@ -5,10 +5,10 @@ import { cloneDeep, find, findIndex, remove, sumBy } from 'lodash';
 import { timeAgo } from '@services/utils/timeago.utils';
 
 export class NotificationUtils {
-  static socketIONotification(profile, notifications, setNotifications, type, setNotificationsCount) {
-    socketService?.socket?.on('insert notification', (data, userToData) => {
+  static socketIONotification(profile, setNotifications, type, setNotificationsCount) {
+    const onInsert = (data, userToData) => {
       if (profile?._id === userToData.userTo) {
-        notifications = [...data];
+        const notifications = [...data];
         if (type === 'notificationPage') {
           setNotifications(notifications);
         } else {
@@ -19,40 +19,43 @@ export class NotificationUtils {
           setNotifications(mappedNotifications);
         }
       }
-    });
+    };
 
-    socketService?.socket?.on('update notification', (notificationId) => {
-      notifications = cloneDeep(notifications);
-      const notificationData = find(notifications, (notification) => notification._id === notificationId);
-      if (notificationData) {
-        const index = findIndex(notifications, (notification) => notification._id === notificationId);
+    const onUpdate = (notificationId) => {
+      setNotifications((prev) => {
+        const notifications = cloneDeep(prev);
+        const notificationData = find(notifications, (n) => n._id === notificationId);
+        if (!notificationData) return prev;
+        const index = findIndex(notifications, (n) => n._id === notificationId);
         notificationData.read = true;
         notifications.splice(index, 1, notificationData);
         if (type === 'notificationPage') {
-          setNotifications(notifications);
-        } else {
-          const mappedNotifications = NotificationUtils.mapNotificationDropdownItems(
-            notifications,
-            setNotificationsCount
-          );
-          setNotifications(mappedNotifications);
+          return notifications;
         }
-      }
-    });
+        return NotificationUtils.mapNotificationDropdownItems(notifications, setNotificationsCount);
+      });
+    };
 
-    socketService?.socket?.on('delete notification', (notificationId) => {
-      notifications = cloneDeep(notifications);
-      remove(notifications, { _id: notificationId });
-      if (type === 'notificationPage') {
-        setNotifications(notifications);
-      } else {
-        const mappedNotifications = NotificationUtils.mapNotificationDropdownItems(
-          notifications,
-          setNotificationsCount
-        );
-        setNotifications(mappedNotifications);
-      }
-    });
+    const onDelete = (notificationId) => {
+      setNotifications((prev) => {
+        const notifications = cloneDeep(prev);
+        remove(notifications, { _id: notificationId });
+        if (type === 'notificationPage') {
+          return notifications;
+        }
+        return NotificationUtils.mapNotificationDropdownItems(notifications, setNotificationsCount);
+      });
+    };
+
+    socketService?.socket?.on('insert notification', onInsert);
+    socketService?.socket?.on('update notification', onUpdate);
+    socketService?.socket?.on('delete notification', onDelete);
+
+    return () => {
+      socketService?.socket?.off('insert notification', onInsert);
+      socketService?.socket?.off('update notification', onUpdate);
+      socketService?.socket?.off('delete notification', onDelete);
+    };
   }
 
   static mapNotificationDropdownItems(notificationData, setNotificationsCount) {
@@ -107,50 +110,44 @@ export class NotificationUtils {
     await notificationService.markNotificationAsRead(messageId);
   }
 
-  static socketIOMessageNotification(
-    profile,
-    messageNotifications,
-    setMessageNotifications,
-    setMessageCount,
-    dispatch,
-    location
-  ) {
-    socketService?.socket?.on('chat list', (data) => {
-      messageNotifications = cloneDeep(messageNotifications);
-      if (data?.receiverUsername === profile?.username) {
-        const notificationData = {
-          senderId: data.senderId,
-          senderUsername: data.senderUsername,
-          senderAvatarColor: data.senderAvatarColor,
-          senderProfilePicture: data.senderProfilePicture,
-          receiverId: data.receiverId,
-          receiverUsername: data.receiverUsername,
-          receiverAvatarColor: data.receiverAvatarColor,
-          receiverProfilePicture: data.receiverProfilePicture,
-          messageId: data._id,
-          conversationId: data.conversationId,
-          body: data.body,
-          isRead: data.isRead
-        };
-        const messageIndex = findIndex(
-          messageNotifications,
-          (notification) => notification.conversationId === data.conversationId
-        );
+  static socketIOMessageNotification(profile, setMessageNotifications, setMessageCount, dispatch, locationRef) {
+    const onChatList = (data) => {
+      if (data?.receiverUsername !== profile?.username) return;
+      const notificationData = {
+        senderId: data.senderId,
+        senderUsername: data.senderUsername,
+        senderAvatarColor: data.senderAvatarColor,
+        senderProfilePicture: data.senderProfilePicture,
+        receiverId: data.receiverId,
+        receiverUsername: data.receiverUsername,
+        receiverAvatarColor: data.receiverAvatarColor,
+        receiverProfilePicture: data.receiverProfilePicture,
+        messageId: data._id,
+        conversationId: data.conversationId,
+        body: data.body,
+        isRead: data.isRead
+      };
+      setMessageNotifications((prev) => {
+        const messageNotifications = cloneDeep(prev);
+        const messageIndex = findIndex(messageNotifications, (n) => n.conversationId === data.conversationId);
         if (messageIndex > -1) {
-          remove(messageNotifications, (notification) => notification.conversationId === data.conversationId);
-          messageNotifications = [notificationData, ...messageNotifications];
-        } else {
-          messageNotifications = [notificationData, ...messageNotifications];
+          remove(messageNotifications, (n) => n.conversationId === data.conversationId);
         }
-        const count = sumBy(messageNotifications, (notification) => {
-          return !notification.isRead ? 1 : 0;
-        });
-        if (!Utils.checkUrl(location.pathname, 'chat')) {
-          Utils.dispatchNotification('You have a new message', 'success', dispatch);
-        }
+        const updated = [notificationData, ...messageNotifications];
+        const count = sumBy(updated, (n) => (!n.isRead ? 1 : 0));
         setMessageCount(count);
-        setMessageNotifications(messageNotifications);
+        return updated;
+      });
+      const location = locationRef?.current ?? locationRef;
+      if (!Utils.checkUrl(location.pathname, 'chat')) {
+        Utils.dispatchNotification('You have a new message', 'success', dispatch);
       }
-    });
+    };
+
+    socketService?.socket?.on('chat list', onChatList);
+
+    return () => {
+      socketService?.socket?.off('chat list', onChatList);
+    };
   }
 }

@@ -28,7 +28,6 @@ const Posts = ({ allPosts, userFollowing, postsLoading }) => {
         ))}
 
       {postsLoading &&
-        !allPosts.length &&
         [1, 2, 3, 4, 5, 6].map((index) => (
           <div key={index}>
             <PostSkeleton />

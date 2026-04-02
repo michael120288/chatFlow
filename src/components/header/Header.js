@@ -46,6 +46,7 @@ const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
+  const locationRef = useRef(location);
   const [isMessageActive, setIsMessageActive] = useDetectOutsideClick(messageRef, false);
   const [isNotificationActive, setIsNotificationActive] = useDetectOutsideClick(notificationRef, false);
   const [isSettingsActive, setIsSettingsActive] = useDetectOutsideClick(settingsRef, false);
@@ -126,6 +127,10 @@ const Header = () => {
   });
 
   useEffect(() => {
+    locationRef.current = location;
+  }, [location]);
+
+  useEffect(() => {
     const count = sumBy(chatList, (notification) => {
       return !notification.isRead && notification.receiverUsername === profile?.username ? 1 : 0;
     });
@@ -134,16 +139,25 @@ const Header = () => {
   }, [chatList, profile]);
 
   useEffect(() => {
-    NotificationUtils.socketIONotification(profile, notifications, setNotifications, 'header', setNotificationCount);
-    NotificationUtils.socketIOMessageNotification(
+    if (!profile) return;
+    const cleanupNotifications = NotificationUtils.socketIONotification(
       profile,
-      messageNotifications,
+      setNotifications,
+      'header',
+      setNotificationCount
+    );
+    const cleanupMessages = NotificationUtils.socketIOMessageNotification(
+      profile,
       setMessageNotifications,
       setMessageCount,
       dispatch,
-      location
+      locationRef
     );
-  }, [profile, notifications, dispatch, location, messageNotifications]);
+    return () => {
+      cleanupNotifications?.();
+      cleanupMessages?.();
+    };
+  }, [profile, dispatch]);
 
   return (
     <>

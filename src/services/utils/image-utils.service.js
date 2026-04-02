@@ -43,7 +43,15 @@ export class ImageUtils {
 
   static async addFileToRedux(event, post, setSelectedImage, dispatch, type) {
     const file = event.target.files[0];
-    ImageUtils.checkFile(file, type);
+    if (!ImageUtils.validateFile(file, type)) {
+      window.alert(`File ${file.name} not accepted`);
+      return;
+    }
+    const sizeError = ImageUtils.checkFileSize(file, type);
+    if (sizeError) {
+      window.alert(sizeError);
+      return;
+    }
     setSelectedImage(file);
     dispatch(
       updatePostItem({

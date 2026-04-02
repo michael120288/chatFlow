@@ -9,8 +9,6 @@ import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Navigate, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { getConversationList } from '@redux/api/chat';
-
 const ProtectedRoute = ({ children }) => {
   const [tokenIsValid, setTokenIsValid] = useState(null);
   const [deleteStorageUsername] = useLocalStorage('username', 'delete');
@@ -24,7 +22,6 @@ const ProtectedRoute = ({ children }) => {
     try {
       const response = await userService.checkCurrentUser();
       logger.info('ProtectedRoute: session valid, user =', response.data.user?.username);
-      dispatch(getConversationList());
       setTokenIsValid(true);
       dispatch(addUser({ token: response.data.token, profile: response.data.user }));
     } catch (error) {
