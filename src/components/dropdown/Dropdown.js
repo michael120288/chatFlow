@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { FaCircle, FaRegCircle, FaTrashAlt, FaUserAlt } from 'react-icons/fa';
 
 import '@components/dropdown/Dropdown.scss';
-import { Utils } from '@services/utils/utils.service';
 
 const Dropdown = ({
   data,
@@ -36,8 +35,8 @@ const Dropdown = ({
               className="social-card-body-info-container"
               style={{ maxHeight: `${height}px` }}
             >
-              {data.map((item) => (
-                <div className="social-sub-card" key={Utils.generateString(10)}>
+              {data.map((item, index) => (
+                <div className="social-sub-card" key={item._id || index}>
                   <div className="content-avatar">
                     {title === 'Notifications' ? (
                       <Avatar

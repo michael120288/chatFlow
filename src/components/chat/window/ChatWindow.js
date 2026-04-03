@@ -2,7 +2,7 @@ import Avatar from '@components/avatar/Avatar';
 import { useDispatch, useSelector } from 'react-redux';
 import '@components/chat/window/ChatWindow.scss';
 import MessageInput from '@components/chat/window/message-input/MessageInput';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Utils } from '@services/utils/utils.service';
 import { userService } from '@services/api/user/user.service';
@@ -19,7 +19,7 @@ const ChatWindow = () => {
   const [chatMessages, setChatMessages] = useState([]);
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [searchParams] = useSearchParams();
-  const [rendered, setRendered] = useState(false);
+  const rendered = useRef(false);
   const dispatch = useDispatch();
 
   const getChatMessages = useCallback(
@@ -108,26 +108,34 @@ const ChatWindow = () => {
   };
 
   useEffect(() => {
-    if (rendered) {
-      getUserProfileByUserId();
-      getNewUserMessages();
+    if (!rendered.current) {
+      rendered.current = true;
+      return;
     }
-    if (!rendered) setRendered(true);
-  }, [getUserProfileByUserId, getNewUserMessages, searchParams, rendered]);
+    getUserProfileByUserId();
+    getNewUserMessages();
+  }, [getUserProfileByUserId, getNewUserMessages, searchParams]);
 
   useEffect(() => {
-    if (rendered) {
-      ChatUtils.socketIOMessageReceived(chatMessages, searchParams.get('username'), setConversationId, setChatMessages);
-    }
-    if (!rendered) setRendered(true);
-    ChatUtils.usersOnline(setOnlineUsers);
-    ChatUtils.usersOnChatPage();
+    const cleanupOnline = ChatUtils.usersOnline(setOnlineUsers);
+    const cleanupChatPage = ChatUtils.usersOnChatPage();
+    return () => {
+      cleanupOnline?.();
+      cleanupChatPage?.();
+    };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (!rendered.current) return;
+    const username = searchParams.get('username');
+    const cleanupReceived = ChatUtils.socketIOMessageReceived(username, setConversationId, setChatMessages);
+    const cleanupReaction = ChatUtils.socketIOMessageReaction(username, setConversationId, setChatMessages);
+    return () => {
+      cleanupReceived?.();
+      cleanupReaction?.();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams, rendered]);
-
-  useEffect(() => {
-    ChatUtils.socketIOMessageReaction(chatMessages, searchParams.get('username'), setConversationId, setChatMessages);
-  }, [chatMessages, searchParams]);
+  }, [searchParams]);
 
   return (
     <div className="chat-window-container" data-testid="chatWindowContainer">

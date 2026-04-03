@@ -6,7 +6,6 @@ import warningIcon from '@assets/images/warning.svg';
 import { cloneDeep, uniqBy } from 'lodash';
 
 const initialState = [];
-let list = [];
 const toastIcons = [
   { success: checkIcon, color: '#5cb85c' },
   { error: errorIcon, color: '#d9534f' },
@@ -28,13 +27,12 @@ const notificationsSlice = createSlice({
         icon: toast[type],
         backgroundColor: toast.color
       };
-      list = cloneDeep(list);
+      let list = cloneDeep(state);
       list.unshift(toastItem);
       list = [...uniqBy(list, 'description')];
       return list;
     },
     clearNotification: () => {
-      list = [];
       return [];
     }
   }

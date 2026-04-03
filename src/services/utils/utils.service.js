@@ -74,7 +74,7 @@ export class Utils {
       version = version.replace(/['"]+/g, '');
       id = id.replace(/['"]+/g, '');
     }
-    const cloudName = process.env.REACT_APP_CLOUDINARY_CLOUD_NAME || 'dhcw9nswr';
+    const cloudName = process.env.REACT_APP_CLOUDINARY_CLOUD_NAME;
     return `https://res.cloudinary.com/${cloudName}/image/upload/v${version}/${id}`;
   }
 
@@ -132,7 +132,7 @@ export class Utils {
   }
 
   static getVideo(videoId, videoVersion) {
-    const cloudName = process.env.REACT_APP_CLOUDINARY_CLOUD_NAME || 'dhcw9nswr';
+    const cloudName = process.env.REACT_APP_CLOUDINARY_CLOUD_NAME;
     return videoId && videoVersion
       ? `https://res.cloudinary.com/${cloudName}/video/upload/v${videoVersion}/${videoId}`
       : '';

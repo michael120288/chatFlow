@@ -20,7 +20,7 @@ export function useSubmission() {
         if (res.passed) {
           const alreadyDone = isCompleted(levelId);
           if (!alreadyDone && res.xpAwarded > 0) {
-            const track = category === 'cypress-ui' ? 'cypress-ui' : 'playwright';
+            const track = category === 'jest' ? 'jest' : category === 'cypress-ui' ? 'cypress-ui' : 'playwright';
             addXP(res.xpAwarded, track);
           }
           completeLevel(levelId);

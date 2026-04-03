@@ -22,7 +22,17 @@ const SSOCallback = () => {
     }
 
     const rawReturn = params.get('return');
-    const safeReturn = rawReturn && rawReturn.startsWith('/') ? rawReturn : null;
+    let safeReturn = null;
+    if (rawReturn) {
+      try {
+        const parsed = new URL(rawReturn, window.location.origin);
+        if (parsed.origin === window.location.origin) {
+          safeReturn = parsed.pathname + parsed.search + parsed.hash;
+        }
+      } catch {
+        // invalid URL — ignore
+      }
+    }
 
     authService
       .ssoLogin(token)

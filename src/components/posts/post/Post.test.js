@@ -6,6 +6,14 @@ import { fireEvent, render, screen } from '@root/test.utils';
 import { timeAgo } from '@services/utils/timeago.utils';
 import { act } from 'react-dom/test-utils';
 
+beforeAll(() => {
+  process.env.REACT_APP_CLOUDINARY_CLOUD_NAME = 'dhcw9nswr';
+});
+
+afterAll(() => {
+  delete process.env.REACT_APP_CLOUDINARY_CLOUD_NAME;
+});
+
 describe('Post', () => {
   beforeEach(() => {
     act(() => {

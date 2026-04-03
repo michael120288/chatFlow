@@ -131,12 +131,14 @@ describe('PostUtils', () => {
       const dispatch = jest.fn();
       const imageInputRef = { current: { textContent: '' } };
 
+      const setDisable = jest.fn();
       await PostUtils.sendPostWithFileRequest(
         'image',
         { post: 'hello' },
         imageInputRef,
         setApiResponse,
         setLoading,
+        setDisable,
         dispatch
       );
 
@@ -154,7 +156,8 @@ describe('PostUtils', () => {
       const setLoading = jest.fn();
       const dispatch = jest.fn();
 
-      await PostUtils.sendPostWithFileRequest('image', { post: 'hello' }, null, setApiResponse, setLoading, dispatch);
+      const setDisable = jest.fn();
+      await PostUtils.sendPostWithFileRequest('image', { post: 'hello' }, null, setApiResponse, setLoading, setDisable, dispatch);
 
       expect(setApiResponse).toHaveBeenCalledWith('error');
     });

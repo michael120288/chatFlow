@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import '@components/chat/window/message-display/MessageDisplay.scss';
 import { timeAgo } from '@services/utils/timeago.utils';
-import { Utils } from '@services/utils/utils.service';
 import RightMessageDisplay from '@components/chat/window/message-display/right-message-display/RightMessageDisplay';
 import { useRef, useState } from 'react';
 import useDetectOutsideClick from '@hooks/useDetectOutsideClick';
@@ -85,7 +84,7 @@ const MessageDisplay = ({ chatMessages, profile, updateMessageReaction, deleteCh
       )}
       <div className="message-page" ref={scrollRef} data-testid="message-page">
         {chatMessages.map((chat, index) => (
-          <div key={Utils.generateString(10)} className="message-chat" data-testid="message-chat">
+          <div key={chat._id} className="message-chat" data-testid="message-chat">
             {(index === 0 ||
               timeAgo.dayMonthYear(chat.createdAt) !== timeAgo.dayMonthYear(chatMessages[index - 1].createdAt)) && (
               <div className="message-date-group">

@@ -10,7 +10,7 @@ import { imageService } from '@services/api/image/image.service';
 import { userService } from '@services/api/user/user.service';
 import { tabItems } from '@services/utils/static.data';
 import { Utils } from '@services/utils/utils.service';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { filter } from 'lodash';
@@ -21,7 +21,7 @@ const Profile = () => {
   const { profile } = useSelector((state) => state.user);
   const { deleteDialogIsOpen, data } = useSelector((state) => state.modal);
   const [user, setUser] = useState();
-  const [rendered, setRendered] = useState(false);
+  const rendered = useRef(false);
   const [hasError, setHasError] = useState(false);
   const [hasImage, setHasImage] = useState(false);
   const [selectedBackgroundImage, setSelectedBackgroundImage] = useState('');
@@ -138,12 +138,13 @@ const Profile = () => {
   };
 
   useEffect(() => {
-    if (rendered) {
-      getUserProfileByUsername();
-      getUserImages();
+    if (!rendered.current) {
+      rendered.current = true;
+      return;
     }
-    if (!rendered) setRendered(true);
-  }, [rendered, getUserProfileByUsername, getUserImages]);
+    getUserProfileByUsername();
+    getUserImages();
+  }, [getUserProfileByUsername, getUserImages]);
 
   return (
     <>

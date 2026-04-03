@@ -75,7 +75,7 @@ const Post = ({ post, showIcons }) => {
 
   useEffect(() => {
     getBackgroundImageColor(post);
-  }, [post]);
+  }, [post?.imgId, post?.gifUrl]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <>
