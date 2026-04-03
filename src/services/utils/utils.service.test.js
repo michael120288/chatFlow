@@ -1,5 +1,15 @@
 import { Utils } from '@services/utils/utils.service';
 
+const CLOUD_NAME = 'dhcw9nswr';
+
+beforeAll(() => {
+  process.env.REACT_APP_CLOUDINARY_CLOUD_NAME = CLOUD_NAME;
+});
+
+afterAll(() => {
+  delete process.env.REACT_APP_CLOUDINARY_CLOUD_NAME;
+});
+
 describe('Utils', () => {
   describe('appEnvironment', () => {
     it('returns "LOCAL" in local environment', () => {

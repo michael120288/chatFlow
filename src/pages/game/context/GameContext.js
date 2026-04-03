@@ -55,7 +55,7 @@ export function GameProvider({ children }) {
             const trackXP = {};
             for (const id of completedLevels) {
               const lvl = levels.find((l) => l.id === id);
-              if (lvl) trackXP[lvl.category] = (trackXP[lvl.category] ?? 0) + (lvl.xp ?? 0);
+              if (lvl) trackXP[lvl.category] = (trackXP[lvl.category] ?? 0) + (lvl.xpReward ?? 0);
             }
             setTotalLevels(levels.length);
             setState((prev) => ({ ...prev, completedLevels, xp, trackXP }));

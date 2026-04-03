@@ -13,7 +13,7 @@ describe('UserService', () => {
 
   it('logoutUser returns success', async () => {
     server.use(
-      rest.get(`${BASE_URL}/signout`, (req, res, ctx) => res(ctx.json({ message: 'Logged out successfully' })))
+      rest.post(`${BASE_URL}/signout`, (req, res, ctx) => res(ctx.json({ message: 'Logged out successfully' })))
     );
     const response = await userService.logoutUser();
     expect(response.data.message).toBe('Logged out successfully');

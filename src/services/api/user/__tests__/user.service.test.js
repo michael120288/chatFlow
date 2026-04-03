@@ -12,10 +12,10 @@ describe('userService', () => {
     expect(axios.get).toHaveBeenCalledWith('/user/profile/user/suggestions');
   });
 
-  it('logoutUser GETs /signout', async () => {
-    axios.get.mockResolvedValueOnce({ data: {} });
+  it('logoutUser POSTs /signout', async () => {
+    axios.post.mockResolvedValueOnce({ data: {} });
     await userService.logoutUser();
-    expect(axios.get).toHaveBeenCalledWith('/signout');
+    expect(axios.post).toHaveBeenCalledWith('/signout');
   });
 
   it('checkCurrentUser GETs /currentuser', async () => {
