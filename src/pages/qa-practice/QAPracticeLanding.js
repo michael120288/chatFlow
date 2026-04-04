@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import '@pages/qa-practice/QAPracticeLanding.scss';
 
 const categories = [
@@ -241,6 +242,14 @@ const categories = [
 const QAPracticeLanding = () => {
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const savedId = sessionStorage.getItem('qal-scroll-id');
+    if (!savedId) return;
+    sessionStorage.removeItem('qal-scroll-id');
+    const el = document.querySelector(`[data-scenario-id="${savedId}"]`);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, []);
+
   return (
     <div className="qal-container">
       <header className="qal-header">
@@ -284,7 +293,15 @@ const QAPracticeLanding = () => {
                   </h3>
                   <div className="qa-scenario-grid">
                     {cat.scenarios.map((s) => (
-                      <button key={s.id} className="qa-scenario-card" onClick={() => navigate(`/qa-practice/${s.id}`)}>
+                      <button
+                        key={s.id}
+                        className="qa-scenario-card"
+                        data-scenario-id={s.id}
+                        onClick={() => {
+                          sessionStorage.setItem('qal-scroll-id', s.id);
+                          navigate(`/qa-practice/${s.id}`);
+                        }}
+                      >
                         <span className="qa-scenario-label">{s.label}</span>
                         <span className="qa-scenario-desc">{s.description}</span>
                       </button>

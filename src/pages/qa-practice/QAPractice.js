@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import ErrorBoundary from '@components/error-boundary/ErrorBoundary';
 import '@pages/qa-practice/QAPractice.scss';
 
 // Helper: mounts a real Shadow DOM inside a host div
@@ -158,6 +159,8 @@ const QAPractice = () => {
   const [apiError, setApiError] = useState(null);
 
   // Form Validation state
+  const [formSubmitSuccess, setFormSubmitSuccess] = useState(false);
+  const [loginError, setLoginError] = useState('');
   const [validationForm, setValidationForm] = useState({
     username: '',
     email: '',
@@ -177,7 +180,18 @@ const QAPractice = () => {
   const [downloadType, setDownloadType] = useState('text');
 
   // Browser Notifications state
-  const [notificationPermission, setNotificationPermission] = useState(Notification.permission);
+  const [notificationPermission, setNotificationPermission] = useState(
+    typeof Notification !== 'undefined' ? Notification.permission : 'unsupported'
+  );
+  const [notificationLog, setNotificationLog] = useState([]);
+  const [notifTipsOpen, setNotifTipsOpen] = useState(false);
+
+  // Loaders state
+  const [loaderSpinner, setLoaderSpinner] = useState(false);
+  const [loaderProgress, setLoaderProgress] = useState(false);
+  const [loaderProgressVal, setLoaderProgressVal] = useState(0);
+  const [loaderSkeleton, setLoaderSkeleton] = useState(false);
+  const [loaderOverlay, setLoaderOverlay] = useState(false);
 
   // Keyboard Navigation state
   const [keyboardLog, setKeyboardLog] = useState([]);
@@ -193,8 +207,16 @@ const QAPractice = () => {
   const [selectedMultiOptions, setSelectedMultiOptions] = useState([]);
 
   // Date/Time Picker state
-  const [selectedDate, setSelectedDate] = useState('');
-  const [selectedTime, setSelectedTime] = useState('');
+  const [selectedDate, setSelectedDate] = useState({ month: '', day: '', year: '' });
+  const [dateCalendarOpen, setDateCalendarOpen] = useState(false);
+  const [dateViewMonth, setDateViewMonth] = useState(new Date().getMonth() + 1);
+  const [dateViewYear, setDateViewYear] = useState(new Date().getFullYear());
+  const [selectedTime, setSelectedTime] = useState({ hour: '', minute: '' });
+  const [timePickerOpen, setTimePickerOpen] = useState(false);
+  const [selectedDateTime, setSelectedDateTime] = useState({ month: '', day: '', year: '', hour: '', minute: '' });
+  const [calendarOpen, setCalendarOpen] = useState(false);
+  const [calendarViewMonth, setCalendarViewMonth] = useState(new Date().getMonth() + 1);
+  const [calendarViewYear, setCalendarViewYear] = useState(new Date().getFullYear());
 
   // Dark Mode state
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -923,10 +945,54 @@ const QAPractice = () => {
   const sampleData = [
     { id: 1, name: 'Apple', category: 'fruit', price: 2.5 },
     { id: 2, name: 'Banana', category: 'fruit', price: 1.5 },
-    { id: 3, name: 'Carrot', category: 'vegetable', price: 1.0 },
-    { id: 4, name: 'Broccoli', category: 'vegetable', price: 2.0 },
-    { id: 5, name: 'Chicken', category: 'meat', price: 8.0 },
-    { id: 6, name: 'Beef', category: 'meat', price: 12.0 }
+    { id: 3, name: 'Mango', category: 'fruit', price: 3.0 },
+    { id: 4, name: 'Strawberry', category: 'fruit', price: 4.5 },
+    { id: 5, name: 'Blueberry', category: 'fruit', price: 5.0 },
+    { id: 6, name: 'Grape', category: 'fruit', price: 3.5 },
+    { id: 7, name: 'Watermelon', category: 'fruit', price: 6.0 },
+    { id: 8, name: 'Pineapple', category: 'fruit', price: 4.0 },
+    { id: 9, name: 'Peach', category: 'fruit', price: 2.8 },
+    { id: 10, name: 'Pear', category: 'fruit', price: 2.2 },
+    { id: 11, name: 'Cherry', category: 'fruit', price: 6.5 },
+    { id: 12, name: 'Kiwi', category: 'fruit', price: 3.2 },
+    { id: 13, name: 'Lemon', category: 'fruit', price: 1.8 },
+    { id: 14, name: 'Orange', category: 'fruit', price: 2.0 },
+    { id: 15, name: 'Raspberry', category: 'fruit', price: 5.5 },
+    { id: 16, name: 'Carrot', category: 'vegetable', price: 1.0 },
+    { id: 17, name: 'Broccoli', category: 'vegetable', price: 2.0 },
+    { id: 18, name: 'Spinach', category: 'vegetable', price: 2.5 },
+    { id: 19, name: 'Tomato', category: 'vegetable', price: 1.8 },
+    { id: 20, name: 'Cucumber', category: 'vegetable', price: 1.2 },
+    { id: 21, name: 'Bell Pepper', category: 'vegetable', price: 2.3 },
+    { id: 22, name: 'Zucchini', category: 'vegetable', price: 1.5 },
+    { id: 23, name: 'Eggplant', category: 'vegetable', price: 2.0 },
+    { id: 24, name: 'Celery', category: 'vegetable', price: 1.3 },
+    { id: 25, name: 'Onion', category: 'vegetable', price: 0.9 },
+    { id: 26, name: 'Garlic', category: 'vegetable', price: 1.1 },
+    { id: 27, name: 'Potato', category: 'vegetable', price: 1.0 },
+    { id: 28, name: 'Sweet Potato', category: 'vegetable', price: 1.6 },
+    { id: 29, name: 'Lettuce', category: 'vegetable', price: 1.4 },
+    { id: 30, name: 'Kale', category: 'vegetable', price: 2.2 },
+    { id: 31, name: 'Chicken', category: 'meat', price: 8.0 },
+    { id: 32, name: 'Beef', category: 'meat', price: 12.0 },
+    { id: 33, name: 'Pork', category: 'meat', price: 9.5 },
+    { id: 34, name: 'Lamb', category: 'meat', price: 14.0 },
+    { id: 35, name: 'Turkey', category: 'meat', price: 10.0 },
+    { id: 36, name: 'Salmon', category: 'meat', price: 15.0 },
+    { id: 37, name: 'Tuna', category: 'meat', price: 11.0 },
+    { id: 38, name: 'Shrimp', category: 'meat', price: 13.5 },
+    { id: 39, name: 'Duck', category: 'meat', price: 16.0 },
+    { id: 40, name: 'Bacon', category: 'meat', price: 7.5 },
+    { id: 41, name: 'Milk', category: 'dairy', price: 2.5 },
+    { id: 42, name: 'Cheese', category: 'dairy', price: 5.0 },
+    { id: 43, name: 'Butter', category: 'dairy', price: 4.0 },
+    { id: 44, name: 'Yogurt', category: 'dairy', price: 3.5 },
+    { id: 45, name: 'Cream', category: 'dairy', price: 3.0 },
+    { id: 46, name: 'Ice Cream', category: 'dairy', price: 6.0 },
+    { id: 47, name: 'Sour Cream', category: 'dairy', price: 2.8 },
+    { id: 48, name: 'Cottage Cheese', category: 'dairy', price: 4.5 },
+    { id: 49, name: 'Mozzarella', category: 'dairy', price: 5.5 },
+    { id: 50, name: 'Cheddar', category: 'dairy', price: 6.0 }
   ];
 
   const filteredData = sampleData
@@ -1027,11 +1093,15 @@ const QAPractice = () => {
 
             <div className="form-group">
               <label htmlFor="date">Date:</label>
-              <div className="custom-date-picker">
+              <div
+                className={`custom-date-picker${showDatePicker ? ' custom-date-picker--open' : ''}`}
+                data-testid="web-date-picker"
+              >
                 <input
                   type="text"
                   id="date"
                   name="date"
+                  data-testid="web-date-input"
                   value={formData.date}
                   placeholder="MM-DD-YYYY"
                   readOnly
@@ -1039,10 +1109,15 @@ const QAPractice = () => {
                   className="date-input-field"
                 />
                 {showDatePicker && (
-                  <div className="date-picker-dropdown">
+                  <div className="date-picker-dropdown" data-testid="web-date-picker-dropdown">
                     <div className="date-picker-header">
                       <h4>Select Date</h4>
-                      <button type="button" className="date-picker-close" onClick={closeDatePicker}>
+                      <button
+                        type="button"
+                        className="date-picker-close"
+                        data-testid="web-date-picker-close"
+                        onClick={closeDatePicker}
+                      >
                         ×
                       </button>
                     </div>
@@ -1051,6 +1126,8 @@ const QAPractice = () => {
                         <label htmlFor="month-select">Month:</label>
                         <select
                           id="month-select"
+                          name="month-select"
+                          data-testid="web-month-select"
                           value={dateComponents.month}
                           onChange={(e) => handleDateComponentChange('month', e.target.value)}
                         >
@@ -1066,6 +1143,8 @@ const QAPractice = () => {
                         <label htmlFor="day-select">Day:</label>
                         <select
                           id="day-select"
+                          name="day-select"
+                          data-testid="web-day-select"
                           value={dateComponents.day}
                           onChange={(e) => handleDateComponentChange('day', e.target.value)}
                         >
@@ -1081,6 +1160,8 @@ const QAPractice = () => {
                         <label htmlFor="year-select">Year:</label>
                         <select
                           id="year-select"
+                          name="year-select"
+                          data-testid="web-year-select"
                           value={dateComponents.year}
                           onChange={(e) => handleDateComponentChange('year', e.target.value)}
                         >
@@ -1093,7 +1174,12 @@ const QAPractice = () => {
                         </select>
                       </div>
                     </div>
-                    <button type="button" className="date-picker-done" onClick={closeDatePicker}>
+                    <button
+                      type="button"
+                      className="date-picker-done"
+                      data-testid="web-date-picker-done"
+                      onClick={closeDatePicker}
+                    >
                       Done
                     </button>
                   </div>
@@ -1441,6 +1527,16 @@ const QAPractice = () => {
 
       return (
         <div className="content-section">
+          <div className="content-section-nav">
+            <button
+              type="button"
+              className="back-to-practice-btn"
+              data-testid="iframe-back-btn"
+              onClick={() => navigate(-1)}
+            >
+              ← Back
+            </button>
+          </div>
           <h2>IFrame</h2>
           <p>Practice testing iframe interactions and switching between different iframe sources</p>
 
@@ -2084,151 +2180,239 @@ const QAPractice = () => {
     }
 
     if (selectedOption === 'loaders') {
+      const triggerSpinner = () => {
+        setLoaderSpinner(true);
+        setTimeout(() => setLoaderSpinner(false), 3000);
+      };
+
+      const triggerProgress = () => {
+        setLoaderProgress(true);
+        setLoaderProgressVal(0);
+        let val = 0;
+        const iv = setInterval(() => {
+          val += 10;
+          setLoaderProgressVal(val);
+          if (val >= 100) {
+            clearInterval(iv);
+            setTimeout(() => {
+              setLoaderProgress(false);
+              setLoaderProgressVal(0);
+            }, 400);
+          }
+        }, 200);
+      };
+
+      const triggerSkeleton = () => {
+        setLoaderSkeleton(true);
+        setTimeout(() => setLoaderSkeleton(false), 3000);
+      };
+
+      const triggerOverlay = () => {
+        setLoaderOverlay(true);
+        setTimeout(() => setLoaderOverlay(false), 3000);
+      };
+
       return (
         <div className="content-section">
-          <h2>Loaders & Spinners</h2>
-          <p>Practice testing different loading indicators and spinners</p>
+          <h2>Loaders &amp; Spinners</h2>
+          <p>
+            Click each trigger button to start a loader. The loader appears, then disappears automatically — practice
+            waiting for it to show up and waiting for it to be gone.
+          </p>
 
           <div className="loaders-content">
-            {/* Circular Spinners */}
-            <div className="loader-section">
-              <h3>Circular Spinners</h3>
-              <div className="loader-grid">
-                <div className="loader-item">
-                  <div className="spinner spinner-border"></div>
-                  <span className="loader-label">Border Spinner</span>
+            {/* 1 — Spinner */}
+            <div className="loader-scenario" data-testid="spinner-scenario">
+              <div className="loader-scenario-header">
+                <div>
+                  <h3>Spinner</h3>
+                  <p className="loader-scenario-desc">
+                    Appears for 3 s then disappears. Practice{' '}
+                    <code>waitFor(() =&gt; expect(spinner).toBeVisible())</code> and{' '}
+                    <code>waitFor(() =&gt; expect(spinner).not.toBeInTheDocument())</code>.
+                  </p>
                 </div>
-
-                <div className="loader-item">
-                  <div className="spinner spinner-dual"></div>
-                  <span className="loader-label">Dual Ring</span>
+                <button
+                  type="button"
+                  className="loader-trigger-btn"
+                  data-testid="start-spinner-btn"
+                  onClick={triggerSpinner}
+                  disabled={loaderSpinner}
+                >
+                  {loaderSpinner ? 'Loading…' : 'Start spinner'}
+                </button>
+              </div>
+              {loaderSpinner && (
+                <div className="loader-display" data-testid="spinner-display">
+                  <div className="spinner spinner-border" data-testid="spinner" role="status" aria-label="Loading" />
                 </div>
-
-                <div className="loader-item">
-                  <div className="spinner spinner-circle"></div>
-                  <span className="loader-label">Circle Spinner</span>
-                </div>
-
-                <div className="loader-item">
-                  <div className="spinner spinner-grow"></div>
-                  <span className="loader-label">Growing Spinner</span>
-                </div>
+              )}
+              <div
+                className="loader-status"
+                data-testid="spinner-status"
+                data-loading={loaderSpinner ? 'true' : 'false'}
+              >
+                {loaderSpinner ? '⏳ Loading…' : '✓ Idle'}
               </div>
             </div>
 
-            {/* Progress Bars */}
-            <div className="loader-section">
-              <h3>Progress Bars</h3>
-              <div className="progress-container">
-                <div className="progress-item">
-                  <span className="progress-label">Indeterminate Progress</span>
-                  <div className="progress-bar">
-                    <div className="progress-fill indeterminate"></div>
-                  </div>
+            {/* 2 — Progress bar */}
+            <div className="loader-scenario" data-testid="progress-scenario">
+              <div className="loader-scenario-header">
+                <div>
+                  <h3>Progress Bar</h3>
+                  <p className="loader-scenario-desc">
+                    Counts 0 → 100% over ~2 s. Assert the <code>aria-valuenow</code> attribute or check the status text.
+                  </p>
                 </div>
-
-                <div className="progress-item">
-                  <span className="progress-label">50% Progress</span>
-                  <div className="progress-bar">
-                    <div className="progress-fill" style={{ width: '50%' }}></div>
+                <button
+                  type="button"
+                  className="loader-trigger-btn"
+                  data-testid="start-progress-btn"
+                  onClick={triggerProgress}
+                  disabled={loaderProgress}
+                >
+                  {loaderProgress ? 'Running…' : 'Start progress'}
+                </button>
+              </div>
+              {loaderProgress && (
+                <div className="loader-display" data-testid="progress-display">
+                  <div
+                    className="loader-progress-bar"
+                    role="progressbar"
+                    aria-label="Loading progress"
+                    aria-valuenow={loaderProgressVal}
+                    aria-valuemin={0}
+                    aria-valuemax={100}
+                    data-testid="progress-bar"
+                  >
+                    <div className="loader-progress-fill" style={{ width: `${loaderProgressVal}%` }} />
                   </div>
+                  <span className="loader-progress-pct" data-testid="progress-value">
+                    {loaderProgressVal}%
+                  </span>
                 </div>
-
-                <div className="progress-item">
-                  <span className="progress-label">Striped Progress</span>
-                  <div className="progress-bar">
-                    <div className="progress-fill striped" style={{ width: '75%' }}></div>
-                  </div>
-                </div>
-
-                <div className="progress-item">
-                  <span className="progress-label">Animated Striped</span>
-                  <div className="progress-bar">
-                    <div className="progress-fill striped animated" style={{ width: '60%' }}></div>
-                  </div>
-                </div>
+              )}
+              <div
+                className="loader-status"
+                data-testid="progress-status"
+                data-loading={loaderProgress ? 'true' : 'false'}
+              >
+                {loaderProgress ? `⏳ ${loaderProgressVal}%` : '✓ Idle'}
               </div>
             </div>
 
-            {/* Dots Loaders */}
-            <div className="loader-section">
-              <h3>Dots Loaders</h3>
-              <div className="loader-grid">
-                <div className="loader-item">
-                  <div className="dots-loader">
-                    <div className="dot"></div>
-                    <div className="dot"></div>
-                    <div className="dot"></div>
-                  </div>
-                  <span className="loader-label">Bouncing Dots</span>
+            {/* 3 — Skeleton */}
+            <div className="loader-scenario" data-testid="skeleton-scenario">
+              <div className="loader-scenario-header">
+                <div>
+                  <h3>Skeleton Loader</h3>
+                  <p className="loader-scenario-desc">
+                    Skeleton replaces real content for 3 s. Assert <code>{'data-testid="skeleton-display"'}</code> is
+                    visible, then not.
+                  </p>
                 </div>
-
-                <div className="loader-item">
-                  <div className="dots-loader pulse">
-                    <div className="dot"></div>
-                    <div className="dot"></div>
-                    <div className="dot"></div>
+                <button
+                  type="button"
+                  className="loader-trigger-btn"
+                  data-testid="start-skeleton-btn"
+                  onClick={triggerSkeleton}
+                  disabled={loaderSkeleton}
+                >
+                  {loaderSkeleton ? 'Loading…' : 'Start skeleton'}
+                </button>
+              </div>
+              {loaderSkeleton ? (
+                <div className="skeleton-container" data-testid="skeleton-display">
+                  <div className="skeleton-card">
+                    <div className="skeleton-avatar" />
+                    <div className="skeleton-content">
+                      <div className="skeleton-line" />
+                      <div className="skeleton-line short" />
+                    </div>
                   </div>
-                  <span className="loader-label">Pulsing Dots</span>
-                </div>
-
-                <div className="loader-item">
-                  <div className="dots-loader wave">
-                    <div className="dot"></div>
-                    <div className="dot"></div>
-                    <div className="dot"></div>
-                    <div className="dot"></div>
-                    <div className="dot"></div>
+                  <div className="skeleton-card">
+                    <div className="skeleton-image" />
+                    <div className="skeleton-content">
+                      <div className="skeleton-line" />
+                      <div className="skeleton-line" />
+                      <div className="skeleton-line short" />
+                    </div>
                   </div>
-                  <span className="loader-label">Wave Dots</span>
                 </div>
+              ) : (
+                <div className="loader-real-content" data-testid="skeleton-content">
+                  <div className="loader-fake-card">
+                    <img
+                      className="loader-fake-avatar"
+                      src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%236366f1'/%3E%3Ctext x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-size='18'%3EJ%3C/text%3E%3C/svg%3E"
+                      alt="avatar"
+                    />
+                    <div>
+                      <strong>Jane Smith</strong>
+                      <p>Software QA Engineer</p>
+                    </div>
+                  </div>
+                  <div className="loader-fake-card">
+                    <img
+                      className="loader-fake-avatar"
+                      src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%2322c55e'/%3E%3Ctext x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-size='18'%3EM%3C/text%3E%3C/svg%3E"
+                      alt="avatar"
+                    />
+                    <div>
+                      <strong>Mark Rivera</strong>
+                      <p>Frontend Developer</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+              <div
+                className="loader-status"
+                data-testid="skeleton-status"
+                data-loading={loaderSkeleton ? 'true' : 'false'}
+              >
+                {loaderSkeleton ? '⏳ Loading content…' : '✓ Content loaded'}
               </div>
             </div>
 
-            {/* Skeleton Loaders */}
-            <div className="loader-section">
-              <h3>Skeleton Loaders</h3>
-              <div className="skeleton-container">
-                <div className="skeleton-card">
-                  <div className="skeleton-avatar"></div>
-                  <div className="skeleton-content">
-                    <div className="skeleton-line"></div>
-                    <div className="skeleton-line short"></div>
-                  </div>
+            {/* 4 — Full-page overlay */}
+            <div className="loader-scenario" data-testid="overlay-scenario">
+              <div className="loader-scenario-header">
+                <div>
+                  <h3>Full-page Overlay</h3>
+                  <p className="loader-scenario-desc">
+                    A semi-transparent overlay covers the page for 3 s. Practice asserting an element is blocked
+                    (covered) while the overlay is active.
+                  </p>
                 </div>
-
-                <div className="skeleton-card">
-                  <div className="skeleton-image"></div>
-                  <div className="skeleton-content">
-                    <div className="skeleton-line"></div>
-                    <div className="skeleton-line"></div>
-                    <div className="skeleton-line short"></div>
-                  </div>
-                </div>
+                <button
+                  type="button"
+                  className="loader-trigger-btn"
+                  data-testid="start-overlay-btn"
+                  onClick={triggerOverlay}
+                  disabled={loaderOverlay}
+                >
+                  {loaderOverlay ? 'Loading…' : 'Start overlay'}
+                </button>
               </div>
-            </div>
-
-            {/* Sizes */}
-            <div className="loader-section">
-              <h3>Different Sizes</h3>
-              <div className="loader-grid sizes">
-                <div className="loader-item">
-                  <div className="spinner spinner-border small"></div>
-                  <span className="loader-label">Small</span>
-                </div>
-
-                <div className="loader-item">
-                  <div className="spinner spinner-border medium"></div>
-                  <span className="loader-label">Medium</span>
-                </div>
-
-                <div className="loader-item">
-                  <div className="spinner spinner-border large"></div>
-                  <span className="loader-label">Large</span>
-                </div>
+              <div
+                className="loader-status"
+                data-testid="overlay-status"
+                data-loading={loaderOverlay ? 'true' : 'false'}
+              >
+                {loaderOverlay ? '⏳ Overlay active…' : '✓ Idle'}
               </div>
             </div>
           </div>
+
+          {loaderOverlay && (
+            <div className="loader-overlay" data-testid="overlay-display" aria-label="Page loading overlay">
+              <div className="loader-overlay-box">
+                <div className="spinner spinner-border" data-testid="overlay-spinner" />
+                <span>Please wait…</span>
+              </div>
+            </div>
+          )}
         </div>
       );
     }
@@ -2493,6 +2677,7 @@ const QAPractice = () => {
                 <option value="fruit">Fruits</option>
                 <option value="vegetable">Vegetables</option>
                 <option value="meat">Meat</option>
+                <option value="dairy">Dairy</option>
               </select>
               <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="filter-select">
                 <option value="name">Sort by Name</option>
@@ -2718,26 +2903,27 @@ const QAPractice = () => {
         <div className="content-section">
           <h2>Sticky Elements</h2>
           <p>Practice testing sticky/fixed positioned elements</p>
-          <div className="sticky-demo">
-            <div className="sticky-header">This header sticks to the top when scrolling</div>
-            <div className="content-block">
-              <p>Scroll down to see the sticky header in action.</p>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-              <p>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-              <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
-              <p>Duis aute irure dolor in reprehenderit in voluptate velit.</p>
-              <p>Excepteur sint occaecat cupidatat non proident.</p>
-              <p>Sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-              <p>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-              <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
+          <div className="sticky-demo" data-testid="sticky-demo">
+            <div className="sticky-header" data-testid="sticky-header">
+              📌 This header sticks to the top when scrolling
+            </div>
+            <div className="content-block" data-testid="sticky-content">
+              <p>⬇️ Scroll down to see the sticky header remain fixed at the top.</p>
+              {Array.from({ length: 30 }, (_, i) => (
+                <p key={i} data-testid={`sticky-paragraph-${i + 1}`}>
+                  Paragraph {i + 1} — Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
+                  incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                  ullamco laboris.
+                </p>
+              ))}
             </div>
             <button
               type="button"
               className="back-to-top"
+              data-testid="back-to-top-btn"
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             >
-              ↑ Back to Top
+              ↑
             </button>
           </div>
         </div>
@@ -2746,16 +2932,17 @@ const QAPractice = () => {
 
     // 1. LocalStorage/SessionStorage
     if (selectedOption === 'local-storage') {
+      const NS = 'qa-practice:';
       const loadStorageData = () => {
         const local = {};
         const session = {};
         for (let i = 0; i < localStorage.length; i++) {
           const key = localStorage.key(i);
-          local[key] = localStorage.getItem(key);
+          if (key.startsWith(NS)) local[key.slice(NS.length)] = localStorage.getItem(key);
         }
         for (let i = 0; i < sessionStorage.length; i++) {
           const key = sessionStorage.key(i);
-          session[key] = sessionStorage.getItem(key);
+          if (key.startsWith(NS)) session[key.slice(NS.length)] = sessionStorage.getItem(key);
         }
         setStorageData({ local, session });
       };
@@ -2770,20 +2957,23 @@ const QAPractice = () => {
               <input
                 type="text"
                 placeholder="Key"
+                data-testid="ls-key-input"
                 value={localStorageKey}
                 onChange={(e) => setLocalStorageKey(e.target.value)}
               />
               <input
                 type="text"
                 placeholder="Value"
+                data-testid="ls-value-input"
                 value={localStorageValue}
                 onChange={(e) => setLocalStorageValue(e.target.value)}
               />
               <button
                 type="button"
+                data-testid="ls-set-btn"
                 onClick={() => {
                   if (localStorageKey) {
-                    localStorage.setItem(localStorageKey, localStorageValue);
+                    localStorage.setItem(`${NS}${localStorageKey}`, localStorageValue);
                     loadStorageData();
                     setLocalStorageKey('');
                     setLocalStorageValue('');
@@ -2794,51 +2984,68 @@ const QAPractice = () => {
               </button>
               <button
                 type="button"
+                data-testid="ls-clear-btn"
                 onClick={() => {
-                  localStorage.clear();
+                  Object.keys(localStorage)
+                    .filter((k) => k.startsWith(NS))
+                    .forEach((k) => localStorage.removeItem(k));
                   loadStorageData();
                 }}
               >
                 Clear All
               </button>
             </div>
-            <div className="storage-data">
-              {Object.entries(storageData.local).map(([key, value]) => (
-                <div key={key} className="storage-item">
-                  <strong>{key}:</strong> {value}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      localStorage.removeItem(key);
-                      loadStorageData();
-                    }}
-                  >
-                    Remove
-                  </button>
-                </div>
-              ))}
+            <div className="storage-data" data-testid="ls-data">
+              {Object.entries(storageData.local).length === 0 ? (
+                <span className="storage-empty" data-testid="ls-empty">
+                  No items yet. Add one above.
+                </span>
+              ) : (
+                Object.entries(storageData.local).map(([key, value]) => (
+                  <div key={key} className="storage-item" data-testid={`ls-item-${key}`}>
+                    <strong className="storage-item-key">{key}</strong>
+                    <span className="storage-item-value" data-testid={`ls-value-${key}`} title={value}>
+                      {value}
+                    </span>
+                    <button
+                      type="button"
+                      data-testid={`ls-remove-${key}`}
+                      onClick={() => {
+                        localStorage.removeItem(`${NS}${key}`);
+                        loadStorageData();
+                      }}
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ))
+              )}
             </div>
           </div>
+
           <div className="storage-section">
             <h3>SessionStorage</h3>
             <div className="storage-controls">
               <input
                 type="text"
                 placeholder="Key"
+                data-testid="ss-key-input"
                 value={sessionStorageKey}
                 onChange={(e) => setSessionStorageKey(e.target.value)}
               />
               <input
                 type="text"
                 placeholder="Value"
+                data-testid="ss-value-input"
                 value={sessionStorageValue}
                 onChange={(e) => setSessionStorageValue(e.target.value)}
               />
               <button
                 type="button"
+                data-testid="ss-set-btn"
                 onClick={() => {
                   if (sessionStorageKey) {
-                    sessionStorage.setItem(sessionStorageKey, sessionStorageValue);
+                    sessionStorage.setItem(`${NS}${sessionStorageKey}`, sessionStorageValue);
                     loadStorageData();
                     setSessionStorageKey('');
                     setSessionStorageValue('');
@@ -2849,32 +3056,51 @@ const QAPractice = () => {
               </button>
               <button
                 type="button"
+                data-testid="ss-clear-btn"
                 onClick={() => {
-                  sessionStorage.clear();
+                  Object.keys(sessionStorage)
+                    .filter((k) => k.startsWith(NS))
+                    .forEach((k) => sessionStorage.removeItem(k));
                   loadStorageData();
                 }}
               >
                 Clear All
               </button>
             </div>
-            <div className="storage-data">
-              {Object.entries(storageData.session).map(([key, value]) => (
-                <div key={key} className="storage-item">
-                  <strong>{key}:</strong> {value}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      sessionStorage.removeItem(key);
-                      loadStorageData();
-                    }}
-                  >
-                    Remove
-                  </button>
-                </div>
-              ))}
+            <div className="storage-data" data-testid="ss-data">
+              {Object.entries(storageData.session).length === 0 ? (
+                <span className="storage-empty" data-testid="ss-empty">
+                  No items yet. Add one above.
+                </span>
+              ) : (
+                Object.entries(storageData.session).map(([key, value]) => (
+                  <div key={key} className="storage-item" data-testid={`ss-item-${key}`}>
+                    <strong className="storage-item-key">{key}</strong>
+                    <span className="storage-item-value" data-testid={`ss-value-${key}`} title={value}>
+                      {value}
+                    </span>
+                    <button
+                      type="button"
+                      data-testid={`ss-remove-${key}`}
+                      onClick={() => {
+                        sessionStorage.removeItem(`${NS}${key}`);
+                        loadStorageData();
+                      }}
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ))
+              )}
             </div>
           </div>
-          <button type="button" onClick={loadStorageData}>
+
+          <button
+            type="button"
+            className="storage-refresh-btn"
+            data-testid="storage-refresh-btn"
+            onClick={loadStorageData}
+          >
             Refresh Data
           </button>
         </div>
@@ -2883,39 +3109,46 @@ const QAPractice = () => {
 
     // 2. Cookie Management
     if (selectedOption === 'cookies') {
+      const COOKIE_NS = 'qa-';
       const getCookies = () => {
         const cookieArray = document.cookie
           .split(';')
           .map((c) => {
-            const [name, value] = c.trim().split('=');
-            return { name, value };
+            const [name, ...rest] = c.trim().split('=');
+            return { name, value: rest.join('=') };
           })
-          .filter((c) => c.name);
+          .filter((c) => c.name && c.name.startsWith(COOKIE_NS))
+          .map((c) => ({ ...c, name: c.name.slice(COOKIE_NS.length) }));
         setCookies(cookieArray);
       };
 
       return (
         <div className="content-section">
           <h2>Cookie Management</h2>
-          <p>Practice testing cookie operations</p>
+          <p>Practice testing cookie operations — set, read, and delete cookies via the UI.</p>
+
           <div className="cookie-controls">
             <input
               type="text"
               placeholder="Cookie Name"
+              data-testid="cookie-name-input"
               value={cookieName}
               onChange={(e) => setCookieName(e.target.value)}
             />
             <input
               type="text"
               placeholder="Cookie Value"
+              data-testid="cookie-value-input"
               value={cookieValue}
               onChange={(e) => setCookieValue(e.target.value)}
             />
             <button
               type="button"
+              className="cookie-btn cookie-btn--set"
+              data-testid="cookie-set-btn"
               onClick={() => {
                 if (cookieName) {
-                  document.cookie = `${cookieName}=${cookieValue}; path=/`;
+                  document.cookie = `${COOKIE_NS}${cookieName}=${cookieValue}; path=/`;
                   getCookies();
                   setCookieName('');
                   setCookieValue('');
@@ -2924,22 +3157,35 @@ const QAPractice = () => {
             >
               Set Cookie
             </button>
-            <button type="button" onClick={getCookies}>
-              Refresh Cookies
+            <button
+              type="button"
+              className="cookie-btn cookie-btn--refresh"
+              data-testid="cookie-refresh-btn"
+              onClick={getCookies}
+            >
+              ↻ Refresh
             </button>
           </div>
-          <div className="cookie-list">
-            <h3>Current Cookies:</h3>
+
+          <div className="cookie-list" data-testid="cookie-list">
+            <h3>Current Cookies</h3>
             {cookies.length === 0 ? (
-              <p>No cookies found</p>
+              <p className="cookie-empty" data-testid="cookie-empty">
+                No cookies yet. Add one above.
+              </p>
             ) : (
-              cookies.map((cookie, index) => (
-                <div key={index} className="cookie-item">
-                  <strong>{cookie.name}:</strong> {cookie.value}
+              cookies.map((cookie) => (
+                <div key={cookie.name} className="cookie-item" data-testid={`cookie-item-${cookie.name}`}>
+                  <strong className="cookie-item-name">{cookie.name}</strong>
+                  <span className="cookie-item-value" data-testid={`cookie-value-${cookie.name}`}>
+                    {cookie.value}
+                  </span>
                   <button
                     type="button"
+                    className="cookie-btn cookie-btn--delete"
+                    data-testid={`cookie-delete-${cookie.name}`}
                     onClick={() => {
-                      document.cookie = `${cookie.name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+                      document.cookie = `${COOKIE_NS}${cookie.name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
                       getCookies();
                     }}
                   >
@@ -2975,14 +3221,26 @@ const QAPractice = () => {
           <h2>API Testing</h2>
           <p>Practice testing HTTP requests</p>
           <div className="api-controls">
-            <select value={apiMethod} onChange={(e) => setApiMethod(e.target.value)}>
+            <select data-testid="api-method-select" value={apiMethod} onChange={(e) => setApiMethod(e.target.value)}>
               <option value="GET">GET</option>
               <option value="POST">POST</option>
               <option value="PUT">PUT</option>
               <option value="DELETE">DELETE</option>
             </select>
-            <input type="text" value={apiUrl} onChange={(e) => setApiUrl(e.target.value)} placeholder="API URL" />
-            <button type="button" onClick={handleApiCall} disabled={apiLoading}>
+            <input
+              type="text"
+              data-testid="api-url-input"
+              value={apiUrl}
+              onChange={(e) => setApiUrl(e.target.value)}
+              placeholder="API URL"
+            />
+            <button
+              type="button"
+              className="qa-submit-btn"
+              data-testid="api-send-btn"
+              onClick={handleApiCall}
+              disabled={apiLoading}
+            >
               {apiLoading ? 'Loading...' : 'Send Request'}
             </button>
           </div>
@@ -3030,77 +3288,129 @@ const QAPractice = () => {
         <div className="content-section">
           <h2>Form Validation</h2>
           <p>Practice testing complex validation scenarios</p>
+          {formSubmitSuccess && (
+            <div className="fv-success" data-testid="form-success-msg">
+              Form submitted successfully!
+            </div>
+          )}
           <form
             className="qa-form"
             onSubmit={(e) => {
               e.preventDefault();
-              if (validateForm()) alert('Form is valid!');
+              if (validateForm()) {
+                setFormSubmitSuccess(true);
+                setTimeout(() => setFormSubmitSuccess(false), 3000);
+              }
             }}
           >
             <div className="form-group">
-              <label>Username (min 3 chars):</label>
+              <label htmlFor="fv-username">Username (min 3 chars):</label>
               <input
+                id="fv-username"
                 type="text"
+                data-testid="fv-username"
                 value={validationForm.username}
                 onChange={(e) => setValidationForm({ ...validationForm, username: e.target.value })}
               />
-              {validationErrors.username && <span className="error">{validationErrors.username}</span>}
+              {validationErrors.username && (
+                <span className="error" data-testid="fv-username-error">
+                  {validationErrors.username}
+                </span>
+              )}
             </div>
             <div className="form-group">
-              <label>Email:</label>
+              <label htmlFor="fv-email">Email:</label>
               <input
+                id="fv-email"
                 type="email"
+                data-testid="fv-email"
                 value={validationForm.email}
                 onChange={(e) => setValidationForm({ ...validationForm, email: e.target.value })}
               />
-              {validationErrors.email && <span className="error">{validationErrors.email}</span>}
+              {validationErrors.email && (
+                <span className="error" data-testid="fv-email-error">
+                  {validationErrors.email}
+                </span>
+              )}
             </div>
             <div className="form-group">
-              <label>Phone (10 digits):</label>
+              <label htmlFor="fv-phone">Phone (10 digits):</label>
               <input
+                id="fv-phone"
                 type="tel"
+                data-testid="fv-phone"
                 value={validationForm.phone}
                 onChange={(e) => setValidationForm({ ...validationForm, phone: e.target.value })}
               />
-              {validationErrors.phone && <span className="error">{validationErrors.phone}</span>}
+              {validationErrors.phone && (
+                <span className="error" data-testid="fv-phone-error">
+                  {validationErrors.phone}
+                </span>
+              )}
             </div>
             <div className="form-group">
-              <label>Password (min 8 chars):</label>
+              <label htmlFor="fv-password">Password (min 8 chars):</label>
               <input
+                id="fv-password"
                 type="password"
+                data-testid="fv-password"
                 value={validationForm.password}
                 onChange={(e) => setValidationForm({ ...validationForm, password: e.target.value })}
               />
-              {validationErrors.password && <span className="error">{validationErrors.password}</span>}
+              {validationErrors.password && (
+                <span className="error" data-testid="fv-password-error">
+                  {validationErrors.password}
+                </span>
+              )}
             </div>
             <div className="form-group">
-              <label>Confirm Password:</label>
+              <label htmlFor="fv-confirm-password">Confirm Password:</label>
               <input
+                id="fv-confirm-password"
                 type="password"
+                data-testid="fv-confirm-password"
                 value={validationForm.confirmPassword}
                 onChange={(e) => setValidationForm({ ...validationForm, confirmPassword: e.target.value })}
               />
-              {validationErrors.confirmPassword && <span className="error">{validationErrors.confirmPassword}</span>}
+              {validationErrors.confirmPassword && (
+                <span className="error" data-testid="fv-confirm-password-error">
+                  {validationErrors.confirmPassword}
+                </span>
+              )}
             </div>
             <div className="form-group">
-              <label>Age (18-100):</label>
+              <label htmlFor="fv-age">Age (18-100):</label>
               <input
+                id="fv-age"
                 type="number"
+                data-testid="fv-age"
                 value={validationForm.age}
                 onChange={(e) => setValidationForm({ ...validationForm, age: e.target.value })}
               />
-              {validationErrors.age && <span className="error">{validationErrors.age}</span>}
+              {validationErrors.age && (
+                <span className="error" data-testid="fv-age-error">
+                  {validationErrors.age}
+                </span>
+              )}
             </div>
             <div className="form-group">
-              <label>Website:</label>
+              <label htmlFor="fv-website">Website:</label>
               <input
+                id="fv-website"
                 type="url"
+                data-testid="fv-website"
                 value={validationForm.website}
                 onChange={(e) => setValidationForm({ ...validationForm, website: e.target.value })}
               />
-              {validationErrors.website && <span className="error">{validationErrors.website}</span>}
+              {validationErrors.website && (
+                <span className="error" data-testid="fv-website-error">
+                  {validationErrors.website}
+                </span>
+              )}
             </div>
-            <button type="submit">Validate Form</button>
+            <button type="submit" className="qa-submit-btn" data-testid="fv-submit">
+              Validate Form
+            </button>
           </form>
         </div>
       );
@@ -3113,13 +3423,15 @@ const QAPractice = () => {
         if (loginForm.username === 'admin' && loginForm.password === 'password123') {
           setAuthUser({ username: loginForm.username, role: 'admin' });
           setLoginForm({ username: '', password: '' });
+          setLoginError('');
         } else {
-          alert('Invalid credentials. Try admin/password123');
+          setLoginError('Invalid credentials. Try admin / password123');
         }
       };
 
       const handleLogout = () => {
         setAuthUser(null);
+        setLoginError('');
       };
 
       return (
@@ -3127,28 +3439,37 @@ const QAPractice = () => {
           <h2>Authentication Flow</h2>
           <p>Practice testing login/logout functionality</p>
           {!authUser ? (
-            <form onSubmit={handleLogin} className="login-form">
+            <form onSubmit={handleLogin} className="login-form" data-testid="login-form">
               <h3>Login</h3>
               <p className="hint">Hint: username: admin, password: password123</p>
+              {loginError && (
+                <div className="auth-error" data-testid="login-error">
+                  {loginError}
+                </div>
+              )}
               <input
                 type="text"
                 placeholder="Username"
+                data-testid="login-username"
                 value={loginForm.username}
                 onChange={(e) => setLoginForm({ ...loginForm, username: e.target.value })}
               />
               <input
                 type="password"
                 placeholder="Password"
+                data-testid="login-password"
                 value={loginForm.password}
                 onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })}
               />
-              <button type="submit">Login</button>
+              <button type="submit" className="qa-submit-btn" data-testid="login-submit">
+                Login
+              </button>
             </form>
           ) : (
-            <div className="authenticated-content">
-              <h3>Welcome, {authUser.username}!</h3>
-              <p>Role: {authUser.role}</p>
-              <button type="button" onClick={handleLogout}>
+            <div className="authenticated-content" data-testid="authenticated-content">
+              <h3 data-testid="welcome-msg">Welcome, {authUser.username}!</h3>
+              <p data-testid="auth-role">Role: {authUser.role}</p>
+              <button type="button" className="auth-logout-btn" data-testid="logout-btn" onClick={handleLogout}>
                 Logout
               </button>
             </div>
@@ -3188,12 +3509,16 @@ const QAPractice = () => {
           <h2>Download Files</h2>
           <p>Practice testing file download functionality</p>
           <div className="download-controls">
-            <select value={downloadType} onChange={(e) => setDownloadType(e.target.value)}>
+            <select
+              data-testid="download-type-select"
+              value={downloadType}
+              onChange={(e) => setDownloadType(e.target.value)}
+            >
               <option value="text">Text File (.txt)</option>
               <option value="json">JSON File (.json)</option>
               <option value="csv">CSV File (.csv)</option>
             </select>
-            <button type="button" onClick={downloadFile}>
+            <button type="button" className="qa-submit-btn" data-testid="download-btn" onClick={downloadFile}>
               Download File
             </button>
           </div>
@@ -3204,44 +3529,296 @@ const QAPractice = () => {
     // 7. Browser Notifications
     if (selectedOption === 'notifications') {
       const requestPermission = async () => {
-        const permission = await Notification.requestPermission();
-        setNotificationPermission(permission);
+        if (typeof Notification === 'undefined') return;
+        try {
+          const permission = await Notification.requestPermission();
+          setNotificationPermission(permission);
+          setNotificationLog((prev) => [`${new Date().toLocaleTimeString()} — Permission ${permission}`, ...prev]);
+        } catch {
+          setNotificationPermission('unsupported');
+        }
       };
 
       const showNotification = () => {
-        if (notificationPermission === 'granted') {
-          const notification = new Notification('QA Test Notification', {
-            body: 'This is a test notification for automation testing',
-            icon: '/favicon.ico'
-          });
-          // Notification created successfully
-          console.log('Notification shown:', notification);
-        } else {
-          alert('Notification permission not granted');
-        }
+        if (notificationPermission !== 'granted') return;
+        // eslint-disable-next-line no-new
+        new Notification('QA Test Notification', {
+          body: 'This is a test notification for automation testing',
+          icon: '/favicon.ico'
+        });
+        setNotificationLog((prev) => [
+          `${new Date().toLocaleTimeString()} — Notification sent: "QA Test Notification"`,
+          ...prev
+        ]);
       };
+
+      const permissionColor =
+        notificationPermission === 'granted' ? '#22c55e' : notificationPermission === 'denied' ? '#ef4444' : '#f59e0b';
 
       return (
         <div className="content-section">
           <h2>Browser Notifications</h2>
-          <p>Practice testing notification API</p>
+          <p>Practice testing the browser Notification API — request permission, fire notifications, assert the log.</p>
+
+          <div className={`notif-explainer${notifTipsOpen ? ' notif-explainer--open' : ''}`}>
+            <button
+              type="button"
+              className="notif-explainer-toggle"
+              onClick={() => setNotifTipsOpen((o) => !o)}
+              aria-expanded={notifTipsOpen}
+            >
+              <span>Testing tips &amp; code snippets</span>
+              <span className="notif-explainer-chevron">{notifTipsOpen ? '▲' : '▼'}</span>
+            </button>
+
+            {notifTipsOpen && (
+              <div className="notif-explainer-body">
+                <h3 className="notif-explainer-title">How the page works</h3>
+                <ol className="notif-steps">
+                  <li>
+                    <strong>Page loads</strong> — badge shows current permission: <code>default</code> (not asked yet),{' '}
+                    <code>granted</code>, or <code>denied</code>.
+                  </li>
+                  <li>
+                    <strong>Request Permission</strong> — visible only when <code>default</code>. Triggers the
+                    browser&apos;s native pop-up. Badge updates after the user responds.
+                  </li>
+                  <li>
+                    <strong>Send Notification</strong> — visible only when <code>granted</code>. Fires a real OS desktop
+                    notification and appends a log entry below.
+                  </li>
+                  <li>
+                    <strong>Event log</strong> — records every action. Assert with{' '}
+                    <code>{'data-testid="notification-log-entry-0"'}</code>.
+                  </li>
+                </ol>
+
+                <h3 className="notif-explainer-title">The testing challenge</h3>
+                <p className="notif-explainer-note">
+                  You <strong>cannot click</strong> the browser&apos;s native permission pop-up with Playwright or
+                  Cypress — it lives outside the page DOM. Each tool has its own way to bypass it (see below).
+                </p>
+
+                <h3 className="notif-explainer-title">Playwright snippets</h3>
+
+                <div className="notif-code-block">
+                  <div className="notif-code-label">Scenario 1 — pre-grant permission (skip the prompt)</div>
+                  <pre className="notif-code">{`// Grant permission before navigating so the prompt never appears
+const context = await browser.newContext({
+  permissions: ['notifications'],
+});
+const page = await context.newPage();
+await page.goto('/qa-practice/notifications');
+
+// Badge should show 'granted' immediately
+await expect(
+  page.getByTestId('notification-permission')
+).toHaveText('granted');
+
+// 'Send Notification' button should be visible
+await expect(page.getByTestId('show-notification-btn')).toBeVisible();
+
+// Click it and assert the log entry
+await page.getByTestId('show-notification-btn').click();
+await expect(
+  page.getByTestId('notification-log-entry-0')
+).toContainText('Notification sent');`}</pre>
+                </div>
+
+                <div className="notif-code-block">
+                  <div className="notif-code-label">Scenario 2 — deny permission, assert warning</div>
+                  <pre className="notif-code">{`// No permissions granted → after requesting, browser sets 'denied'
+const context = await browser.newContext({ permissions: [] });
+const page = await context.newPage();
+await page.goto('/qa-practice/notifications');
+
+// Badge shows 'denied'
+await expect(
+  page.getByTestId('notification-permission')
+).toHaveText('denied');
+
+// Warning message is visible, Send button is gone
+await expect(page.getByTestId('notification-denied')).toBeVisible();
+await expect(page.getByTestId('show-notification-btn')).not.toBeVisible();`}</pre>
+                </div>
+
+                <div className="notif-code-block">
+                  <div className="notif-code-label">Scenario 3 — default state, click Request Permission</div>
+                  <pre className="notif-code">{`// Fresh context → permission is 'default'
+const context = await browser.newContext();
+const page = await context.newPage();
+await page.goto('/qa-practice/notifications');
+
+await expect(
+  page.getByTestId('notification-permission')
+).toHaveText('default');
+
+// Grant permission then click — badge updates
+await context.grantPermissions(['notifications']);
+await page.getByTestId('request-permission-btn').click();
+
+await expect(
+  page.getByTestId('notification-permission')
+).toHaveText('granted');`}</pre>
+                </div>
+
+                <div className="notif-code-block">
+                  <div className="notif-code-label">Scenario 4 — clear log</div>
+                  <pre className="notif-code">{`await page.getByTestId('show-notification-btn').click();
+await expect(page.getByTestId('notification-log-entry-0')).toBeVisible();
+
+await page.getByTestId('clear-notification-log-btn').click();
+await expect(page.getByTestId('notification-log-entry-0')).not.toBeVisible();`}</pre>
+                </div>
+
+                <div className="notif-divider" />
+                <h3 className="notif-explainer-title">Cypress snippets</h3>
+                <p className="notif-explainer-note">
+                  Cypress uses <code>onBeforeLoad</code> to stub <code>window.Notification</code> before the page loads
+                  — replacing the real browser API with a fake one you control.
+                </p>
+
+                <div className="notif-code-block">
+                  <div className="notif-code-label">Scenario 1 — stub as granted, send notification</div>
+                  <pre className="notif-code">{`cy.visit('/qa-practice/notifications', {
+  onBeforeLoad(win) {
+    Object.defineProperty(win.Notification, 'permission', {
+      get: () => 'granted',
+    });
+    cy.stub(win, 'Notification').as('Notification');
+  },
+});
+
+cy.getByTestId('notification-permission').should('have.text', 'granted');
+cy.getByTestId('show-notification-btn').should('be.visible').click();
+
+cy.get('@Notification').should('have.been.calledWith', 'QA Test Notification');
+cy.getByTestId('notification-log-entry-0')
+  .should('contain.text', 'Notification sent');`}</pre>
+                </div>
+
+                <div className="notif-code-block">
+                  <div className="notif-code-label">Scenario 2 — stub as denied, assert warning</div>
+                  <pre className="notif-code">{`cy.visit('/qa-practice/notifications', {
+  onBeforeLoad(win) {
+    Object.defineProperty(win.Notification, 'permission', {
+      get: () => 'denied',
+    });
+  },
+});
+
+cy.getByTestId('notification-permission').should('have.text', 'denied');
+cy.getByTestId('notification-denied').should('be.visible');
+cy.getByTestId('show-notification-btn').should('not.exist');`}</pre>
+                </div>
+
+                <div className="notif-code-block">
+                  <div className="notif-code-label">Scenario 3 — stub requestPermission, click Request button</div>
+                  <pre className="notif-code">{`cy.visit('/qa-practice/notifications', {
+  onBeforeLoad(win) {
+    cy.stub(win.Notification, 'requestPermission').resolves('granted');
+  },
+});
+
+cy.getByTestId('notification-permission').should('have.text', 'default');
+cy.getByTestId('request-permission-btn').click();
+
+cy.getByTestId('notification-permission').should('have.text', 'granted');
+cy.getByTestId('notification-log-entry-0')
+  .should('contain.text', 'Permission granted');`}</pre>
+                </div>
+
+                <div className="notif-code-block">
+                  <div className="notif-code-label">Scenario 4 — clear log</div>
+                  <pre className="notif-code">{`cy.getByTestId('notification-log-entry-0').should('exist');
+cy.getByTestId('clear-notification-log-btn').click();
+cy.getByTestId('notification-log-entry-0').should('not.exist');`}</pre>
+                </div>
+
+                <div className="notif-code-block">
+                  <div className="notif-code-label">cypress/support/commands.js — custom getByTestId</div>
+                  <pre className="notif-code">{`Cypress.Commands.add('getByTestId', (testId) =>
+  cy.get(\`[data-testid="\${testId}"]\`)
+);`}</pre>
+                </div>
+              </div>
+            )}
+          </div>
+
           <div className="notification-controls">
-            <p>
-              Permission Status: <strong>{notificationPermission}</strong>
-            </p>
+            <div className="notification-status" data-testid="notification-status">
+              <span className="notif-label">Permission status:</span>
+              <span
+                className="notif-badge"
+                data-testid="notification-permission"
+                style={{ background: permissionColor }}
+              >
+                {notificationPermission}
+              </span>
+            </div>
+
+            {notificationPermission === 'unsupported' && (
+              <p className="notif-warning" data-testid="notification-unsupported">
+                The Notification API is not supported or blocked in this browser/context.
+              </p>
+            )}
+
             {notificationPermission === 'default' && (
-              <button type="button" onClick={requestPermission}>
+              <button
+                type="button"
+                className="notif-btn notif-btn--request"
+                data-testid="request-permission-btn"
+                onClick={requestPermission}
+              >
                 Request Permission
               </button>
             )}
+
             {notificationPermission === 'granted' && (
-              <button type="button" onClick={showNotification}>
-                Show Notification
+              <button
+                type="button"
+                className="notif-btn notif-btn--show"
+                data-testid="show-notification-btn"
+                onClick={showNotification}
+              >
+                Send Notification
               </button>
             )}
+
             {notificationPermission === 'denied' && (
-              <p>Notification permission denied. Please reset in browser settings.</p>
+              <p className="notif-warning" data-testid="notification-denied">
+                Permission denied — reset it in your browser settings and refresh.
+              </p>
             )}
+
+            <div className="notif-log-section">
+              <div className="notif-log-header">
+                <h3>Event log</h3>
+                {notificationLog.length > 0 && (
+                  <button
+                    type="button"
+                    className="notif-clear-btn"
+                    data-testid="clear-notification-log-btn"
+                    onClick={() => setNotificationLog([])}
+                  >
+                    Clear
+                  </button>
+                )}
+              </div>
+              <div className="notif-log" data-testid="notification-log">
+                {notificationLog.length === 0 ? (
+                  <span className="notif-log-empty">No events yet.</span>
+                ) : (
+                  <ul className="notif-log-list">
+                    {notificationLog.map((entry, i) => (
+                      <li key={i} data-testid={`notification-log-entry-${i}`} className="notif-log-entry">
+                        {entry}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       );
@@ -3287,6 +3864,7 @@ const QAPractice = () => {
     // 9. Auto-complete
     if (selectedOption === 'autocomplete') {
       const suggestions = [
+        // Languages
         'JavaScript',
         'Java',
         'Python',
@@ -3294,17 +3872,130 @@ const QAPractice = () => {
         'PHP',
         'C++',
         'C#',
+        'C',
         'Go',
         'Rust',
         'Swift',
         'Kotlin',
         'TypeScript',
+        'Scala',
+        'Elixir',
+        'Haskell',
+        'Lua',
+        'Perl',
+        'R',
+        'Dart',
+        'Clojure',
+        'F#',
+        'Julia',
+        'COBOL',
+        'Fortran',
+        'Assembly',
+        'Bash',
+        'PowerShell',
+        'Groovy',
+        'Erlang',
+        'Nim',
+        'Zig',
+        'Crystal',
+        'Solidity',
+        // Frontend frameworks & libraries
         'React',
         'Angular',
         'Vue',
+        'Svelte',
+        'Next.js',
+        'Nuxt.js',
+        'Remix',
+        'Astro',
+        'Ember.js',
+        'Backbone.js',
+        'Alpine.js',
+        'Lit',
+        'Preact',
+        'Solid.js',
+        'Qwik',
+        // Backend frameworks
         'Node.js',
+        'Express.js',
         'Django',
-        'Flask'
+        'Flask',
+        'FastAPI',
+        'Spring Boot',
+        'Laravel',
+        'Ruby on Rails',
+        'NestJS',
+        'Hapi.js',
+        'Koa.js',
+        'Fiber',
+        'Gin',
+        'Phoenix',
+        'Actix',
+        'ASP.NET',
+        // Databases
+        'PostgreSQL',
+        'MySQL',
+        'MongoDB',
+        'Redis',
+        'SQLite',
+        'Cassandra',
+        'DynamoDB',
+        'Elasticsearch',
+        'MariaDB',
+        'CockroachDB',
+        'Neo4j',
+        'InfluxDB',
+        'Supabase',
+        'PlanetScale',
+        // Testing tools
+        'Jest',
+        'Cypress',
+        'Playwright',
+        'Selenium',
+        'Mocha',
+        'Chai',
+        'Jasmine',
+        'Vitest',
+        'Puppeteer',
+        'TestCafe',
+        'Karma',
+        'AVA',
+        // DevOps & cloud
+        'Docker',
+        'Kubernetes',
+        'Terraform',
+        'Ansible',
+        'Jenkins',
+        'GitHub Actions',
+        'GitLab CI',
+        'CircleCI',
+        'AWS',
+        'Azure',
+        'Google Cloud',
+        'Heroku',
+        'Vercel',
+        'Netlify',
+        'Cloudflare',
+        // Tools & misc
+        'GraphQL',
+        'REST',
+        'WebSockets',
+        'gRPC',
+        'Webpack',
+        'Vite',
+        'Rollup',
+        'Parcel',
+        'Babel',
+        'ESLint',
+        'Prettier',
+        'Git',
+        'Linux',
+        'Nginx',
+        'Apache',
+        'RabbitMQ',
+        'Kafka',
+        'Prometheus',
+        'Grafana'
       ];
 
       const handleAutocompleteChange = (value) => {
@@ -3401,19 +4092,356 @@ const QAPractice = () => {
           <h2>Date/Time Picker</h2>
           <p>Practice testing date and time inputs</p>
           <div className="datetime-picker">
-            <div className="picker-group">
+            <div className={`picker-group picker-group--date${dateCalendarOpen ? ' picker-group--open' : ''}`}>
               <label>Date:</label>
-              <input type="date" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} />
-              {selectedDate && <p>Selected Date: {selectedDate}</p>}
+              <div className="custom-datetime-picker" data-testid="date-picker">
+                <button
+                  type="button"
+                  className="dt-display-btn"
+                  data-testid="date-display-btn"
+                  onClick={() => {
+                    setDateCalendarOpen((o) => !o);
+                    setTimePickerOpen(false);
+                    setCalendarOpen(false);
+                  }}
+                >
+                  {selectedDate.year && selectedDate.month && selectedDate.day
+                    ? `${selectedDate.month}/${selectedDate.day}/${selectedDate.year}`
+                    : 'Select date...'}
+                  <span className="dt-calendar-icon">📅</span>
+                </button>
+                {dateCalendarOpen && (
+                  <div className="calendar-popup" data-testid="date-calendar-popup">
+                    <div className="calendar-header">
+                      <button
+                        type="button"
+                        className="cal-nav-btn"
+                        data-testid="date-prev-month"
+                        onClick={() => {
+                          if (dateViewMonth === 1) {
+                            setDateViewMonth(12);
+                            setDateViewYear((y) => y - 1);
+                          } else {
+                            setDateViewMonth((m) => m - 1);
+                          }
+                        }}
+                      >
+                        ‹
+                      </button>
+                      <span className="cal-month-year" data-testid="date-month-year-label">
+                        {months.find((m) => m.value === dateViewMonth)?.label} {dateViewYear}
+                      </span>
+                      <button
+                        type="button"
+                        className="cal-nav-btn"
+                        data-testid="date-next-month"
+                        onClick={() => {
+                          if (dateViewMonth === 12) {
+                            setDateViewMonth(1);
+                            setDateViewYear((y) => y + 1);
+                          } else {
+                            setDateViewMonth((m) => m + 1);
+                          }
+                        }}
+                      >
+                        ›
+                      </button>
+                    </div>
+                    <div className="calendar-weekdays">
+                      {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map((d) => (
+                        <span key={d} className="weekday-label">
+                          {d}
+                        </span>
+                      ))}
+                    </div>
+                    <div className="calendar-grid" data-testid="date-calendar-grid">
+                      {(() => {
+                        const firstDay = new Date(dateViewYear, dateViewMonth - 1, 1).getDay();
+                        const daysInMonth = new Date(dateViewYear, dateViewMonth, 0).getDate();
+                        const cells = [];
+                        for (let i = 0; i < firstDay; i++) {
+                          cells.push(<span key={`empty-${i}`} className="cal-empty" />);
+                        }
+                        for (let d = 1; d <= daysInMonth; d++) {
+                          const isSelected =
+                            Number(selectedDate.day) === d &&
+                            Number(selectedDate.month) === dateViewMonth &&
+                            Number(selectedDate.year) === dateViewYear;
+                          cells.push(
+                            <button
+                              key={d}
+                              type="button"
+                              className={`cal-day${isSelected ? ' selected' : ''}`}
+                              data-testid={`date-day-${d}`}
+                              onClick={() => {
+                                setSelectedDate({
+                                  day: String(d),
+                                  month: String(dateViewMonth),
+                                  year: String(dateViewYear)
+                                });
+                                setDateCalendarOpen(false);
+                              }}
+                            >
+                              {d}
+                            </button>
+                          );
+                        }
+                        return cells;
+                      })()}
+                    </div>
+                    <div className="calendar-footer">
+                      <button
+                        type="button"
+                        className="cal-done-btn"
+                        data-testid="date-done-btn"
+                        onClick={() => setDateCalendarOpen(false)}
+                      >
+                        Done
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+              {selectedDate.month && selectedDate.day && selectedDate.year && (
+                <p data-testid="selected-date-display">
+                  Selected Date: {selectedDate.month}/{selectedDate.day}/{selectedDate.year}
+                </p>
+              )}
             </div>
-            <div className="picker-group">
+            <div className={`picker-group picker-group--time${timePickerOpen ? ' picker-group--open' : ''}`}>
               <label>Time:</label>
-              <input type="time" value={selectedTime} onChange={(e) => setSelectedTime(e.target.value)} />
-              {selectedTime && <p>Selected Time: {selectedTime}</p>}
+              <div className="custom-datetime-picker" data-testid="time-picker">
+                <button
+                  type="button"
+                  className="dt-display-btn"
+                  data-testid="time-display-btn"
+                  onClick={() => {
+                    setTimePickerOpen((o) => !o);
+                    setDateCalendarOpen(false);
+                    setCalendarOpen(false);
+                  }}
+                >
+                  {selectedTime.hour !== '' && selectedTime.minute !== ''
+                    ? `${selectedTime.hour}:${selectedTime.minute}`
+                    : 'Select time...'}
+                  <span className="dt-calendar-icon">🕐</span>
+                </button>
+                {timePickerOpen && (
+                  <div className="calendar-popup time-only-popup" data-testid="time-picker-popup">
+                    <div className="time-picker-grid" data-testid="time-picker-grid">
+                      <div className="time-column" data-testid="time-hours-column">
+                        <span className="time-column-label">Hour</span>
+                        <div className="time-scroll" data-testid="time-hours-scroll">
+                          {Array.from({ length: 24 }, (_, i) => String(i).padStart(2, '0')).map((h) => (
+                            <button
+                              key={h}
+                              type="button"
+                              className={`time-cell${selectedTime.hour === h ? ' selected' : ''}`}
+                              data-testid={`time-hour-${h}`}
+                              onClick={() => setSelectedTime((prev) => ({ ...prev, hour: h }))}
+                            >
+                              {h}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                      <span className="time-col-colon">:</span>
+                      <div className="time-column" data-testid="time-minutes-column">
+                        <span className="time-column-label">Min</span>
+                        <div className="time-scroll" data-testid="time-minutes-scroll">
+                          {Array.from({ length: 60 }, (_, i) => String(i).padStart(2, '0')).map((m) => (
+                            <button
+                              key={m}
+                              type="button"
+                              className={`time-cell${selectedTime.minute === m ? ' selected' : ''}`}
+                              data-testid={`time-minute-${m}`}
+                              onClick={() => setSelectedTime((prev) => ({ ...prev, minute: m }))}
+                            >
+                              {m}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="calendar-footer">
+                      <button
+                        type="button"
+                        className="cal-done-btn"
+                        data-testid="time-done-btn"
+                        onClick={() => setTimePickerOpen(false)}
+                      >
+                        Done
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+              {selectedTime.hour !== '' && selectedTime.minute !== '' && (
+                <p data-testid="selected-time-display">
+                  Selected Time: {selectedTime.hour}:{selectedTime.minute}
+                </p>
+              )}
             </div>
-            <div className="picker-group">
+            <div className={`picker-group picker-group--datetime${calendarOpen ? ' picker-group--open' : ''}`}>
               <label>DateTime Local:</label>
-              <input type="datetime-local" />
+              <div className="custom-datetime-picker" data-testid="datetime-local-picker">
+                <button
+                  type="button"
+                  className="dt-display-btn"
+                  data-testid="dt-display-btn"
+                  onClick={() => {
+                    setCalendarOpen((o) => !o);
+                    setDateCalendarOpen(false);
+                    setTimePickerOpen(false);
+                  }}
+                >
+                  {selectedDateTime.year && selectedDateTime.month && selectedDateTime.day
+                    ? `${selectedDateTime.month}/${selectedDateTime.day}/${selectedDateTime.year} ${
+                        selectedDateTime.hour || '00'
+                      }:${selectedDateTime.minute || '00'}`
+                    : 'Select date & time...'}
+                  <span className="dt-calendar-icon">📆</span>
+                </button>
+                {calendarOpen && (
+                  <div className="calendar-popup" data-testid="calendar-popup">
+                    <div className="calendar-header">
+                      <button
+                        type="button"
+                        className="cal-nav-btn"
+                        data-testid="dt-prev-month"
+                        onClick={() => {
+                          if (calendarViewMonth === 1) {
+                            setCalendarViewMonth(12);
+                            setCalendarViewYear((y) => y - 1);
+                          } else {
+                            setCalendarViewMonth((m) => m - 1);
+                          }
+                        }}
+                      >
+                        ‹
+                      </button>
+                      <span className="cal-month-year" data-testid="dt-month-year-label">
+                        {months.find((m) => m.value === calendarViewMonth)?.label} {calendarViewYear}
+                      </span>
+                      <button
+                        type="button"
+                        className="cal-nav-btn"
+                        data-testid="dt-next-month"
+                        onClick={() => {
+                          if (calendarViewMonth === 12) {
+                            setCalendarViewMonth(1);
+                            setCalendarViewYear((y) => y + 1);
+                          } else {
+                            setCalendarViewMonth((m) => m + 1);
+                          }
+                        }}
+                      >
+                        ›
+                      </button>
+                    </div>
+                    <div className="calendar-weekdays">
+                      {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map((d) => (
+                        <span key={d} className="weekday-label">
+                          {d}
+                        </span>
+                      ))}
+                    </div>
+                    <div className="calendar-grid" data-testid="calendar-grid">
+                      {(() => {
+                        const firstDay = new Date(calendarViewYear, calendarViewMonth - 1, 1).getDay();
+                        const daysInMonth = new Date(calendarViewYear, calendarViewMonth, 0).getDate();
+                        const cells = [];
+                        for (let i = 0; i < firstDay; i++) {
+                          cells.push(<span key={`empty-${i}`} className="cal-empty" />);
+                        }
+                        for (let d = 1; d <= daysInMonth; d++) {
+                          const isSelected =
+                            Number(selectedDateTime.day) === d &&
+                            Number(selectedDateTime.month) === calendarViewMonth &&
+                            Number(selectedDateTime.year) === calendarViewYear;
+                          cells.push(
+                            <button
+                              key={d}
+                              type="button"
+                              className={`cal-day${isSelected ? ' selected' : ''}`}
+                              data-testid={`dt-day-${d}`}
+                              onClick={() =>
+                                setSelectedDateTime((prev) => ({
+                                  ...prev,
+                                  day: String(d),
+                                  month: String(calendarViewMonth),
+                                  year: String(calendarViewYear)
+                                }))
+                              }
+                            >
+                              {d}
+                            </button>
+                          );
+                        }
+                        return cells;
+                      })()}
+                    </div>
+                    <div className="calendar-time" data-testid="calendar-time">
+                      <span className="time-label">Time:</span>
+                      <input
+                        id="dt-hour-input"
+                        name="dt-hour"
+                        type="number"
+                        min="0"
+                        max="23"
+                        placeholder="HH"
+                        data-testid="dt-hour-input"
+                        className="time-input"
+                        value={selectedDateTime.hour}
+                        onChange={(e) =>
+                          setSelectedDateTime((prev) => ({
+                            ...prev,
+                            hour: String(e.target.value).padStart(2, '0')
+                          }))
+                        }
+                      />
+                      <span className="time-colon">:</span>
+                      <input
+                        id="dt-minute-input"
+                        name="dt-minute"
+                        type="number"
+                        min="0"
+                        max="59"
+                        placeholder="MM"
+                        data-testid="dt-minute-input"
+                        className="time-input"
+                        value={selectedDateTime.minute}
+                        onChange={(e) =>
+                          setSelectedDateTime((prev) => ({
+                            ...prev,
+                            minute: String(e.target.value).padStart(2, '0')
+                          }))
+                        }
+                      />
+                    </div>
+                    <div className="calendar-footer">
+                      <button
+                        type="button"
+                        className="cal-done-btn"
+                        data-testid="dt-done-btn"
+                        onClick={() => setCalendarOpen(false)}
+                      >
+                        Done
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+              {selectedDateTime.month &&
+                selectedDateTime.day &&
+                selectedDateTime.year &&
+                selectedDateTime.hour &&
+                selectedDateTime.minute && (
+                  <p data-testid="selected-datetime-display">
+                    Selected DateTime: {selectedDateTime.month}/{selectedDateTime.day}/{selectedDateTime.year}{' '}
+                    {selectedDateTime.hour}:{selectedDateTime.minute}
+                  </p>
+                )}
             </div>
           </div>
         </div>
@@ -3556,19 +4584,55 @@ const QAPractice = () => {
         if (shouldThrowError) {
           throw new Error('This is a test error!');
         }
-        return <p>Click the button to trigger an error</p>;
+        return (
+          <p className="eb-idle-msg" data-testid="error-boundary-idle">
+            The component is healthy. Click &ldquo;Throw Error&rdquo; to crash it.
+          </p>
+        );
       };
+
+      const fallback = (
+        <div className="eb-fallback" data-testid="error-boundary-fallback">
+          <span className="eb-fallback-icon">⚠️</span>
+          <p className="eb-fallback-msg">Something went wrong inside this component.</p>
+          <button
+            type="button"
+            className="eb-reset-btn"
+            data-testid="error-boundary-reset-btn"
+            onClick={() => setShouldThrowError(false)}
+          >
+            Reset component
+          </button>
+        </div>
+      );
 
       return (
         <div className="content-section">
-          <h2>Error Boundaries</h2>
-          <p>Practice testing error handling</p>
-          <div className="error-demo">
-            <button type="button" onClick={() => setShouldThrowError(!shouldThrowError)}>
-              {shouldThrowError ? 'Reset' : 'Throw Error'}
-            </button>
-            <div className="error-content">
-              <ThrowError />
+          <h2>Error Boundary</h2>
+          <p>
+            Trigger a React error inside a child component and assert the fallback UI. The <code>ErrorBoundary</code>{' '}
+            catches the throw and renders a recovery screen.
+          </p>
+
+          <div className="eb-demo" data-testid="error-boundary-demo">
+            <div className="eb-controls">
+              <button
+                type="button"
+                className={`eb-trigger-btn${shouldThrowError ? ' eb-trigger-btn--reset' : ''}`}
+                data-testid="error-boundary-trigger-btn"
+                onClick={() => setShouldThrowError((v) => !v)}
+              >
+                {shouldThrowError ? 'Reset' : 'Throw Error'}
+              </button>
+              <span className="eb-status" data-testid="error-boundary-status" data-errored={shouldThrowError}>
+                {shouldThrowError ? '💥 Error thrown' : '✓ Healthy'}
+              </span>
+            </div>
+
+            <div className="eb-component" data-testid="error-boundary-component">
+              <ErrorBoundary key={shouldThrowError ? 'error' : 'ok'} fallback={fallback}>
+                <ThrowError />
+              </ErrorBoundary>
             </div>
           </div>
         </div>
@@ -3579,29 +4643,76 @@ const QAPractice = () => {
     if (selectedOption === 'disabled-readonly') {
       return (
         <div className="content-section">
-          <h2>Disabled/Readonly States</h2>
-          <p>Practice testing element states</p>
+          <h2>Disabled / Read-only States</h2>
+          <p>Toggle the state of inputs and buttons — then assert they cannot be edited or clicked.</p>
+
           <div className="state-controls">
-            <button type="button" onClick={() => setIsInputDisabled(!isInputDisabled)}>
-              Toggle Disabled
+            <button
+              type="button"
+              className={`state-toggle-btn${isInputDisabled ? ' state-toggle-btn--active' : ''}`}
+              data-testid="toggle-disabled-btn"
+              onClick={() => setIsInputDisabled((v) => !v)}
+            >
+              {isInputDisabled ? 'Enable inputs' : 'Disable inputs'}
             </button>
-            <button type="button" onClick={() => setIsInputReadonly(!isInputReadonly)}>
-              Toggle Readonly
+            <button
+              type="button"
+              className={`state-toggle-btn${isInputReadonly ? ' state-toggle-btn--active' : ''}`}
+              data-testid="toggle-readonly-btn"
+              onClick={() => setIsInputReadonly((v) => !v)}
+            >
+              {isInputReadonly ? 'Remove readonly' : 'Make readonly'}
             </button>
           </div>
+
           <div className="state-examples">
-            <div>
-              <label>Disabled Input:</label>
-              <input type="text" disabled={isInputDisabled} defaultValue="This is disabled" />
+            <div className="state-row">
+              <label className="state-label" htmlFor="disabled-input">
+                Disabled input
+              </label>
+              <input
+                id="disabled-input"
+                type="text"
+                className="state-input"
+                data-testid="disabled-input"
+                disabled={isInputDisabled}
+                defaultValue="Cannot be edited when disabled"
+              />
+              <span className="state-badge" data-testid="disabled-badge">
+                {isInputDisabled ? 'disabled' : 'enabled'}
+              </span>
             </div>
-            <div>
-              <label>Readonly Input:</label>
-              <input type="text" readOnly={isInputReadonly} defaultValue="This is readonly" />
+
+            <div className="state-row">
+              <label className="state-label" htmlFor="readonly-input">
+                Read-only input
+              </label>
+              <input
+                id="readonly-input"
+                type="text"
+                className="state-input"
+                data-testid="readonly-input"
+                readOnly={isInputReadonly}
+                defaultValue="Cannot be edited when readonly"
+              />
+              <span className="state-badge" data-testid="readonly-badge">
+                {isInputReadonly ? 'readonly' : 'editable'}
+              </span>
             </div>
-            <div>
-              <button type="button" disabled={isInputDisabled}>
-                Disabled Button
+
+            <div className="state-row">
+              <label className="state-label">Disabled button</label>
+              <button
+                type="button"
+                className="state-action-btn"
+                data-testid="disabled-action-btn"
+                disabled={isInputDisabled}
+              >
+                Click me
               </button>
+              <span className="state-badge" data-testid="btn-disabled-badge">
+                {isInputDisabled ? 'disabled' : 'enabled'}
+              </span>
             </div>
           </div>
         </div>
@@ -3616,33 +4727,67 @@ const QAPractice = () => {
           <p>Practice testing progress bars and step indicators</p>
           <div className="progress-section">
             <h3>Progress Bar</h3>
-            <progress value={progressValue} max="100" />
-            <p>{progressValue}%</p>
-            <button type="button" onClick={() => setProgressValue(Math.min(100, progressValue + 10))}>
-              +10%
-            </button>
-            <button type="button" onClick={() => setProgressValue(Math.max(0, progressValue - 10))}>
-              -10%
-            </button>
-            <button type="button" onClick={() => setProgressValue(0)}>
-              Reset
-            </button>
+            <progress data-testid="progress-bar" value={progressValue} max="100" />
+            <p data-testid="progress-value">{progressValue}%</p>
+            <div className="progress-btn-row">
+              <button
+                type="button"
+                className="progress-ctrl-btn"
+                data-testid="progress-increment-btn"
+                onClick={() => setProgressValue(Math.min(100, progressValue + 10))}
+              >
+                +10%
+              </button>
+              <button
+                type="button"
+                className="progress-ctrl-btn"
+                data-testid="progress-decrement-btn"
+                onClick={() => setProgressValue(Math.max(0, progressValue - 10))}
+              >
+                -10%
+              </button>
+              <button
+                type="button"
+                className="progress-ctrl-btn progress-ctrl-btn--reset"
+                data-testid="progress-reset-btn"
+                onClick={() => setProgressValue(0)}
+              >
+                Reset
+              </button>
+            </div>
           </div>
           <div className="progress-section">
             <h3>Step Indicator</h3>
-            <div className="steps">
+            <div className="steps" data-testid="steps-container">
               {[1, 2, 3, 4].map((step) => (
-                <div key={step} className={`step ${stepProgress >= step ? 'completed' : ''}`}>
+                <div
+                  key={step}
+                  data-testid={`step-${step}`}
+                  className={`step${stepProgress >= step ? ' completed' : ''}`}
+                  data-completed={stepProgress >= step}
+                >
                   {step}
                 </div>
               ))}
             </div>
-            <button type="button" onClick={() => setStepProgress(Math.min(4, stepProgress + 1))}>
-              Next Step
-            </button>
-            <button type="button" onClick={() => setStepProgress(Math.max(1, stepProgress - 1))}>
-              Previous Step
-            </button>
+            <div className="progress-btn-row">
+              <button
+                type="button"
+                className="progress-ctrl-btn"
+                data-testid="step-next-btn"
+                onClick={() => setStepProgress(Math.min(4, stepProgress + 1))}
+              >
+                Next Step
+              </button>
+              <button
+                type="button"
+                className="progress-ctrl-btn"
+                data-testid="step-prev-btn"
+                onClick={() => setStepProgress(Math.max(1, stepProgress - 1))}
+              >
+                Previous Step
+              </button>
+            </div>
           </div>
         </div>
       );
@@ -3662,26 +4807,21 @@ const QAPractice = () => {
         <div className="content-section">
           <h2>Virtual Scroll</h2>
           <p>Practice testing large lists with virtual scrolling</p>
-          <div className="virtual-scroll-container" onScroll={handleScroll}>
-            <div style={{ height: `${virtualItems.length * 50}px`, position: 'relative' }}>
+          <div className="virtual-scroll-container" data-testid="virtual-scroll-container" onScroll={handleScroll}>
+            <div className="virtual-scroll-inner" style={{ height: `${virtualItems.length * 50}px` }}>
               {virtualItems.slice(visibleRange.start, visibleRange.end).map((item, index) => (
                 <div
                   key={index}
-                  style={{
-                    position: 'absolute',
-                    top: `${(visibleRange.start + index) * 50}px`,
-                    height: '50px',
-                    width: '100%',
-                    padding: '10px',
-                    borderBottom: '1px solid #ddd'
-                  }}
+                  className="virtual-row"
+                  data-testid="virtual-row"
+                  style={{ top: `${(visibleRange.start + index) * 50}px` }}
                 >
                   {item}
                 </div>
               ))}
             </div>
           </div>
-          <p>
+          <p data-testid="virtual-scroll-info">
             Showing items {visibleRange.start + 1} to {visibleRange.end} of {virtualItems.length}
           </p>
         </div>
@@ -3721,36 +4861,52 @@ const QAPractice = () => {
           <p>Practice testing WebSocket connections (simulated)</p>
           <div className="websocket-controls">
             <p>
-              Status: <strong>{wsStatus}</strong>
+              Status:{' '}
+              <strong data-testid="ws-status" data-status={wsStatus}>
+                {wsStatus}
+              </strong>
             </p>
             {wsStatus === 'disconnected' && (
-              <button type="button" onClick={connectWebSocket}>
+              <button
+                type="button"
+                className="ws-btn ws-btn--connect"
+                data-testid="ws-connect-btn"
+                onClick={connectWebSocket}
+              >
                 Connect
               </button>
             )}
+            {wsStatus === 'connecting' && <p data-testid="ws-connecting-msg">Connecting...</p>}
             {wsStatus === 'connected' && (
               <>
-                <button type="button" onClick={disconnect}>
+                <button
+                  type="button"
+                  className="ws-btn ws-btn--disconnect"
+                  data-testid="ws-disconnect-btn"
+                  onClick={disconnect}
+                >
                   Disconnect
                 </button>
                 <div className="message-input">
                   <input
                     type="text"
+                    className="ws-msg-input"
+                    data-testid="ws-message-input"
                     value={wsMessage}
                     onChange={(e) => setWsMessage(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
+                    onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
                     placeholder="Type a message..."
                   />
-                  <button type="button" onClick={sendMessage}>
+                  <button type="button" className="ws-btn ws-btn--send" data-testid="ws-send-btn" onClick={sendMessage}>
                     Send
                   </button>
                 </div>
               </>
             )}
           </div>
-          <div className="websocket-messages">
+          <div className="websocket-messages" data-testid="ws-messages">
             {wsMessages.map((msg, index) => (
-              <div key={index} className={`ws-message ${msg.type}`}>
+              <div key={index} className={`ws-message ws-message--${msg.type}`} data-testid={`ws-msg-${msg.type}`}>
                 {msg.text}
               </div>
             ))}
@@ -4159,30 +5315,42 @@ const QAPractice = () => {
             Playwright use <code>{'locator(\'pierce/[data-testid="shadow-btn"]\')'}</code>.
           </p>
 
-          <h3>Regular DOM (selectable normally)</h3>
-          <div className="shadow-box" data-testid="regular-dom-box">
-            <p>This paragraph is in the regular DOM.</p>
-            <button data-testid="regular-btn" onClick={() => setShadowClicked(true)} className="qa-btn">
-              Regular DOM button
-            </button>
-            {shadowClicked && (
-              <p data-testid="regular-result" style={{ color: 'green', marginTop: 8 }}>
-                Regular button clicked ✓
-              </p>
-            )}
-          </div>
+          <div className="shadow-dom-grid">
+            <div className="shadow-dom-panel">
+              <h3 className="shadow-dom-panel-title">Regular DOM</h3>
+              <p className="shadow-dom-panel-desc">Selectable with normal CSS selectors.</p>
+              <div className="shadow-box" data-testid="regular-dom-box">
+                <p className="shadow-box-text">This paragraph is in the regular DOM.</p>
+                <button
+                  type="button"
+                  data-testid="regular-btn"
+                  className="shadow-dom-btn"
+                  onClick={() => setShadowClicked(true)}
+                >
+                  Regular DOM button
+                </button>
+                {shadowClicked && (
+                  <p className="shadow-result-msg" data-testid="regular-result">
+                    ✓ Regular button clicked
+                  </p>
+                )}
+              </div>
+            </div>
 
-          <h3 style={{ marginTop: 24 }}>Shadow DOM (needs pierce selector)</h3>
-          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.55)', marginBottom: 8 }}>
-            The host element below has a shadow root attached. The button and input inside it are invisible to{' '}
-            <code>document.querySelector</code> but reachable via Playwright&apos;s pierce selectors.
-          </p>
-          <ShadowDOMWidget onInput={(val) => setShadowInputVal(val)} />
-          {shadowInputVal && (
-            <p data-testid="shadow-typed-mirror" style={{ marginTop: 8, color: 'rgba(255,255,255,0.88)' }}>
-              Mirrored from shadow input: <strong>{shadowInputVal}</strong>
-            </p>
-          )}
+            <div className="shadow-dom-panel">
+              <h3 className="shadow-dom-panel-title">Shadow DOM</h3>
+              <p className="shadow-dom-panel-desc">
+                Button and input are invisible to <code>document.querySelector</code> — use Playwright&apos;s{' '}
+                <code>pierce/</code> selector.
+              </p>
+              <ShadowDOMWidget onInput={(val) => setShadowInputVal(val)} />
+              {shadowInputVal && (
+                <p className="shadow-result-msg" data-testid="shadow-typed-mirror">
+                  Mirrored: <strong>{shadowInputVal}</strong>
+                </p>
+              )}
+            </div>
+          </div>
         </div>
       );
     }
@@ -4193,22 +5361,16 @@ const QAPractice = () => {
       return (
         <div className="content-section">
           <h2>Multi-tab &amp; Popup</h2>
-          <p className="section-description">
+          <p>
             Practice handling new tabs and popup windows. In Playwright use{' '}
             <code>page.waitForEvent(&apos;popup&apos;)</code> to capture the new context before clicking.
           </p>
 
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-              gap: 16,
-              marginBottom: 24
-            }}
-          >
-            <div className="shadow-box">
+          <div className="multi-tab-grid">
+            <div className="multi-tab-card">
+              <div className="multi-tab-card-icon">↗</div>
               <h3>New Tab — anchor link</h3>
-              <p style={{ fontSize: 13 }}>
+              <p>
                 A plain <code>{'<a target="_blank">'}</code> — the most common case.
               </p>
               <a
@@ -4216,22 +5378,23 @@ const QAPractice = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 data-testid="new-tab-link"
-                className="qa-btn"
-                style={{ display: 'inline-block', textDecoration: 'none' }}
+                className="multi-tab-btn multi-tab-btn--primary"
                 onClick={() => logEntry('Anchor link clicked → playwright.dev')}
               >
-                Open Playwright docs ↗
+                Open Playwright docs
               </a>
             </div>
 
-            <div className="shadow-box">
+            <div className="multi-tab-card">
+              <div className="multi-tab-card-icon">⧉</div>
               <h3>Popup window</h3>
-              <p style={{ fontSize: 13 }}>
+              <p>
                 Opens a 600×400 popup via <code>window.open()</code>.
               </p>
               <button
+                type="button"
                 data-testid="open-popup-btn"
-                className="qa-btn"
+                className="multi-tab-btn multi-tab-btn--secondary"
                 onClick={() => {
                   window.open('https://playwright.dev', 'pw-popup', 'width=600,height=400');
                   logEntry('Popup window opened (600×400)');
@@ -4241,14 +5404,16 @@ const QAPractice = () => {
               </button>
             </div>
 
-            <div className="shadow-box">
+            <div className="multi-tab-card">
+              <div className="multi-tab-card-icon">□</div>
               <h3>Blank tab</h3>
-              <p style={{ fontSize: 13 }}>
+              <p>
                 Opens a new tab with <code>about:blank</code> — useful for navigation testing.
               </p>
               <button
+                type="button"
                 data-testid="open-blank-tab-btn"
-                className="qa-btn"
+                className="multi-tab-btn multi-tab-btn--ghost"
                 onClick={() => {
                   window.open('about:blank', '_blank');
                   logEntry('Blank tab opened via window.open()');
@@ -4259,31 +5424,28 @@ const QAPractice = () => {
             </div>
           </div>
 
-          <h3>Action log</h3>
-          <div
-            data-testid="popup-log"
-            style={{
-              minHeight: 60,
-              background: 'rgba(255,255,255,0.05)',
-              borderRadius: 6,
-              padding: 12,
-              fontSize: 13,
-              border: '1px solid rgba(255,255,255,0.1)'
-            }}
-          >
-            {popupLog.length === 0 ? (
-              <span style={{ color: 'rgba(255,255,255,0.4)', fontStyle: 'italic' }}>
-                No actions yet — click a button above.
-              </span>
-            ) : (
-              <ul style={{ margin: 0, padding: '0 0 0 16px' }}>
-                {popupLog.map((entry, i) => (
-                  <li key={i} data-testid={`log-entry-${i}`}>
-                    {entry}
-                  </li>
-                ))}
-              </ul>
-            )}
+          <div className="multi-tab-log-section">
+            <div className="multi-tab-log-header">
+              <h3>Action log</h3>
+              {popupLog.length > 0 && (
+                <button type="button" className="multi-tab-clear-btn" onClick={() => setPopupLog([])}>
+                  Clear
+                </button>
+              )}
+            </div>
+            <div className="multi-tab-log" data-testid="popup-log">
+              {popupLog.length === 0 ? (
+                <span className="multi-tab-log-empty">No actions yet — click a button above.</span>
+              ) : (
+                <ul className="multi-tab-log-list">
+                  {popupLog.map((entry, i) => (
+                    <li key={i} data-testid={`log-entry-${i}`} className="multi-tab-log-entry">
+                      {entry}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
           </div>
         </div>
       );
@@ -4541,7 +5703,7 @@ const QAPractice = () => {
   };
 
   return (
-    <div className="qa-practice-container">
+    <div id="top" className="qa-practice-container">
       <header className="qa-practice-header">
         <button className="home-button" onClick={() => navigate('/qa-practice')} aria-label="Go to QA Practice">
           ← Back
