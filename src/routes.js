@@ -11,6 +11,7 @@ import { GameHome } from '@pages/game/GameHome';
 import { Track } from '@pages/game/Track';
 import { Game } from '@pages/game/Game';
 import { LevelComplete } from '@pages/game/LevelComplete';
+import { SelectorAcademy } from '@pages/selectors/SelectorAcademy';
 import { useRoutes } from 'react-router-dom';
 import { Suspense, lazy } from 'react';
 import StreamsSkeleton from '@pages/social/streams/StreamsSkeleton';
@@ -412,6 +413,10 @@ export const AppRouter = () => {
           element: <LevelComplete />
         }
       ]
+    },
+    {
+      path: '/css-selectors',
+      element: <SelectorAcademy />
     },
     {
       path: '*',
