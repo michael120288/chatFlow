@@ -80,14 +80,9 @@
   max-width: 720px;
   margin: 0 auto;
 
-  &--three {
+  &--four {
     grid-template-columns: repeat(2, 1fr);
     max-width: 720px;
-
-    // Jest card spans both columns on its own row
-    .track-jest {
-      grid-column: 1 / -1;
-    }
   }
 }
 
@@ -130,6 +125,11 @@
     border-color: #2e2000;
     &:hover { border-color: #f59e0b; }
   }
+
+  &.track-selectors {
+    border-color: #0a2a3a;
+    &:hover { border-color: #38bdf8; }
+  }
 }
 
 .tc-icon { font-size: 44px; line-height: 1; margin-top: 2px; }
@@ -146,6 +146,7 @@
   .track-api & { color: #a78bfa; }
   .track-cypress & { color: #22c55e; }
   .track-jest & { color: #f59e0b; }
+  .track-selectors & { color: #38bdf8; }
 }
 
 .tc-desc {
@@ -172,6 +173,16 @@
   color: #ffd700;
 }
 
+.tc-badge {
+  font-size: 11px;
+  font-weight: 700;
+  color: #38bdf8;
+  background: #0a1a2e;
+  border: 1px solid #0a3060;
+  border-radius: 10px;
+  padding: 2px 8px;
+}
+
 .tc-progress-track {
   height: 4px;
   background: #1e1e3a;
@@ -189,6 +200,7 @@
   .track-api & { background: #a78bfa; }
   .track-cypress & { background: #22c55e; }
   .track-jest & { background: #f59e0b; }
+  .track-selectors & { background: #38bdf8; }
 }
 
 .tc-done {
@@ -209,6 +221,7 @@
 .track-api:hover .tc-arrow { color: #a78bfa; }
 .track-cypress:hover .tc-arrow { color: #22c55e; }
 .track-jest:hover .tc-arrow { color: #f59e0b; }
+.track-selectors:hover .tc-arrow { color: #38bdf8; }
 
 // ── Topics collapsible ───────────────────────────────────────────────────────
 

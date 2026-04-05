@@ -106,7 +106,7 @@ export function GameHome() {
         {error && <div className="error-msg">Failed to load levels: {error}</div>}
 
         {!loading && !error && (
-          <div className="tracks-row tracks-row--three">
+          <div className="tracks-row tracks-row--four">
             <Link to="/app/game/track/playwright" className="track-card track-playwright">
               <div className="tc-icon">🎭</div>
               <div className="tc-body">
@@ -245,6 +245,26 @@ export function GameHome() {
                     <li>Code coverage reporting</li>
                   </ul>
                 )}
+              </div>
+              <div className="tc-arrow">→</div>
+            </Link>
+            <Link to="/css-selectors" className="track-card track-selectors">
+              <div className="tc-icon">🎯</div>
+              <div className="tc-body">
+                <h2 className="tc-title">CSS Selectors</h2>
+                <p className="tc-desc">
+                  Master CSS selectors from scratch — tag, class, ID, combinators, pseudo-classes and more
+                </p>
+                <div className="tc-meta">
+                  <span className="tc-count">42 Lessons</span>
+                  <span className="tc-badge">Free</span>
+                </div>
+                <ul className="tc-topics-list">
+                  <li>Tag, class and ID selectors</li>
+                  <li>Descendant, child and sibling combinators</li>
+                  <li>Attribute selectors</li>
+                  <li>:nth-child, :not(), :has() and more</li>
+                </ul>
               </div>
               <div className="tc-arrow">→</div>
             </Link>
