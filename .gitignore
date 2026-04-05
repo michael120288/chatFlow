@@ -29,3 +29,4 @@ yarn-error.log*
 .claude/
 .mcp.json
 CLAUDE.md
+.playwright-mcp/

@@ -79,6 +79,7 @@ const DeckPractice = () => {
       setStats(mockStats);
       setIsLoading(false);
     }, 500);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deckId]);
 
   const handleAnswer = async (difficulty) => {
