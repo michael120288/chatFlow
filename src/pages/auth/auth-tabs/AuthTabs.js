@@ -9,7 +9,7 @@ import { Utils } from '@services/utils/utils.service';
 import PageLoader from '@components/page-loader/PageLoader';
 
 const FEATURES = [
-  { icon: '🧪', text: '39 interactive UI scenarios' },
+  { icon: '🧪', text: '46 interactive UI scenarios' },
   { icon: '💬', text: 'Real-time social platform to automate' },
   { icon: '⚔️', text: 'Playwright & Cypress learning game' }
 ];

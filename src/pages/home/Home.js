@@ -11,7 +11,7 @@ const features = [
     icon: '🧪',
     title: 'QA Practice',
     description:
-      '43 interactive scenarios covering forms, drag-and-drop, WebSocket, virtual scroll, and more — built for Playwright automation practice.',
+      '46 interactive scenarios covering forms, drag-and-drop, WebSocket, virtual scroll, and more — built for Playwright automation practice.',
     cta: 'Start Practising',
     path: '/qa-practice',
     accent: '#667eea'
@@ -40,7 +40,7 @@ const features = [
 
 const stats = [
   { number: '1,180', label: 'Coding Challenges' },
-  { number: '43', label: 'QA Scenarios' },
+  { number: '46', label: 'QA Scenarios' },
   { number: '3', label: 'Test Tracks' },
   { number: '1', label: 'Platform' }
 ];
@@ -123,7 +123,7 @@ const Home = () => {
             <span className="home-landing-title-accent">One Scenario at a Time</span>
           </h1>
           <p className="home-landing-subtitle">
-            A hands-on playground with 43 real UI scenarios, a social platform to automate, and 1,180 coding challenges
+            A hands-on playground with 46 real UI scenarios, a social platform to automate, and 1,180 coding challenges
             across Playwright, Cypress &amp; Jest learning tracks — all in one place.
           </p>
           <div className="home-landing-actions">

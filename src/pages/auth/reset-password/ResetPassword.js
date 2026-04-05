@@ -8,7 +8,7 @@ import { authService } from '@services/api/auth/auth.service';
 import { Utils } from '@services/utils/utils.service';
 
 const FEATURES = [
-  { icon: '🧪', text: '39 interactive UI scenarios' },
+  { icon: '🧪', text: '46 interactive UI scenarios' },
   { icon: '💬', text: 'Real-time social platform to automate' },
   { icon: '⚔️', text: 'Playwright & Cypress learning game' }
 ];
