@@ -41,7 +41,7 @@ const DeckPractice = () => {
       category: 'React',
       questionCodeSnippet: '',
       answerCodeSnippet: 'const App = () => <div>Hello</div>;',
-      deckId: deckId
+      deckId
     },
     {
       _id: '2',
@@ -50,7 +50,7 @@ const DeckPractice = () => {
       category: 'React',
       questionCodeSnippet: '',
       answerCodeSnippet: 'const [count, setCount] = useState(0);',
-      deckId: deckId
+      deckId
     },
     {
       _id: '3',
@@ -59,7 +59,7 @@ const DeckPractice = () => {
       category: 'React',
       questionCodeSnippet: '',
       answerCodeSnippet: 'useEffect(() => { /* side effect */ }, [deps]);',
-      deckId: deckId
+      deckId
     }
   ];
 

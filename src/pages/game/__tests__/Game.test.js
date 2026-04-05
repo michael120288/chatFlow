@@ -3,6 +3,11 @@ import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { Game } from '../Game';
 
+import { useLevel } from '../hooks/useLevel';
+import { useSubmission } from '../hooks/useSubmission';
+import { useLevelNavigation } from '../hooks/useLevelNavigation';
+import { useGame } from '../context/GameContext';
+
 // ── Mocks ──────────────────────────────────────────────────────────────────────
 
 jest.mock('../hooks/useLevel');
@@ -35,11 +40,6 @@ jest.mock('../components/editor/CodeEditor', () => ({
     <textarea data-testid="code-editor" value={value} onChange={(e) => onChange(e.target.value)} />
   )
 }));
-
-import { useLevel } from '../hooks/useLevel';
-import { useSubmission } from '../hooks/useSubmission';
-import { useLevelNavigation } from '../hooks/useLevelNavigation';
-import { useGame } from '../context/GameContext';
 
 const mockSubmit = jest.fn();
 const mockReset = jest.fn();

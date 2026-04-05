@@ -2,11 +2,11 @@ import { render, screen, act } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { LevelComplete } from '../LevelComplete';
 
-jest.mock('../hooks/useLevel');
-jest.mock('../hooks/useProgress');
-
 import { useLevel } from '../hooks/useLevel';
 import { useProgress } from '../hooks/useProgress';
+
+jest.mock('../hooks/useLevel');
+jest.mock('../hooks/useProgress');
 
 const JEST_LEVEL = {
   id: 'jest-02',

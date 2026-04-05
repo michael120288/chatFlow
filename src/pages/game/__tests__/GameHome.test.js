@@ -4,13 +4,13 @@ import { MemoryRouter } from 'react-router-dom';
 import { GameHome } from '../GameHome';
 import { gameService } from '@services/api/game/game.service';
 
+import { useProgress } from '../hooks/useProgress';
+
 // ── Mocks ──────────────────────────────────────────────────────────────────────
 
 jest.mock('@services/api/game/game.service');
 jest.mock('../hooks/useProgress');
 jest.mock('../components/progress/XPBar', () => ({ XPBar: () => <div data-testid="xp-bar" /> }));
-
-import { useProgress } from '../hooks/useProgress';
 
 const mockResetProgress = jest.fn();
 

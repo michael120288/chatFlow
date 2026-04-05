@@ -78,5 +78,4 @@ describe('useLevelNavigation', () => {
     expect(result.current.prevId).toBeNull();
     expect(result.current.nextId).toBeNull();
   });
-
 });
