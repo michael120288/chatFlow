@@ -157,7 +157,15 @@ describe('PostUtils', () => {
       const dispatch = jest.fn();
 
       const setDisable = jest.fn();
-      await PostUtils.sendPostWithFileRequest('image', { post: 'hello' }, null, setApiResponse, setLoading, setDisable, dispatch);
+      await PostUtils.sendPostWithFileRequest(
+        'image',
+        { post: 'hello' },
+        null,
+        setApiResponse,
+        setLoading,
+        setDisable,
+        dispatch
+      );
 
       expect(setApiResponse).toHaveBeenCalledWith('error');
     });

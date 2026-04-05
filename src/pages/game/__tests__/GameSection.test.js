@@ -4,12 +4,12 @@ import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import { GameSection } from '../GameSection';
 
+import { useProgress } from '../hooks/useProgress';
+
 jest.mock('../hooks/useProgress');
 jest.mock('../components/layout/GameLayout', () => ({
   GameLayout: () => <div data-testid="game-layout">Layout</div>
 }));
-
-import { useProgress } from '../hooks/useProgress';
 
 const store = configureStore({ reducer: { user: () => ({ profile: null }) } });
 

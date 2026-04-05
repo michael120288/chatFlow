@@ -337,6 +337,8 @@
         max-height: 90vh;
         overflow-y: auto;
         animation: slideUp 0.3s ease;
+        background: white;
+        border-radius: 16px;
 
         &.add-cards-modal {
           background: white;

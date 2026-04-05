@@ -4,9 +4,9 @@ import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import { GameLayout } from '../GameLayout';
+import { useProgress } from '../../../hooks/useProgress';
 
 jest.mock('../../../hooks/useProgress');
-import { useProgress } from '../../../hooks/useProgress';
 
 const defaultProgress = {
   trackXP: { playwright: 0, 'cypress-ui': 0, jest: 0 },
