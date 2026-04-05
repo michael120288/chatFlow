@@ -13,7 +13,7 @@ export function XPBar({ completedCount, totalCount, xpEarned, tracks }) {
   const displayPercent = displayTotal > 0 ? Math.round((displayCompleted / displayTotal) * 100) : 0;
 
   const xpInCurrentLevel = displayXP % XP_PER_LEVEL;
-  const xpBarPercent = Math.round((xpInCurrentLevel / XP_PER_LEVEL) * 100);
+  const xpBarPercent = displayTotal > 0 ? displayPercent : Math.round((xpInCurrentLevel / XP_PER_LEVEL) * 100);
 
   if (tracks) {
     return (

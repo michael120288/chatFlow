@@ -38,7 +38,7 @@ export function GameProvider({ children }) {
   const isAuthenticated = !!token;
   const [state, setState] = useState(loadState);
   const [serverLoaded, setServerLoaded] = useState(false);
-  const [totalLevels, setTotalLevels] = useState(59);
+  const [totalLevels, setTotalLevels] = useState(0);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -55,7 +55,11 @@ export function GameProvider({ children }) {
             const trackXP = {};
             for (const id of completedLevels) {
               const lvl = levels.find((l) => l.id === id);
-              if (lvl) trackXP[lvl.category] = (trackXP[lvl.category] ?? 0) + (lvl.xpReward ?? 0);
+              if (lvl) {
+                const track =
+                  lvl.category === 'jest' ? 'jest' : lvl.category === 'cypress-ui' ? 'cypress-ui' : 'playwright';
+                trackXP[track] = (trackXP[track] ?? 0) + (lvl.xpReward ?? 0);
+              }
             }
             setTotalLevels(levels.length);
             setState((prev) => ({ ...prev, completedLevels, xp, trackXP }));
