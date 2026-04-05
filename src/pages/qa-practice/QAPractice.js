@@ -161,6 +161,30 @@ const QAPractice = () => {
   // Form Validation state
   const [formSubmitSuccess, setFormSubmitSuccess] = useState(false);
   const [loginError, setLoginError] = useState('');
+
+  // Soft Assertions scenario
+  const [softDashboard, setSoftDashboard] = useState({
+    uptime: 99,
+    responseTime: 142,
+    errorRate: 3,
+    activeUsers: 512,
+    cpuUsage: 67,
+    memoryUsage: 81
+  });
+  const [softRefreshing, setSoftRefreshing] = useState(false);
+
+  // Wait for Request scenario
+  const [wfrLoading, setWfrLoading] = useState(false);
+  const [wfrData, setWfrData] = useState(null);
+  const [wfrError, setWfrError] = useState(null);
+  const [wfrDelay, setWfrDelay] = useState(1500);
+  const [wfrShouldFail, setWfrShouldFail] = useState(false);
+
+  // Visual Testing scenario
+  const [vtTheme, setVtTheme] = useState('light');
+  const [vtSize, setVtSize] = useState('medium');
+  const [vtShowBadge, setVtShowBadge] = useState(true);
+
   const [validationForm, setValidationForm] = useState({
     username: '',
     email: '',
@@ -619,6 +643,12 @@ const QAPractice = () => {
       setSelectedOption('viewport');
     } else if (path.includes('rich-text-editor')) {
       setSelectedOption('rich-text-editor');
+    } else if (path.includes('soft-assertions')) {
+      setSelectedOption('soft-assertions');
+    } else if (path.includes('wait-for-request')) {
+      setSelectedOption('wait-for-request');
+    } else if (path.includes('visual-testing')) {
+      setSelectedOption('visual-testing');
     }
   }, [location.pathname, navigate]);
 
@@ -5694,6 +5724,261 @@ cy.getByTestId('notification-log-entry-0').should('not.exist');`}</pre>
             >
               {rteHtml || <span style={{ color: 'rgba(255,255,255,0.35)' }}>(empty — type something above)</span>}
             </pre>
+          </div>
+        </div>
+      );
+    }
+
+    // 20. Soft Assertions
+    if (selectedOption === 'soft-assertions') {
+      return (
+        <div className="content-section">
+          <h2>Soft Assertions</h2>
+
+          <div className="sa-dashboard" data-testid="sa-dashboard">
+            <div className="sa-header">
+              <h3 className="sa-title">System Health Dashboard</h3>
+              <button
+                type="button"
+                className="sa-refresh-btn"
+                data-testid="sa-refresh-btn"
+                disabled={softRefreshing}
+                onClick={() => {
+                  setSoftRefreshing(true);
+                  setTimeout(() => {
+                    setSoftDashboard({
+                      uptime: Math.floor(Math.random() * 5) + 95,
+                      responseTime: Math.floor(Math.random() * 300) + 80,
+                      errorRate: Math.floor(Math.random() * 10),
+                      activeUsers: Math.floor(Math.random() * 900) + 100,
+                      cpuUsage: Math.floor(Math.random() * 60) + 20,
+                      memoryUsage: Math.floor(Math.random() * 60) + 20
+                    });
+                    setSoftRefreshing(false);
+                  }, 800);
+                }}
+              >
+                {softRefreshing ? 'Refreshing…' : 'Refresh Metrics'}
+              </button>
+            </div>
+
+            <div className="sa-grid">
+              <div className="sa-metric" data-testid="sa-uptime">
+                <span className="sa-metric-label">Uptime</span>
+                <span
+                  className={`sa-metric-value${
+                    softDashboard.uptime >= 99 ? ' sa-metric-value--good' : ' sa-metric-value--warn'
+                  }`}
+                >
+                  {softDashboard.uptime}%
+                </span>
+              </div>
+              <div className="sa-metric" data-testid="sa-response-time">
+                <span className="sa-metric-label">Response Time</span>
+                <span
+                  className={`sa-metric-value${
+                    softDashboard.responseTime <= 200 ? ' sa-metric-value--good' : ' sa-metric-value--bad'
+                  }`}
+                >
+                  {softDashboard.responseTime}ms
+                </span>
+              </div>
+              <div className="sa-metric" data-testid="sa-error-rate">
+                <span className="sa-metric-label">Error Rate</span>
+                <span
+                  className={`sa-metric-value${
+                    softDashboard.errorRate === 0
+                      ? ' sa-metric-value--good'
+                      : softDashboard.errorRate < 5
+                      ? ' sa-metric-value--warn'
+                      : ' sa-metric-value--bad'
+                  }`}
+                >
+                  {softDashboard.errorRate}%
+                </span>
+              </div>
+              <div className="sa-metric" data-testid="sa-active-users">
+                <span className="sa-metric-label">Active Users</span>
+                <span className="sa-metric-value sa-metric-value--good">{softDashboard.activeUsers}</span>
+              </div>
+              <div className="sa-metric" data-testid="sa-cpu">
+                <span className="sa-metric-label">CPU Usage</span>
+                <span
+                  className={`sa-metric-value${
+                    softDashboard.cpuUsage < 70 ? ' sa-metric-value--good' : ' sa-metric-value--warn'
+                  }`}
+                >
+                  {softDashboard.cpuUsage}%
+                </span>
+              </div>
+              <div className="sa-metric" data-testid="sa-memory">
+                <span className="sa-metric-label">Memory Usage</span>
+                <span
+                  className={`sa-metric-value${
+                    softDashboard.memoryUsage < 70 ? ' sa-metric-value--good' : ' sa-metric-value--warn'
+                  }`}
+                >
+                  {softDashboard.memoryUsage}%
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // 21. Wait for Request
+    if (selectedOption === 'wait-for-request') {
+      return (
+        <div className="content-section">
+          <h2>Wait for Request / Response</h2>
+
+          <div className="wfr-controls" data-testid="wfr-controls">
+            <div className="wfr-control-row">
+              <label htmlFor="wfr-delay" className="wfr-label">
+                Response delay: <strong data-testid="wfr-delay-value">{wfrDelay}ms</strong>
+              </label>
+              <input
+                id="wfr-delay"
+                type="range"
+                min="500"
+                max="4000"
+                step="500"
+                value={wfrDelay}
+                data-testid="wfr-delay-slider"
+                className="wfr-slider"
+                onChange={(e) => setWfrDelay(Number(e.target.value))}
+              />
+            </div>
+            <div className="wfr-control-row">
+              <label className="wfr-label">
+                <input
+                  type="checkbox"
+                  data-testid="wfr-fail-toggle"
+                  checked={wfrShouldFail}
+                  onChange={(e) => setWfrShouldFail(e.target.checked)}
+                />
+                {' Simulate server error (500)'}
+              </label>
+            </div>
+            <button
+              type="button"
+              className="qa-submit-btn"
+              data-testid="wfr-fetch-btn"
+              disabled={wfrLoading}
+              onClick={() => {
+                setWfrLoading(true);
+                setWfrData(null);
+                setWfrError(null);
+                setTimeout(() => {
+                  if (wfrShouldFail) {
+                    setWfrError('500 Internal Server Error');
+                  } else {
+                    setWfrData({ id: 1, title: 'QA Practice Post', userId: 42, status: 'success' });
+                  }
+                  setWfrLoading(false);
+                }, wfrDelay);
+              }}
+            >
+              {wfrLoading ? 'Fetching…' : 'Fetch Data'}
+            </button>
+          </div>
+
+          <div className="wfr-status" data-testid="wfr-status" data-loading={wfrLoading}>
+            {wfrLoading && (
+              <div className="wfr-loading" data-testid="wfr-loading-indicator">
+                Loading…
+              </div>
+            )}
+            {wfrData && (
+              <div className="wfr-result wfr-result--success" data-testid="wfr-result">
+                <pre data-testid="wfr-result-json">{JSON.stringify(wfrData, null, 2)}</pre>
+              </div>
+            )}
+            {wfrError && (
+              <div className="wfr-result wfr-result--error" data-testid="wfr-error">
+                {wfrError}
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    // 22. Visual Testing
+    if (selectedOption === 'visual-testing') {
+      return (
+        <div className="content-section">
+          <h2>Screenshots &amp; Visual Testing</h2>
+
+          <div className="vt-controls" data-testid="vt-controls">
+            <div className="vt-control-group">
+              <span className="vt-control-label">Theme</span>
+              <div className="vt-btn-group">
+                {['light', 'dark', 'high-contrast'].map((t) => (
+                  <button
+                    key={t}
+                    type="button"
+                    className={`vt-option-btn${vtTheme === t ? ' vt-option-btn--active' : ''}`}
+                    data-testid={`vt-theme-${t}`}
+                    onClick={() => setVtTheme(t)}
+                  >
+                    {t}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="vt-control-group">
+              <span className="vt-control-label">Size</span>
+              <div className="vt-btn-group">
+                {['small', 'medium', 'large'].map((s) => (
+                  <button
+                    key={s}
+                    type="button"
+                    className={`vt-option-btn${vtSize === s ? ' vt-option-btn--active' : ''}`}
+                    data-testid={`vt-size-${s}`}
+                    onClick={() => setVtSize(s)}
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="vt-control-group">
+              <label className="vt-label">
+                <input
+                  type="checkbox"
+                  data-testid="vt-badge-toggle"
+                  checked={vtShowBadge}
+                  onChange={(e) => setVtShowBadge(e.target.checked)}
+                />
+                {' Show notification badge'}
+              </label>
+            </div>
+          </div>
+
+          <div
+            className={`vt-card vt-card--${vtTheme} vt-card--${vtSize}`}
+            data-testid="vt-card"
+            data-theme={vtTheme}
+            data-size={vtSize}
+          >
+            {vtShowBadge && (
+              <span className="vt-badge" data-testid="vt-badge">
+                3
+              </span>
+            )}
+            <div className="vt-card-icon">🧪</div>
+            <h3 className="vt-card-title" data-testid="vt-card-title">
+              QA Component
+            </h3>
+            <p className="vt-card-desc" data-testid="vt-card-desc">
+              This card changes appearance based on your selections above. Take a screenshot baseline, then change a
+              setting and compare.
+            </p>
+            <button type="button" className="vt-card-btn" data-testid="vt-card-btn">
+              Action
+            </button>
           </div>
         </div>
       );

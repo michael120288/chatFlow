@@ -222,6 +222,18 @@ export const AppRouter = () => {
         {
           path: 'rich-text-editor',
           element: <QAPractice />
+        },
+        {
+          path: 'soft-assertions',
+          element: <QAPractice />
+        },
+        {
+          path: 'wait-for-request',
+          element: <QAPractice />
+        },
+        {
+          path: 'visual-testing',
+          element: <QAPractice />
         }
       ]
     },

@@ -44,6 +44,10 @@ export function GameHome() {
   const jestXPEarned =
     trackXP.jest ?? jestLevels.filter((l) => completedLevels.includes(l.id)).reduce((sum, l) => sum + l.xpReward, 0);
 
+  const [pwOpen, setPwOpen] = useState(false);
+  const [cyOpen, setCyOpen] = useState(false);
+  const [jestOpen, setJestOpen] = useState(false);
+
   const xpTracks = [
     {
       label: 'Playwright',
@@ -123,6 +127,30 @@ export function GameHome() {
                 <span className="tc-done">
                   {playwrightDone} / {playwrightLevels.length} complete
                 </span>
+                <button
+                  type="button"
+                  className="tc-topics-btn"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setPwOpen((o) => !o);
+                  }}
+                  aria-expanded={pwOpen}
+                >
+                  What you&apos;ll learn <span className="tc-topics-chevron">{pwOpen ? '▲' : '▼'}</span>
+                </button>
+                {pwOpen && (
+                  <ul className="tc-topics-list">
+                    <li>Page navigation &amp; URL assertions</li>
+                    <li>Locators — getByRole, getByTestId, getByText</li>
+                    <li>Click, type, fill &amp; keyboard events</li>
+                    <li>Network interception &amp; request mocking</li>
+                    <li>API endpoint testing</li>
+                    <li>Multi-tab, popups &amp; iframes</li>
+                    <li>File upload &amp; download</li>
+                    <li>Screenshots &amp; visual regression</li>
+                  </ul>
+                )}
               </div>
               <div className="tc-arrow">→</div>
             </Link>
@@ -145,6 +173,30 @@ export function GameHome() {
                 <span className="tc-done">
                   {cypressDone} / {cypressLevels.length} complete
                 </span>
+                <button
+                  type="button"
+                  className="tc-topics-btn"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setCyOpen((o) => !o);
+                  }}
+                  aria-expanded={cyOpen}
+                >
+                  What you&apos;ll learn <span className="tc-topics-chevron">{cyOpen ? '▲' : '▼'}</span>
+                </button>
+                {cyOpen && (
+                  <ul className="tc-topics-list">
+                    <li>cy.get / cy.contains / cy.find selectors</li>
+                    <li>cy.type, cy.click, cy.check, cy.select</li>
+                    <li>cy.intercept — stubbing &amp; spying on requests</li>
+                    <li>Viewport &amp; responsive testing</li>
+                    <li>Cookie &amp; localStorage management</li>
+                    <li>iframe &amp; dialog handling</li>
+                    <li>Custom commands &amp; aliases</li>
+                    <li>Fixtures &amp; data management</li>
+                  </ul>
+                )}
               </div>
               <div className="tc-arrow">→</div>
             </Link>
@@ -169,6 +221,30 @@ export function GameHome() {
                 <span className="tc-done">
                   {jestDone} / {jestLevels.length} complete
                 </span>
+                <button
+                  type="button"
+                  className="tc-topics-btn"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setJestOpen((o) => !o);
+                  }}
+                  aria-expanded={jestOpen}
+                >
+                  What you&apos;ll learn <span className="tc-topics-chevron">{jestOpen ? '▲' : '▼'}</span>
+                </button>
+                {jestOpen && (
+                  <ul className="tc-topics-list">
+                    <li>Core matchers — toBe, toEqual, toContain</li>
+                    <li>Mock functions &amp; spies (jest.fn())</li>
+                    <li>Module mocking &amp; auto-mocking</li>
+                    <li>Async / await &amp; Promise testing</li>
+                    <li>beforeEach / afterEach / beforeAll lifecycle</li>
+                    <li>Snapshot testing</li>
+                    <li>Timer mocks (jest.useFakeTimers)</li>
+                    <li>Code coverage reporting</li>
+                  </ul>
+                )}
               </div>
               <div className="tc-arrow">→</div>
             </Link>

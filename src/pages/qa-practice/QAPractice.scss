@@ -6966,3 +6966,400 @@ $transition: all 0.3s ease;
     transform: translateY(-1px);
   }
 }
+
+// ── Soft Assertions ───────────────────────────────────────────────────────────
+
+.sa-dashboard {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid $border-color;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.sa-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.sa-title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: $text-color;
+}
+
+.sa-refresh-btn {
+  padding: 0.55rem 1.25rem;
+  background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: $transition;
+
+  &:hover:not(:disabled) {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.sa-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+
+  @media (max-width: 700px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.sa-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  border: 1px solid $border-color;
+}
+
+.sa-metric-label {
+  font-size: 0.8rem;
+  color: $text-light;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.sa-metric-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: $text-color;
+
+  &--good { color: $success-color; }
+  &--warn { color: $warning-color; }
+  &--bad  { color: $error-color; }
+}
+
+.sa-explainer {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 1.25rem 1.5rem;
+  margin-top: 1.5rem;
+
+  h4 {
+    margin: 0 0 0.75rem 0;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: $text-color;
+  }
+}
+
+.sa-code {
+  margin: 0;
+  font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: #a5f3fc;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-x: auto;
+}
+
+// ── Wait for Request ──────────────────────────────────────────────────────────
+
+.wfr-controls {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid $border-color;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.wfr-control-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.wfr-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: $text-color;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+  }
+}
+
+.wfr-slider {
+  width: 100%;
+  max-width: 400px;
+  cursor: pointer;
+  accent-color: $primary-color;
+}
+
+.wfr-status {
+  min-height: 80px;
+  border-radius: 10px;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid $border-color;
+  margin-bottom: 1.5rem;
+}
+
+.wfr-loading {
+  color: $text-light;
+  font-style: italic;
+  font-size: 0.9rem;
+  animation: pulse 1s ease-in-out infinite;
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+}
+
+.wfr-result {
+  font-family: 'JetBrains Mono', Consolas, monospace;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+
+  &--success {
+    color: $success-color;
+    background: rgba($success-color, 0.08);
+    border: 1px solid rgba($success-color, 0.25);
+  }
+
+  &--error {
+    color: $error-color;
+    background: rgba($error-color, 0.08);
+    border: 1px solid rgba($error-color, 0.25);
+    font-weight: 600;
+  }
+
+  pre {
+    margin: 0;
+    white-space: pre-wrap;
+  }
+}
+
+// ── Visual Testing ────────────────────────────────────────────────────────────
+
+.vt-controls {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid $border-color;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.vt-control-group {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.vt-control-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: $text-light;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  min-width: 80px;
+}
+
+.vt-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: $text-color;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+
+  input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: $primary-color;
+  }
+}
+
+.vt-btn-group {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.vt-option-btn {
+  padding: 0.4rem 1rem;
+  border: 2px solid $border-color;
+  border-radius: 6px;
+  background: transparent;
+  color: $text-color;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: $transition;
+  text-transform: capitalize;
+
+  &:hover {
+    border-color: $primary-color;
+    color: $primary-color;
+  }
+
+  &--active {
+    background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
+    border-color: transparent;
+    color: white;
+  }
+}
+
+// vt-card variations
+.vt-card {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  border-radius: 16px;
+  border: 2px solid $border-color;
+  margin-bottom: 1.5rem;
+  transition: all 0.3s ease;
+
+  // Sizes
+  &--small  { padding: 1.5rem 2rem; width: 220px; }
+  &--medium { padding: 2rem 2.5rem; width: 300px; }
+  &--large  { padding: 2.5rem 3rem; width: 380px; }
+
+  // Themes
+  &--light {
+    background: #ffffff;
+    color: #111;
+    border-color: #e2e8f0;
+    .vt-card-title { color: #1e293b; }
+    .vt-card-desc  { color: #64748b; }
+  }
+
+  &--dark {
+    background: #1e293b;
+    color: #f1f5f9;
+    border-color: #334155;
+    .vt-card-title { color: #f1f5f9; }
+    .vt-card-desc  { color: #94a3b8; }
+  }
+
+  &--high-contrast {
+    background: #000;
+    color: #fff;
+    border: 3px solid #fff;
+    .vt-card-title { color: #fff; }
+    .vt-card-desc  { color: #ccc; }
+  }
+}
+
+.vt-badge {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: $error-color;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 700;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vt-card-icon { font-size: 2.5rem; }
+
+.vt-card-title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.vt-card-desc {
+  margin: 0;
+  font-size: 0.85rem;
+  text-align: center;
+  line-height: 1.5;
+}
+
+.vt-card-btn {
+  padding: 0.5rem 1.5rem;
+  border-radius: 8px;
+  border: none;
+  background: $primary-color;
+  color: white;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: $transition;
+
+  &:hover {
+    filter: brightness(1.1);
+  }
+}
+
+// ── Collapsible tips panel (shared by soft-assertions, wait-for-request, visual-testing) ──
+
+.sa-explainer-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: transparent;
+  border: none;
+  padding: 0.5rem 0;
+  cursor: pointer;
+  color: $text-color;
+  font-size: 0.95rem;
+  font-weight: 700;
+
+  &:hover {
+    color: $primary-color;
+  }
+}
+
+.sa-explainer-chevron {
+  font-size: 0.75rem;
+  color: $text-light;
+  transition: $transition;
+}
+
+.sa-explainer-body {
+  margin-top: 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 0.75rem;
+}

@@ -169,6 +169,12 @@ const categories = [
         id: 'viewport',
         label: 'Viewport & Responsive',
         description: 'Test responsive layouts at different sizes using page.setViewportSize() and device emulation.'
+      },
+      {
+        id: 'soft-assertions',
+        label: 'Soft Assertions',
+        description:
+          'Use expect.soft() to check multiple dashboard metrics in one test without stopping on the first failure.'
       }
     ]
   },
@@ -234,6 +240,18 @@ const categories = [
         label: 'Shadow DOM',
         description:
           'Interact with elements inside a Shadow DOM — use Playwright pierce selectors to reach encapsulated content.'
+      },
+      {
+        id: 'wait-for-request',
+        label: 'Wait for Request',
+        description:
+          'Practice waitForRequest() and waitForResponse() — configure delay and error mode, then assert network responses.'
+      },
+      {
+        id: 'visual-testing',
+        label: 'Screenshots & Visual',
+        description:
+          'Practice page.screenshot() and toHaveScreenshot() — change theme, size, and badge, then capture baselines.'
       }
     ]
   }
@@ -262,7 +280,7 @@ const QAPracticeLanding = () => {
         <div className="qal-content">
           <div className="qa-landing">
             <div className="qa-landing-hero">
-              <h2>43 Interactive Scenarios</h2>
+              <h2>46 Interactive Scenarios</h2>
               <p>
                 A hands-on playground for practising Playwright end-to-end testing. Each scenario gives you a real,
                 interactive UI element to automate — from basic form inputs to WebSockets and virtual scroll. Pick a
@@ -270,7 +288,7 @@ const QAPracticeLanding = () => {
               </p>
               <div className="qa-landing-stats">
                 <div className="stat">
-                  <span className="stat-number">43</span>
+                  <span className="stat-number">46</span>
                   <span className="stat-label">Scenarios</span>
                 </div>
                 <div className="stat">
