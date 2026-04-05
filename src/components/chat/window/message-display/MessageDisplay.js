@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import '@components/chat/window/message-display/MessageDisplay.scss';
 import { timeAgo } from '@services/utils/timeago.utils';
 import RightMessageDisplay from '@components/chat/window/message-display/right-message-display/RightMessageDisplay';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import useDetectOutsideClick from '@hooks/useDetectOutsideClick';
 import useChatScrollToBottom from '@hooks/useChatScrollToBottom';
 import ImageModal from '@components/image-modal/ImageModal';
@@ -20,9 +20,46 @@ const MessageDisplay = ({ chatMessages, profile, updateMessageReaction, deleteCh
   });
   const [activeElementIndex, setActiveElementIndex] = useState(null);
   const [selectedReaction, setSelectedReaction] = useState(null);
+  const [pendingDeletions, setPendingDeletions] = useState({});
+  const pendingTimers = useRef({});
   const reactionRef = useRef(null);
   const [toggleReaction, setToggleReaction] = useDetectOutsideClick(reactionRef, false);
   const scrollRef = useChatScrollToBottom(chatMessages);
+
+  useEffect(() => {
+    return () => {
+      Object.values(pendingTimers.current).forEach(clearInterval);
+    };
+  }, []);
+
+  const startPendingDeletion = (message, type) => {
+    const messageId = message._id;
+    setPendingDeletions((prev) => ({ ...prev, [messageId]: { message, type, secondsLeft: 10 } }));
+    const intervalId = setInterval(() => {
+      setPendingDeletions((prev) => {
+        const entry = prev[messageId];
+        if (!entry) return prev;
+        if (entry.secondsLeft <= 1) {
+          clearInterval(pendingTimers.current[messageId]);
+          delete pendingTimers.current[messageId];
+          deleteChatMessage(entry.message.senderId, entry.message.receiverId, messageId, entry.type);
+          const { [messageId]: _removed, ...rest } = prev;
+          return rest;
+        }
+        return { ...prev, [messageId]: { ...entry, secondsLeft: entry.secondsLeft - 1 } };
+      });
+    }, 1000);
+    pendingTimers.current[messageId] = intervalId;
+  };
+
+  const restoreMessage = (messageId) => {
+    clearInterval(pendingTimers.current[messageId]);
+    delete pendingTimers.current[messageId];
+    setPendingDeletions((prev) => {
+      const { [messageId]: _removed, ...rest } = prev;
+      return rest;
+    });
+  };
 
   const showReactionIconOnHover = (show, index) => {
     if (index === activeElementIndex || !activeElementIndex) {
@@ -66,12 +103,8 @@ const MessageDisplay = ({ chatMessages, profile, updateMessageReaction, deleteCh
           secondButtonText="CANCEL"
           firstBtnHandler={() => {
             const { message, type } = deleteDialog;
-            deleteChatMessage(message.senderId, message.receiverId, message._id, type);
-            setDeleteDialog({
-              open: false,
-              message: null,
-              type: ''
-            });
+            startPendingDeletion(message, type);
+            setDeleteDialog({ open: false, message: null, type: '' });
           }}
           secondBtnHandler={() => {
             setDeleteDialog({
@@ -93,52 +126,68 @@ const MessageDisplay = ({ chatMessages, profile, updateMessageReaction, deleteCh
                 </div>
               </div>
             )}
-            {(chat.receiverUsername === profile?.username || chat.senderUsername === profile?.username) && (
-              <>
-                {chat.senderUsername === profile?.username && (
-                  <RightMessageDisplay
-                    chat={chat}
-                    lastChatMessage={chatMessages[chatMessages.length - 1]}
-                    profile={profile}
-                    toggleReaction={toggleReaction}
-                    showReactionIcon={showReactionIcon}
-                    index={index}
-                    activeElementIndex={activeElementIndex}
-                    reactionRef={reactionRef}
-                    setToggleReaction={setToggleReaction}
-                    handleReactionClick={handleReactionClick}
-                    deleteMessage={deleteMessage}
-                    showReactionIconOnHover={showReactionIconOnHover}
-                    setActiveElementIndex={setActiveElementIndex}
-                    setShowImageModal={setShowImageModal}
-                    setImageUrl={setImageUrl}
-                    showImageModal={showImageModal}
-                    setSelectedReaction={setSelectedReaction}
-                  />
-                )}
+            {(chat.receiverUsername === profile?.username || chat.senderUsername === profile?.username) &&
+              !chat.deleteForEveryone &&
+              !chat.deleteForMe && (
+                <>
+                  {pendingDeletions[chat._id] && (
+                    <div
+                      className={`message-pending-delete ${
+                        chat.senderUsername === profile?.username ? 'pending-right' : 'pending-left'
+                      }`}
+                    >
+                      <span className="pending-delete-text">
+                        Deleting in {pendingDeletions[chat._id].secondsLeft}s…
+                      </span>
+                      <button className="pending-delete-undo" onClick={() => restoreMessage(chat._id)}>
+                        Undo
+                      </button>
+                    </div>
+                  )}
+                  {!pendingDeletions[chat._id] && chat.senderUsername === profile?.username && (
+                    <RightMessageDisplay
+                      chat={chat}
+                      lastChatMessage={chatMessages[chatMessages.length - 1]}
+                      profile={profile}
+                      toggleReaction={toggleReaction}
+                      showReactionIcon={showReactionIcon}
+                      index={index}
+                      activeElementIndex={activeElementIndex}
+                      reactionRef={reactionRef}
+                      setToggleReaction={setToggleReaction}
+                      handleReactionClick={handleReactionClick}
+                      deleteMessage={deleteMessage}
+                      showReactionIconOnHover={showReactionIconOnHover}
+                      setActiveElementIndex={setActiveElementIndex}
+                      setShowImageModal={setShowImageModal}
+                      setImageUrl={setImageUrl}
+                      showImageModal={showImageModal}
+                      setSelectedReaction={setSelectedReaction}
+                    />
+                  )}
 
-                {chat.receiverUsername === profile?.username && (
-                  <LeftMessageDisplay
-                    chat={chat}
-                    profile={profile}
-                    toggleReaction={toggleReaction}
-                    showReactionIcon={showReactionIcon}
-                    index={index}
-                    activeElementIndex={activeElementIndex}
-                    reactionRef={reactionRef}
-                    setToggleReaction={setToggleReaction}
-                    handleReactionClick={handleReactionClick}
-                    deleteMessage={deleteMessage}
-                    showReactionIconOnHover={showReactionIconOnHover}
-                    setActiveElementIndex={setActiveElementIndex}
-                    setShowImageModal={setShowImageModal}
-                    setImageUrl={setImageUrl}
-                    showImageModal={showImageModal}
-                    setSelectedReaction={setSelectedReaction}
-                  />
-                )}
-              </>
-            )}
+                  {!pendingDeletions[chat._id] && chat.receiverUsername === profile?.username && (
+                    <LeftMessageDisplay
+                      chat={chat}
+                      profile={profile}
+                      toggleReaction={toggleReaction}
+                      showReactionIcon={showReactionIcon}
+                      index={index}
+                      activeElementIndex={activeElementIndex}
+                      reactionRef={reactionRef}
+                      setToggleReaction={setToggleReaction}
+                      handleReactionClick={handleReactionClick}
+                      deleteMessage={deleteMessage}
+                      showReactionIconOnHover={showReactionIconOnHover}
+                      setActiveElementIndex={setActiveElementIndex}
+                      setShowImageModal={setShowImageModal}
+                      setImageUrl={setImageUrl}
+                      showImageModal={showImageModal}
+                      setSelectedReaction={setSelectedReaction}
+                    />
+                  )}
+                </>
+              )}
           </div>
         ))}
       </div>
