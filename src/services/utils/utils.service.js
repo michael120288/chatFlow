@@ -120,11 +120,10 @@ export class Utils {
   }
 
   static shortenLargeNumbers(data) {
-    if (data === undefined) {
+    if (data === undefined || data === null || typeof data !== 'number') {
       return 0;
-    } else {
-      return millify(data);
     }
+    return millify(data);
   }
 
   static getImage(imageId, imageVersion) {
