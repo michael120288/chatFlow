@@ -78,6 +78,7 @@ const Sidebar = () => {
       const userTwoName =
         chatUser?.receiverUsername !== profile?.username ? chatUser?.receiverUsername : chatUser?.senderUsername;
       ChatUtils.privateChatMessages = [];
+      if (!userTwoName) return;
       await chatService.removeChatUsers({ userOne: profile?.username, userTwo: userTwoName });
     } catch (error) {
       Utils.dispatchNotification(error.response.data.message, 'error', dispatch);

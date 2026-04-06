@@ -90,7 +90,7 @@ const Timeline = ({ userProfileData, loading }) => {
   }, [getUserByUsername]);
 
   useEffect(() => {
-    PostUtils.socketIOPost(posts, setPosts);
+    PostUtils.socketIOPost(setPosts);
   }, [posts]);
 
   return (
