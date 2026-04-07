@@ -110,6 +110,7 @@
         margin-bottom: 20px;
         width: 100%;
         padding: 10px;
+        position: relative;
 
         .avatar {
           grid-row: span 2;
@@ -172,9 +173,39 @@
           }
         }
 
+        .delete-conversation-btn {
+          position: absolute;
+          right: 10px;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 28px;
+          height: 28px;
+          border-radius: 50%;
+          background: var(--white-5);
+          border: none;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          opacity: 0;
+          transition: opacity 0.2s ease, background 0.2s ease;
+          color: var(--gray-3);
+          font-size: 11px;
+          z-index: 1;
+
+          &:hover {
+            background: rgba(255, 80, 80, 0.15);
+            color: #e05252;
+          }
+        }
+
         &:hover {
           background-color: var(--white-7);
           cursor: pointer;
+
+          .delete-conversation-btn {
+            opacity: 1;
+          }
         }
       }
 

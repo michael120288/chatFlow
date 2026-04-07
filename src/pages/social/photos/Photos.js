@@ -1,4 +1,5 @@
 import GalleryImage from '@components/gallery-image/GalleryImage';
+import Dialog from '@components/dialog/Dialog';
 import useEffectOnce from '@hooks/useEffectOnce';
 import { followerService } from '@services/api/followers/follower.service';
 import { postService } from '@services/api/post/post.service';
@@ -16,6 +17,7 @@ const Photos = () => {
   const [imageUrl, setImageUrl] = useState('');
   const [showImageModal, setShowImageModal] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [deleteDialogPost, setDeleteDialogPost] = useState(null);
   const [rightImageIndex, setRightImageIndex] = useState();
   const [leftImageIndex, setLeftImageIndex] = useState();
   const [lastItemRight, setLastItemRight] = useState(false);
@@ -82,6 +84,37 @@ const Photos = () => {
     }
   };
 
+  const deletePost = async (post) => {
+    try {
+      await postService.deletePost(post._id);
+      setPosts((prev) => prev.filter((p) => p._id !== post._id));
+      Utils.dispatchNotification('Post deleted', 'success', dispatch);
+    } catch (error) {
+      Utils.dispatchNotification(error.response.data.message, 'error', dispatch);
+    }
+  };
+
+  const removeImageFromPost = async (post) => {
+    try {
+      await postService.updatePost(post._id, {
+        post: post.post,
+        bgColor: post.bgColor,
+        feelings: post.feelings,
+        privacy: post.privacy,
+        gifUrl: '',
+        profilePicture: post.profilePicture,
+        imgId: '',
+        imgVersion: '',
+        videoId: '',
+        videoVersion: ''
+      });
+      setPosts((prev) => prev.filter((p) => p._id !== post._id));
+      Utils.dispatchNotification('Image removed from post', 'success', dispatch);
+    } catch (error) {
+      Utils.dispatchNotification(error.response.data.message, 'error', dispatch);
+    }
+  };
+
   useEffectOnce(() => {
     getPostsWithImages();
     getUserFollowing();
@@ -90,6 +123,23 @@ const Photos = () => {
   return (
     <>
       <div className="photos-container">
+        {deleteDialogPost && (
+          <Dialog
+            title="What would you like to do?"
+            firstButtonText="Delete Post"
+            secondButtonText="Cancel"
+            thirdButtonText="Remove Image Only"
+            firstBtnHandler={() => {
+              deletePost(deleteDialogPost);
+              setDeleteDialogPost(null);
+            }}
+            secondBtnHandler={() => setDeleteDialogPost(null)}
+            thirdBtnHandler={() => {
+              removeImageFromPost(deleteDialogPost);
+              setDeleteDialogPost(null);
+            }}
+          />
+        )}
         {showImageModal && (
           <ImageModal
             image={`${imageUrl}`}
@@ -124,7 +174,7 @@ const Photos = () => {
                         <GalleryImage
                           post={post}
                           showCaption={true}
-                          showDelete={false}
+                          showDelete={post.userId === profile?._id}
                           imgSrc={`${postImageUrl(post)}`}
                           onClick={() => {
                             setRightImageIndex(index + 1);
@@ -133,6 +183,10 @@ const Photos = () => {
                             setLastItemRight(index + 1 === posts.length);
                             setImageUrl(postImageUrl(post));
                             setShowImageModal(!showImageModal);
+                          }}
+                          onRemoveImage={(e) => {
+                            e.stopPropagation();
+                            setDeleteDialogPost(post);
                           }}
                         />
                       </>

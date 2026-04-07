@@ -1,7 +1,7 @@
 import Avatar from '@components/avatar/Avatar';
 import Input from '@components/input/Input';
 import { Utils } from '@services/utils/utils.service';
-import { FaSearch, FaTimes } from 'react-icons/fa';
+import { FaSearch, FaTimes, FaTrash } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import '@components/chat/list/ChatList.scss';
 import SearchList from '@components/chat/list/search-list/SearchList';
@@ -82,6 +82,17 @@ const ChatList = () => {
     },
     [chatList, chatMessageList, dispatch, searchParams, profile]
   );
+
+  const deleteConversation = async (event, data) => {
+    event.stopPropagation();
+    const receiverId = data.receiverUsername !== profile?.username ? data.receiverId : data.senderId;
+    try {
+      await chatService.deleteConversation(receiverId);
+      setChatMessageList((prev) => prev.filter((item) => item.conversationId !== data.conversationId));
+    } catch (error) {
+      Utils.dispatchNotification(error.response.data.message, 'error', dispatch);
+    }
+  };
 
   const removeSelectedUserFromList = (event) => {
     event.stopPropagation();
@@ -242,6 +253,15 @@ const ChatList = () => {
                     <div className="created-date" onClick={removeSelectedUserFromList}>
                       <FaTimes />
                     </div>
+                  )}
+                  {data?.body && (
+                    <button
+                      className="delete-conversation-btn"
+                      onClick={(e) => deleteConversation(e, data)}
+                      title="Remove conversation"
+                    >
+                      <FaTrash />
+                    </button>
                   )}
                   {data?.body && !data?.deleteForMe && !data.deleteForEveryone && (
                     <ChatListBody data={data} profile={profile} />
