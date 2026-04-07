@@ -30,6 +30,38 @@
       }
     }
 
+    .video-figure {
+      position: relative;
+      margin: 0;
+
+      .video-delete-btn {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.5);
+        border: none;
+        color: #fff;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        opacity: 0;
+        transition: opacity 0.2s ease, background 0.2s ease;
+
+        &:hover {
+          background: rgba(220, 50, 50, 0.85);
+        }
+      }
+
+      &:hover .video-delete-btn {
+        opacity: 1;
+      }
+    }
+
     .empty-post-div {
       display: none;
     }
