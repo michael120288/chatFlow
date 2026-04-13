@@ -22,4 +22,4 @@ User-agent: PerplexityBot
 Allow: /
 Disallow: /app/
 
-Sitemap: https://chatty.app/sitemap.xml
+Sitemap: https://codeandtest.com/sitemap.xml

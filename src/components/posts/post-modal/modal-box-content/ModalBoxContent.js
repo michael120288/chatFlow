@@ -5,7 +5,6 @@ import { privacyList } from '@services/utils/static.data';
 import { useRef, useState, useCallback, useEffect } from 'react';
 import { FaGlobe } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
-import { find } from 'lodash';
 
 const ModalBoxContent = () => {
   const { profile } = useSelector((state) => state.user);
@@ -21,7 +20,7 @@ const ModalBoxContent = () => {
 
   const displayPostPrivacy = useCallback(() => {
     if (privacy) {
-      const postPrivacy = find(privacyList, (data) => data.topText === privacy);
+      const postPrivacy = privacyList.find((data) => data.topText === privacy);
       setSelectedItem(postPrivacy);
     }
   }, [privacy]);

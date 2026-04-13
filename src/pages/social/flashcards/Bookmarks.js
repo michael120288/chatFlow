@@ -140,9 +140,9 @@ const Bookmarks = () => {
             </div>
 
             <div className="bookmarks-list">
-              {bookmarkedCards.map((card) => (
+              {bookmarkedCards.map((card, index) => (
                 <CardItem
-                  key={card._id}
+                  key={card._id ?? `bookmark-${index}`}
                   card={card}
                   onFlip={handleFlip}
                   onBookmark={handleBookmark}

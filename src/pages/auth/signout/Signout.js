@@ -30,7 +30,8 @@ const Signout = () => {
         Utils.clearStore({ dispatch, deleteStorageUsername, deleteSessionPageReload, setLoggedIn });
         window.location.href = returnUrl;
       });
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional run-once on mount: sign out and redirect
+  }, []);
 
   return null;
 };

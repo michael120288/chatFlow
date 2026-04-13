@@ -6,7 +6,7 @@ import { clearPost } from '@redux/reducers/post/post.reducer';
 import { postService } from '@services/api/post/post.service';
 import { reactionsColor, reactionsMap } from '@services/utils/static.data';
 import { Utils } from '@services/utils/utils.service';
-import { filter, orderBy, some } from 'lodash';
+
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import '@components/posts/reactions/reactions-modal/ReactionsModal.scss';
@@ -24,7 +24,9 @@ const ReactionsModal = () => {
   const getPostReactions = async () => {
     try {
       const response = await postService.getPostReactions(_id);
-      const orderedPosts = orderBy(response.data?.reactions, ['createdAt'], ['desc']);
+      const orderedPosts = [...(response.data?.reactions || [])].sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
       setPostReactions(orderedPosts);
       setReactionsOfPost(orderedPosts);
     } catch (error) {
@@ -46,8 +48,8 @@ const ReactionsModal = () => {
   const reactionList = (type) => {
     setActiveViewAllTab(false);
     setReactionType(type);
-    const exist = some(reactionsOfPost, (reaction) => reaction.type === type);
-    const filteredReactions = exist ? filter(reactionsOfPost, (reaction) => reaction.type === type) : [];
+    const exist = reactionsOfPost.some((reaction) => reaction.type === type);
+    const filteredReactions = exist ? reactionsOfPost.filter((reaction) => reaction.type === type) : [];
     setPostReactions(filteredReactions);
     setReactionColor(reactionsColor[type]);
   };

@@ -1,7 +1,23 @@
+/*
+ * Design Tokens — Code and Test
+ *
+ * Structure:
+ *   1. Raw palette  (legacy names kept for backward compat — prefer semantic names for new code)
+ *   2. Semantic aliases  (use these in components)
+ *   3. Spacing scale
+ *   4. Typography scale
+ *   5. Radius scale
+ *   6. Elevation
+ */
+
 :root {
+  /* ─────────────────────────────────────────────
+   * 1. RAW PALETTE (legacy — do not add new ones)
+   * ───────────────────────────────────────────── */
+
+  /* Whites / light surfaces */
   --white-1: #ffffff;
   --white-2: #eeeeee;
-  --white-3: #e5e6e7;
   --white-4: #f1f1f1;
   --white-5: #f1f0f0;
   --white-6: #fafafb;
@@ -10,29 +26,42 @@
   --white-9: #e4e6eb;
   --white-10: #f0f2f5;
   --white-11: #f3f4f5;
-  --white-12: #dddddd;
   --white-13: #ced0d4;
-  --white-14: #f5fbff;
+  --white-14: var(--white-7); /* duplicate of white-7 — alias for compat */
   --white-15: #bdbdbd;
   --white-16: #e8e9ef;
   --white-17: #ced4da;
   --white-18: #cccccc;
   --white-19: #eff1f6;
+
+  /* Blacks */
   --black-1: #000000;
   --black-2: #1c1e21;
-  --black-3: #3f414d;
+  --black-3: #3f414d; /* same as gray-7 */
   --black-4: #060606;
   --black-5: #050505;
-  --black-6: #565656;
+  --black-6: #565656; /* same as gray-4 */
   --black-7: #3f3f3f;
+
+  /* Brand */
   --primary-1: #50b5ff;
   --primary-2: #00c6fb;
   --primary-3: #1876f2;
+
+  /* Feedback */
   --success: #5cb85c;
   --error: #fa9b8a;
-  --dark-blue-1: #22233a;
+  --red-1: #f33e58;
+  --red-3: #ef9a9a;
+  --red-4: red;
+  --red-5: #fb3958;
+  --yellow-1: #f7b124;
+  --orange-1: #e9710f;
+  --bluish-white-1: #eaf3ff;
   --dark-blue-2: #131e40;
-  --gray-1: #888888;
+
+  /* Grays */
+  --gray-1: #767676;
   --gray-2: #444444;
   --gray-3: #777d74;
   --gray-4: #565656;
@@ -43,29 +72,89 @@
   --gray-9: #65676b;
   --gray-10: #bec3c9;
   --gray-11: #495057;
-  --gray-12: #9aa9bb;
+  --gray-12: #6b7a8d;
   --gray-13: #969eb3;
-  --gray-14: #f5f6fa;
   --gray-15: #40414d;
   --gray-16: #969eb33b;
   --gray-17: #637381;
   --gray-18: #212b36;
-  --red-1: #f33e58;
-  --red-2: #d3394c;
-  --red-3: #ef9a9a;
-  --red-4: red;
-  --red-5: #fb3958;
-  --red-6: #721c24;
-  --red-7: #f8d7da;
-  --red-8: #f5c6cb;
-  --yellow-1: #f7b124;
-  --orange-1: #e9710f;
-  --bluish-white: #e7f3ff;
-  --bluish-white-1: #eaf3ff;
-  --green-1: #155724;
-  --green-2: #d4edda;
-  --green-3: #c3e6cb;
-  --small-text: 0.875rem;
-  --extra-small-text: 0.7em;
-  --letter-spacing: 1px;
+
+  /* ─────────────────────────────────────────────
+   * 2. SEMANTIC ALIASES (prefer these in new code)
+   * ───────────────────────────────────────────── */
+
+  /* Brand */
+  --color-brand: var(--primary-1);        /* #50b5ff — buttons, active states */
+  --color-brand-text: var(--primary-3);   /* #1876f2 — brand text on white (passes WCAG 4.5:1) */
+
+  /* Text */
+  --color-text-primary: var(--gray-18);        /* #212b36 — headings, body */
+  --color-text-secondary: var(--gray-11);      /* #495057 — labels, captions */
+  --color-text-muted: var(--gray-17);          /* #637381 — hints, timestamps */
+  --color-text-placeholder: var(--gray-8);     /* #a09e9e — input placeholder (WCAG exempt) */
+  --color-text-inverse: var(--white-1);        /* #ffffff — text on dark bg */
+  --color-text-link: var(--primary-1);         /* #50b5ff — links */
+  --color-text-danger: var(--red-1);           /* #f33e58 — error text */
+
+  /* Surfaces */
+  --color-bg-page: var(--white-10);       /* #f0f2f5 — app background */
+  --color-bg-surface: var(--white-1);     /* #ffffff — cards, modals */
+  --color-bg-subtle: var(--white-6);      /* #fafafb — secondary surface */
+  --color-bg-hover: var(--white-7);       /* #f5fbff — hover states */
+  --color-bg-brand: var(--bluish-white-1); /* #eaf3ff — brand tint bg */
+
+  /* Borders */
+  --color-border: var(--white-9);         /* #e4e6eb — standard border */
+  --color-border-light: var(--white-4);   /* #f1f1f1 — subtle divider */
+
+  /* Feedback */
+  --color-success: var(--success);        /* #5cb85c */
+  --color-danger: var(--red-1);           /* #f33e58 */
+  --color-warning: var(--yellow-1);       /* #f7b124 */
+
+  /* ─────────────────────────────────────────────
+   * 3. SPACING SCALE (4-point base)
+   * ───────────────────────────────────────────── */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* ─────────────────────────────────────────────
+   * 4. TYPOGRAPHY SCALE
+   * ───────────────────────────────────────────── */
+  --font-size-xs: 0.75rem;   /* 12px */
+  --font-size-sm: 0.875rem;  /* 14px */
+  --font-size-base: 1rem;    /* 16px */
+  --font-size-lg: 1.125rem;  /* 18px */
+  --font-size-xl: 1.25rem;   /* 20px */
+  --font-size-2xl: 1.5rem;   /* 24px */
+  --font-size-3xl: 1.875rem; /* 30px */
+
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+
+  --letter-spacing: 1px; /* kept for compat */
+
+  /* ─────────────────────────────────────────────
+   * 5. RADIUS SCALE
+   * ───────────────────────────────────────────── */
+  --radius-sm: 5px;
+  --radius: 8px;
+  --radius-md: 16px;
+  --radius-lg: 25px;
+  --radius-full: 50%;
+
+  /* ─────────────────────────────────────────────
+   * 6. ELEVATION
+   * ───────────────────────────────────────────── */
+  --shadow-card: rgb(145 158 171 / 20%) 0 0 2px 0, rgb(145 158 171 / 12%) 0 12px 24px -4px;
+  --shadow-nav: 0 0 20px 0 rgb(44 101 144 / 10%);
 }

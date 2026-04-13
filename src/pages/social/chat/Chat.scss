@@ -94,22 +94,62 @@
   }
 }
 
+/* ── Mobile: single-panel chat ─────────────────────────────────────────── */
 @media screen and (max-width: 576px) {
   .private-chat-wrapper {
+    padding: 0;
+
     &-content {
       grid-template-columns: 1fr;
-      grid-template-areas: "message";
+      grid-template-areas: 'side';
+      margin: 0;
 
+      /* Default: show list, hide window */
       &-side {
-        display: none;
+        display: block;
+        border-right: none;
+        padding: 10px 8px;
       }
 
       &-conversation {
-        .no-chat {
-          font-size: 14px;
-          padding: 10px;
+        display: none;
+      }
+
+      /* When a conversation is selected: hide list, show window */
+      &--active {
+        grid-template-areas: 'message';
+
+        .private-chat-wrapper-content-side {
+          display: none;
+        }
+
+        .private-chat-wrapper-content-conversation {
+          display: flex;
+          flex-direction: column;
+          height: 100%;
         }
       }
     }
+  }
+}
+
+/* Back button — visible only on mobile */
+.chat-back-btn {
+  display: none;
+
+  @media screen and (max-width: 576px) {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: none;
+    border-bottom: 1px solid var(--color-border-light);
+    color: var(--color-text-link);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+    padding: 10px 12px;
+    width: 100%;
+    text-align: left;
   }
 }

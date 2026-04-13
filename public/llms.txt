@@ -1,37 +1,70 @@
-# Chatty
+# Code and Test
 
-> Chatty is a full-stack social platform with real-time chat, social feeds, and interactive QA practice tools for learning Playwright end-to-end testing.
+> Code and Test (codeandtest.com) is a full-stack platform combining a social network with real-time chat and 35+ interactive QA practice scenarios designed for learning Playwright end-to-end testing.
 
 ## About
 
-Chatty provides two main experiences:
+Code and Test provides two main experiences:
 
-1. **Social Platform** — Authenticated users can post to streams, chat in real time, follow other users, share images and videos, manage flashcard decks, and play the Test Quest game.
-2. **QA Practice** — A public suite of 35+ interactive UI scenarios (web inputs, drag-and-drop, iframes, file uploads, alerts, dynamic tables, API testing, WebSocket, virtual scroll, etc.) designed for practising Playwright automation.
+1. **Social Platform** — Authenticated users can post to streams, chat in real time, follow other users, share images and videos, manage flashcard decks, and play the Test Quest Playwright learning game.
+2. **QA Practice** — A free public suite of 35+ interactive UI scenarios covering web inputs, drag-and-drop, iframes, file uploads, alerts, dynamic tables, API testing, WebSocket, virtual scroll, and more — each designed for practising Playwright automation.
 
 ## Public Pages
 
-- /: Home — platform overview and navigation
-- /auth: Sign in or register
-- /qa-practice: QA practice hub — index of all available scenarios
-- /qa-practice/web-inputs: Form inputs practice
-- /qa-practice/dynamic-table: Dynamic table interactions
-- /qa-practice/drag-and-drop: Drag and drop practice
-- /qa-practice/iframe: iFrame handling
-- /qa-practice/file-upload: File upload scenarios
-- /qa-practice/alerts-modals: Alerts and modals
-- /qa-practice/navigation: Navigation patterns
-- /qa-practice/api-testing: API testing practice
-- /qa-practice/websocket: WebSocket interactions
-- /qa-practice/form-validation: Form validation patterns
-- /qa-practice/keyboard-nav: Keyboard navigation
+- [Home](https://codeandtest.com/): Platform overview and navigation
+- [Sign In / Register](https://codeandtest.com/auth): User authentication
+- [QA Practice Hub](https://codeandtest.com/qa-practice): Index of all 35+ interactive Playwright practice scenarios
+- [Web Inputs](https://codeandtest.com/qa-practice/web-inputs): Form input automation practice
+- [Dynamic Table](https://codeandtest.com/qa-practice/dynamic-table): Dynamic table interactions
+- [Drag and Drop](https://codeandtest.com/qa-practice/drag-and-drop): Drag-and-drop automation
+- [iFrame Handling](https://codeandtest.com/qa-practice/iframe): iFrame navigation and interaction
+- [File Upload](https://codeandtest.com/qa-practice/file-upload): File upload scenarios
+- [Alerts and Modals](https://codeandtest.com/qa-practice/alerts-modals): Browser alerts and modal dialogs
+- [Navigation Patterns](https://codeandtest.com/qa-practice/navigation): SPA navigation automation
+- [API Testing](https://codeandtest.com/qa-practice/api-testing): REST API request interception and validation
+- [WebSocket](https://codeandtest.com/qa-practice/websocket): Real-time WebSocket interaction testing
+- [Form Validation](https://codeandtest.com/qa-practice/form-validation): Client-side form validation patterns
+- [Keyboard Navigation](https://codeandtest.com/qa-practice/keyboard-nav): Keyboard and accessibility automation
+- [Tooltips](https://codeandtest.com/qa-practice/tooltips): Tooltip hover and display testing
+- [Loaders](https://codeandtest.com/qa-practice/loaders): Loading state and skeleton screen testing
+- [Accordion](https://codeandtest.com/qa-practice/accordion): Expandable accordion component testing
+- [Tabs](https://codeandtest.com/qa-practice/tabs): Tab panel navigation testing
+- [Carousel](https://codeandtest.com/qa-practice/carousel): Image carousel interaction testing
+- [Search and Filters](https://codeandtest.com/qa-practice/search-filters): Search input and filter automation
+- [Breadcrumbs](https://codeandtest.com/qa-practice/breadcrumbs): Breadcrumb navigation testing
+- [Context Menu](https://codeandtest.com/qa-practice/context-menu): Right-click context menu automation
+- [Copy to Clipboard](https://codeandtest.com/qa-practice/copy-clipboard): Clipboard API interaction testing
+- [Rating](https://codeandtest.com/qa-practice/rating): Star rating component automation
+- [Wizard / Stepper](https://codeandtest.com/qa-practice/wizard): Multi-step wizard form testing
+- [Infinite Scroll](https://codeandtest.com/qa-practice/infinite-scroll): Infinite scroll and virtual list testing
+- [Sticky Elements](https://codeandtest.com/qa-practice/sticky-elements): Sticky header and element testing
+- [Local Storage](https://codeandtest.com/qa-practice/local-storage): Browser localStorage read/write testing
+- [Cookies](https://codeandtest.com/qa-practice/cookies): Cookie management and testing
+- [Authentication Flow](https://codeandtest.com/qa-practice/authentication): Login/logout flow automation
+- [Download Files](https://codeandtest.com/qa-practice/download-files): File download verification
+- [Notifications](https://codeandtest.com/qa-practice/notifications): Toast and push notification testing
+- [Autocomplete](https://codeandtest.com/qa-practice/autocomplete): Autocomplete and typeahead testing
+- [Multi-Select](https://codeandtest.com/qa-practice/multi-select): Multi-select dropdown automation
+- [Date and Time Picker](https://codeandtest.com/qa-practice/date-time-picker): Date/time picker interaction
+- [Dark Mode](https://codeandtest.com/qa-practice/dark-mode): Theme switching and dark mode testing
+- [Nested Dropdowns](https://codeandtest.com/qa-practice/nested-dropdowns): Nested menu navigation
+- [Error Boundary](https://codeandtest.com/qa-practice/error-boundary): React error boundary testing
+- [Disabled and Readonly](https://codeandtest.com/qa-practice/disabled-readonly): Disabled and read-only element assertions
+- [Progress](https://codeandtest.com/qa-practice/progress): Progress bar and indicator testing
+- [Virtual Scroll](https://codeandtest.com/qa-practice/virtual-scroll): Virtualized list automation
 
 ## Protected Pages (require authentication)
 
 - /app/social/*: Social feeds, chat, profiles, photos, videos, notifications, flashcards
 - /app/game/*: Test Quest — Playwright learning game with tracks and levels
 
-## Tech Stack
+## Key Facts
 
-- Frontend: React 18, Create React App, Redux Toolkit, Socket.IO client
-- Backend: Node.js, Express, TypeScript, MongoDB, Redis, Bull queues
+- 35+ free interactive Playwright QA practice scenarios, no account required
+- Real-time chat and social features powered by Socket.IO and Redis
+- Test Quest game teaches Playwright through guided levels and tracks
+- Built with React 18, Node.js/Express/TypeScript, MongoDB, Redis, and Bull queues
+
+## Sitemap
+
+https://codeandtest.com/sitemap.xml

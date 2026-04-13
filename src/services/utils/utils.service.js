@@ -1,12 +1,12 @@
 import { addNotification, clearNotification } from '@redux/reducers/notifications/notification.reducer';
 import { addUser, clearUser } from '@redux/reducers/user/user.reducer';
 import { avatarColors } from '@services/utils/static.data';
-import { floor, random, some, findIndex } from 'lodash';
+
 import millify from 'millify';
 
 export class Utils {
   static avatarColor() {
-    return avatarColors[floor(random(0.9) * avatarColors.length)];
+    return avatarColors[Math.floor(Math.random() * 0.9 * avatarColors.length)];
   }
 
   static generateAvatar(text, backgroundColor, foregroundColor = 'white') {
@@ -89,15 +89,15 @@ export class Utils {
   }
 
   static checkIfUserIsBlocked(blocked, userId) {
-    return some(blocked, (id) => id === userId);
+    return blocked.some((id) => id === userId);
   }
 
   static checkIfUserIsFollowed(userFollowers, postCreatorId, userId) {
-    return some(userFollowers, (user) => user._id === postCreatorId || postCreatorId === userId);
+    return userFollowers.some((user) => user._id === postCreatorId || postCreatorId === userId);
   }
 
   static checkIfUserIsOnline(username, onlineUsers) {
-    return some(onlineUsers, (user) => user === username?.toLowerCase());
+    return onlineUsers.some((user) => user === username?.toLowerCase());
   }
 
   static firstLetterUpperCase(word) {
@@ -138,7 +138,7 @@ export class Utils {
   }
 
   static removeUserFromList(list, userId) {
-    const index = findIndex(list, (id) => id === userId);
+    const index = list.findIndex((id) => id === userId);
     list.splice(index, 1);
     return list;
   }

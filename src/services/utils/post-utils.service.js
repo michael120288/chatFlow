@@ -3,7 +3,6 @@ import { clearPost, updatePostItem } from '@redux/reducers/post/post.reducer';
 import { postService } from '@services/api/post/post.service';
 import { socketService } from '@services/socket/socket.service';
 import { Utils } from '@services/utils/utils.service';
-import { cloneDeep, find, findIndex, remove } from 'lodash';
 
 export class PostUtils {
   static selectBackground(bgColor, postData, setTextAreaBackground, setPostData) {
@@ -146,8 +145,8 @@ export class PostUtils {
 
     const onUpdatePost = (post) => {
       setPosts((prev) => {
-        const posts = cloneDeep(prev);
-        const index = findIndex(posts, ['_id', post?._id]);
+        const posts = structuredClone(prev);
+        const index = posts.findIndex((p) => p._id === post?._id);
         if (index > -1) {
           posts.splice(index, 1, post);
         }
@@ -156,20 +155,16 @@ export class PostUtils {
     };
 
     const onDeletePost = (postId) => {
-      setPosts((prev) => {
-        const posts = cloneDeep(prev);
-        remove(posts, { _id: postId });
-        return posts;
-      });
+      setPosts((prev) => prev.filter((p) => p._id !== postId));
     };
 
     const onUpdateLike = (reactionData) => {
       setPosts((prev) => {
-        const posts = cloneDeep(prev);
-        const postData = find(posts, (post) => post._id === reactionData?.postId);
+        const posts = structuredClone(prev);
+        const postData = posts.find((post) => post._id === reactionData?.postId);
         if (postData) {
           postData.reactions = reactionData.postReactions;
-          const index = findIndex(posts, ['_id', postData._id]);
+          const index = posts.findIndex((p) => p._id === postData._id);
           if (index > -1) posts.splice(index, 1, postData);
         }
         return posts;
@@ -178,11 +173,11 @@ export class PostUtils {
 
     const onUpdateComment = (commentData) => {
       setPosts((prev) => {
-        const posts = cloneDeep(prev);
-        const postData = find(posts, (post) => post._id === commentData?.postId);
+        const posts = structuredClone(prev);
+        const postData = posts.find((post) => post._id === commentData?.postId);
         if (postData) {
           postData.commentsCount = commentData.commentsCount;
-          const index = findIndex(posts, ['_id', postData._id]);
+          const index = posts.findIndex((p) => p._id === postData._id);
           if (index > -1) posts.splice(index, 1, postData);
         }
         return posts;
@@ -205,8 +200,8 @@ export class PostUtils {
   }
 
   static updateSinglePost(posts, post, setPosts) {
-    posts = cloneDeep(posts);
-    const index = findIndex(posts, ['_id', post?._id]);
+    posts = structuredClone(posts);
+    const index = posts.findIndex((p) => p._id === post?._id);
     if (index > -1) {
       posts.splice(index, 1, post);
       setPosts(posts);

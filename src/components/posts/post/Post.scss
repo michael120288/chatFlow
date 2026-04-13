@@ -2,13 +2,13 @@
   padding: 15px;
   margin-top: 15px;
   margin-bottom: 25px;
-  background-color: var(--white-1);
+  background-color: var(--color-bg-surface);
   height: auto;
-  border-radius: 16px;
-  box-shadow: rgb(145 158 171 / 20%) 0 0 2px 0, rgb(145 158 171 / 12%) 0 12px 24px -4px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
 
   .user-post-data-wrap {
-    background-color: var(--white-1);
+    background-color: var(--color-bg-surface);
     flex-wrap: wrap;
     display: flex;
     width: 100%;
@@ -16,7 +16,7 @@
     .view-comments {
       width: 100%;
       margin-bottom: -25px;
-      color: var(--primary-1);
+      color: var(--color-text-link);
       cursor: pointer;
       text-align: right;
     }
@@ -46,7 +46,7 @@
           grid-area: name;
           margin-bottom: 0;
           display: inline-block;
-          font-size: 16px;
+          font-size: var(--font-size-base);
           font-family: Poppins, sans-serif;
           font-weight: 700;
           margin-right: 5px;
@@ -59,16 +59,22 @@
           grid-area: icons;
           text-align: right;
           cursor: pointer;
+          opacity: 0;
+          transition: opacity 0.15s ease;
 
           .trash {
-            color: var(--red-1);
+            color: var(--color-text-danger);
           }
 
           .pencil {
-            color: var(--primary-1);
+            color: var(--color-text-link);
             margin-right: 15px;
           }
         }
+      }
+
+      &:hover .post-icons {
+        opacity: 1;
       }
 
       .inline-display {
@@ -91,7 +97,7 @@
       }
 
       .time-text-display {
-        font-size: 14px;
+        font-size: var(--font-size-sm);
         display: flex;
 
         .globe {
@@ -104,7 +110,7 @@
     .user-post {
       width: 100%;
       margin-top: 1rem;
-      border-bottom: 1px solid var(--white-4);
+      border-bottom: 1px solid var(--color-border-light);
 
       .post {
         margin-top: 0;
@@ -112,10 +118,10 @@
         text-align: left;
         margin-bottom: 16px;
         line-height: 25px;
-        font-size: 18px;
+        font-size: var(--font-size-lg);
 
         a {
-          color: var(--primary-1);
+          color: var(--color-text-link);
           text-decoration: none;
 
           &:hover {
@@ -155,9 +161,13 @@
         height: 400px;
 
         .post-image {
-          border-radius: 5px;
+          border-radius: var(--radius-sm);
           width: 100%;
           object-fit: cover;
+
+          &--contain {
+            object-fit: contain;
+          }
         }
       }
     }

@@ -38,13 +38,12 @@
 
 @media screen and (max-width: 768px) {
   .dashboard {
-    flex-direction: column;
-
     &-sidebar {
-      flex: 0 0 auto;
-      max-width: 100%;
-      min-width: 100%;
-      height: auto;
+      display: none;
+    }
+
+    &-content {
+      padding-bottom: 72px;
     }
   }
 }

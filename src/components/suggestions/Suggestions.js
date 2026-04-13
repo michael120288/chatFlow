@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import '@components/suggestions/Suggestions.scss';
 import { Utils } from '@services/utils/utils.service';
 import { FollowersUtils } from '@services/utils/followers-utils.service';
-import { filter } from 'lodash';
+
 import { addToSuggestions } from '@redux/reducers/suggestions/suggestions.reducer';
 
 const Suggestions = () => {
@@ -18,11 +18,11 @@ const Suggestions = () => {
   const followUser = async (user) => {
     try {
       FollowersUtils.followUser(user, dispatch);
-      const result = filter(users, (data) => data?._id !== user?._id);
+      const result = users.filter((data) => data?._id !== user?._id);
       setUsers(result);
       dispatch(addToSuggestions({ users: result, isLoading: false }));
     } catch (error) {
-      Utils.dispatchNotification(error.response.data.message, 'error', dispatch);
+      Utils.dispatchNotification(error?.response?.data?.message || 'Failed to follow user', 'error', dispatch);
     }
   };
 

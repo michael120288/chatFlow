@@ -3,7 +3,7 @@ import { FaRegCommentAlt } from 'react-icons/fa';
 import '@components/posts/comment-area/CommentArea.scss';
 import Reactions from '@components/posts/reactions/Reactions';
 import { useCallback, useEffect, useState } from 'react';
-import { cloneDeep, filter, find } from 'lodash';
+
 import { Utils } from '@services/utils/utils.service';
 import { reactionsMap } from '@services/utils/static.data';
 import { useDispatch, useSelector } from 'react-redux';
@@ -23,7 +23,7 @@ const CommentArea = ({ post }) => {
 
   const selectedUserReaction = useCallback(
     (postReactions) => {
-      const userReaction = find(postReactions, (reaction) => reaction.postId === post._id);
+      const userReaction = postReactions.find((reaction) => reaction.postId === post._id);
       const result = userReaction ? Utils.firstLetterUpperCase(userReaction.type) : 'Like';
       setUserSelectedReaction(result);
     },
@@ -100,7 +100,7 @@ const CommentArea = ({ post }) => {
   };
 
   const updatePostReactions = (newReaction, hasResponse, previousReaction) => {
-    post = cloneDeep(post);
+    post = structuredClone(post);
     if (!hasResponse) {
       post.reactions[newReaction] += 1;
     } else {
@@ -115,7 +115,7 @@ const CommentArea = ({ post }) => {
   };
 
   const addNewReaction = (newReaction, hasResponse, previousReaction) => {
-    const postReactions = filter(reactions, (reaction) => reaction?.postId !== post?._id);
+    const postReactions = reactions.filter((reaction) => reaction?.postId !== post?._id);
     const newPostReaction = {
       avatarColor: profile?.avatarColor,
       createdAt: `${new Date()}`,

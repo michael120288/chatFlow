@@ -9,7 +9,7 @@ import Posts from '@components/posts/Posts';
 import { Utils } from '@services/utils/utils.service';
 import { postService } from '@services/api/post/post.service';
 import { getPosts } from '@redux/api/posts';
-import { orderBy, uniqBy } from 'lodash';
+
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { PostUtils } from '@services/utils/post-utils.service';
 import useLocalStorage from '@hooks/useLocalStorage';
@@ -17,7 +17,7 @@ import { addReactions } from '@redux/reducers/post/user-post-reaction.reducer';
 import { followerService } from '@services/api/followers/follower.service';
 
 const Streams = () => {
-  const { allPosts } = useSelector((state) => state);
+  const allPosts = useSelector((state) => state.allPosts);
   const [posts, setPosts] = useState([]);
   const [following, setFollowing] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -45,13 +45,15 @@ const Streams = () => {
       const response = await postService.getAllPosts(currentPage);
       if (response.data.posts.length > 0) {
         setPosts((prev) => {
-          const merged = uniqBy([...prev, ...response.data.posts], '_id');
-          return orderBy(merged, ['createdAt'], ['desc']);
+          const merged = [
+            ...new Map([...prev, ...response.data.posts].filter((x) => x?._id).map((x) => [String(x._id), x])).values()
+          ];
+          return [...merged].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         });
       }
       setLoading(false);
     } catch (error) {
-      Utils.dispatchNotification(error.response.data.message, 'error', dispatch);
+      Utils.dispatchNotification(error?.response?.data?.message || 'Failed to load posts', 'error', dispatch);
     }
   };
 
@@ -60,7 +62,7 @@ const Streams = () => {
       const response = await followerService.getUserFollowing();
       setFollowing(response.data.following);
     } catch (error) {
-      Utils.dispatchNotification(error.response.data.message, 'error', dispatch);
+      Utils.dispatchNotification(error?.response?.data?.message || 'Failed to load following', 'error', dispatch);
     }
   };
 
@@ -69,7 +71,7 @@ const Streams = () => {
       const response = await postService.getReactionsByUsername(storedUsername);
       dispatch(addReactions(response.data.reactions));
     } catch (error) {
-      Utils.dispatchNotification(error.response.data.message, 'error', dispatch);
+      Utils.dispatchNotification(error?.response?.data?.message || 'Failed to load reactions', 'error', dispatch);
     }
   };
 
@@ -83,15 +85,19 @@ const Streams = () => {
 
   useEffect(() => {
     setLoading(allPosts?.isLoading);
-    const orderedPosts = orderBy(allPosts?.posts, ['createdAt'], ['desc']);
-    setPosts(orderedPosts);
+    const apiPosts = [...(allPosts?.posts || [])].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    setPosts((prev) => {
+      const merged = [...new Map([...apiPosts, ...prev].filter((x) => x?._id).map((x) => [String(x._id), x])).values()];
+      return [...merged].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    });
     setTotalPostsCount(allPosts?.totalPostsCount);
   }, [allPosts]);
 
   useEffect(() => {
     const cleanup = PostUtils.socketIOPost(setPosts);
     return cleanup;
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- setPosts is a stable state setter; socket listeners registered once on mount
+  }, []);
 
   return (
     <div className="streams" data-testid="streams">
@@ -99,7 +105,7 @@ const Streams = () => {
         <div className="streams-post" ref={bodyRef}>
           <PostForm />
           <Posts allPosts={posts} postsLoading={loading} userFollowing={following} />
-          <div ref={bottomLineRef} style={{ marginBottom: '50px', height: '50px' }}></div>
+          <div ref={bottomLineRef} className="streams-sentinel"></div>
         </div>
         <div className="streams-suggestions">
           <Suggestions />

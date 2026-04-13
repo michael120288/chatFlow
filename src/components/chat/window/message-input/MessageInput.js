@@ -5,9 +5,8 @@ import { FaPaperPlane } from 'react-icons/fa';
 import gif from '@assets/images/gif.png';
 import photo from '@assets/images/photo.png';
 import feeling from '@assets/images/feeling.png';
-import loadable from '@loadable/component';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import '@components/chat/window/message-input/MessageInput.scss';
-import { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import GiphyContainer from '@components/chat/giphy-container/GiphyContainer';
 import ImagePreview from '@components/chat/image-preview/ImagePreview';
@@ -15,9 +14,7 @@ import { ImageUtils } from '@services/utils/image-utils.service';
 import { Utils } from '@services/utils/utils.service';
 import { ProfanityFilter } from '@services/utils/profanity-filter.service';
 
-const EmojiPickerComponent = loadable(() => import('./EmojiPicker'), {
-  fallback: <p id="loading">Loading...</p>
-});
+const EmojiPickerComponent = lazy(() => import('./EmojiPicker'));
 
 const MessageInput = ({ setChatMessage }) => {
   const [message, setMessage] = useState('');
@@ -85,12 +82,14 @@ const MessageInput = ({ setChatMessage }) => {
   return (
     <>
       {showEmojiContainer && (
-        <EmojiPickerComponent
-          onEmojiClick={(event, eventObject) => {
-            setMessage((text) => (text += ` ${eventObject.emoji}`));
-          }}
-          pickerStyle={{ width: '352px', height: '447px' }}
-        />
+        <Suspense fallback={<p id="loading">Loading...</p>}>
+          <EmojiPickerComponent
+            onEmojiClick={(event, eventObject) => {
+              setMessage((text) => (text += ` ${eventObject.emoji}`));
+            }}
+            pickerStyle={{ width: '352px', height: '447px' }}
+          />
+        </Suspense>
       )}
       {showGifContainer && <GiphyContainer handleGiphyClick={handleGiphyClick} />}
       <div className="chat-inputarea" data-testid="chat-inputarea">

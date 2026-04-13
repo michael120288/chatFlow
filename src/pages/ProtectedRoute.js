@@ -26,10 +26,13 @@ const ProtectedRoute = ({ children }) => {
       dispatch(addUser({ token: response.data.token, profile: response.data.user }));
     } catch (error) {
       logger.warn('ProtectedRoute: session invalid —', error?.response?.status, error?.message);
+      const hadSession = !!localStorage.getItem('username');
       setTokenIsValid(false);
       Utils.clearStore({ dispatch, deleteStorageUsername, deleteSessionPageReload, setLoggedIn });
       navigate('/auth');
-      userService.logoutUser().catch(() => {});
+      if (hadSession) {
+        userService.logoutUser().catch(() => {});
+      }
     }
   }, [dispatch, navigate, deleteStorageUsername, deleteSessionPageReload, setLoggedIn]);
 

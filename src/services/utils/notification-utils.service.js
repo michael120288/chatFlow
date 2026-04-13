@@ -1,7 +1,7 @@
 import { notificationService } from '@services/api/notifications/notification.service';
 import { socketService } from '@services/socket/socket.service';
 import { Utils } from '@services/utils/utils.service';
-import { cloneDeep, find, findIndex, remove, sumBy } from 'lodash';
+
 import { timeAgo } from '@services/utils/timeago.utils';
 
 export class NotificationUtils {
@@ -23,10 +23,10 @@ export class NotificationUtils {
 
     const onUpdate = (notificationId) => {
       setNotifications((prev) => {
-        const notifications = cloneDeep(prev);
-        const notificationData = find(notifications, (n) => n._id === notificationId);
+        const notifications = structuredClone(prev);
+        const notificationData = notifications.find((n) => n._id === notificationId);
         if (!notificationData) return prev;
-        const index = findIndex(notifications, (n) => n._id === notificationId);
+        const index = notifications.findIndex((n) => n._id === notificationId);
         notificationData.read = true;
         notifications.splice(index, 1, notificationData);
         if (type === 'notificationPage') {
@@ -38,8 +38,7 @@ export class NotificationUtils {
 
     const onDelete = (notificationId) => {
       setNotifications((prev) => {
-        const notifications = cloneDeep(prev);
-        remove(notifications, { _id: notificationId });
+        const notifications = prev.filter((n) => n._id !== notificationId);
         if (type === 'notificationPage') {
           return notifications;
         }
@@ -84,9 +83,7 @@ export class NotificationUtils {
       items.push(item);
     }
 
-    const count = sumBy(items, (selectedNotification) => {
-      return !selectedNotification.read ? 1 : 0;
-    });
+    const count = items.reduce((sum, selectedNotification) => sum + (!selectedNotification.read ? 1 : 0), 0);
     setNotificationsCount(count);
     return items;
   }
@@ -128,13 +125,9 @@ export class NotificationUtils {
         isRead: data.isRead
       };
       setMessageNotifications((prev) => {
-        const messageNotifications = cloneDeep(prev);
-        const messageIndex = findIndex(messageNotifications, (n) => n.conversationId === data.conversationId);
-        if (messageIndex > -1) {
-          remove(messageNotifications, (n) => n.conversationId === data.conversationId);
-        }
+        const messageNotifications = prev.filter((n) => n.conversationId !== data.conversationId);
         const updated = [notificationData, ...messageNotifications];
-        const count = sumBy(updated, (n) => (!n.isRead ? 1 : 0));
+        const count = updated.reduce((sum, n) => sum + (!n.isRead ? 1 : 0), 0);
         setMessageCount(count);
         return updated;
       });

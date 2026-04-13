@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import { useEffect, useCallback, useRef, useState } from 'react';
-import { cloneDeep } from 'lodash';
 
 import '@components/toast/Toast.scss';
 import { Utils } from '@services/utils/utils.service';
@@ -13,7 +12,7 @@ const Toast = (props) => {
   const dispatch = useDispatch();
 
   const deleteToast = useCallback(() => {
-    listData.current = cloneDeep(list);
+    listData.current = structuredClone(list);
     listData.current.splice(0, 1);
     setList([...listData.current]);
     if (!listData.current.length) {

@@ -11,7 +11,7 @@ import { ChatUtils } from '@services/utils/chat-utils.service';
 import { FollowersUtils } from '@services/utils/followers-utils.service';
 import { ProfileUtils } from '@services/utils/profile-utils.service';
 import { Utils } from '@services/utils/utils.service';
-import { uniqBy } from 'lodash';
+
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { FaCircle } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
@@ -48,7 +48,7 @@ const People = () => {
       if (response.data.users.length > 0) {
         setUsers((data) => {
           const result = [...data, ...response.data.users];
-          const allUsers = uniqBy(result, '_id');
+          const allUsers = [...new Map(result.filter((x) => x?._id).map((x) => [String(x._id), x])).values()];
           return allUsers;
         });
       }
@@ -56,7 +56,7 @@ const People = () => {
       setLoading(false);
     } catch (error) {
       setLoading(false);
-      Utils.dispatchNotification(error.response.data.message, 'error', dispatch);
+      Utils.dispatchNotification(error?.response?.data?.message || 'Something went wrong', 'error', dispatch);
     }
   }, [currentPage, dispatch]);
 
@@ -67,7 +67,7 @@ const People = () => {
       setLoading(false);
     } catch (error) {
       setLoading(false);
-      Utils.dispatchNotification(error.response.data.message, 'error', dispatch);
+      Utils.dispatchNotification(error?.response?.data?.message || 'Something went wrong', 'error', dispatch);
     }
   };
 
@@ -75,7 +75,7 @@ const People = () => {
     try {
       FollowersUtils.followUser(user, dispatch);
     } catch (error) {
-      Utils.dispatchNotification(error.response.data.message, 'error', dispatch);
+      Utils.dispatchNotification(error?.response?.data?.message || 'Something went wrong', 'error', dispatch);
     }
   };
 
@@ -86,7 +86,7 @@ const People = () => {
       socketService?.socket?.emit('unfollow user', userData);
       FollowersUtils.unFollowUser(user, profile, dispatch);
     } catch (error) {
-      Utils.dispatchNotification(error.response.data.message, 'error', dispatch);
+      Utils.dispatchNotification(error?.response?.data?.message || 'Something went wrong', 'error', dispatch);
     }
   };
 
@@ -105,8 +105,8 @@ const People = () => {
       <div className="people">People</div>
       {users.length > 0 && (
         <div className="card-element">
-          {users.map((data) => (
-            <div className="card-element-item" key={data?._id} data-testid="card-element-item">
+          {users.map((data, index) => (
+            <div className="card-element-item" key={data?._id ?? `user-${index}`} data-testid="card-element-item">
               {Utils.checkIfUserIsOnline(data?.username, onlineUsers) && (
                 <div className="card-element-item-indicator">
                   <FaCircle className="online-indicator" />

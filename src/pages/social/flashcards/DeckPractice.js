@@ -79,12 +79,10 @@ const DeckPractice = () => {
       setStats(mockStats);
       setIsLoading(false);
     }, 500);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- mock data setters are stable; only reload when deckId changes
   }, [deckId]);
 
   const handleAnswer = async (difficulty) => {
-    console.log('Answered:', difficulty, 'for card:', cards[currentCardIndex]._id);
-
     // Update session stats
     const isCorrect = difficulty === 'good' || difficulty === 'easy';
     setSessionStats((prev) => ({

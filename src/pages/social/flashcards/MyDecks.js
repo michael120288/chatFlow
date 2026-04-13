@@ -192,9 +192,9 @@ const MyDecks = () => {
           </div>
         ) : (
           <div className="decks-grid">
-            {decks.map((deck) => (
+            {decks.map((deck, index) => (
               <DeckItem
-                key={deck._id}
+                key={deck._id ?? `deck-${index}`}
                 deck={deck}
                 onView={handleViewDeck}
                 onPractice={handlePracticeDeck}

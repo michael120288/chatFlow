@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useRef, useState } from 'react';
 import { Utils } from '@services/utils/utils.service';
 import { ProfanityFilter } from '@services/utils/profanity-filter.service';
-import { cloneDeep } from 'lodash';
+
 import { socketService } from '@services/socket/socket.service';
 import { postService } from '@services/api/post/post.service';
 
@@ -22,7 +22,7 @@ const CommentInputBox = ({ post }) => {
       return;
     }
     try {
-      post = cloneDeep(post);
+      post = structuredClone(post);
       post.commentsCount += 1;
       const commentBody = {
         userTo: post?.userId,

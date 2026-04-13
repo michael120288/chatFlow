@@ -1,6 +1,6 @@
 import { chatService } from '@services/api/chat/chat.service';
 import { socketService } from '@services/socket/socket.service';
-import { cloneDeep, find, findIndex, remove } from 'lodash';
+
 import { createSearchParams } from 'react-router-dom';
 
 export class ChatUtils {
@@ -63,8 +63,7 @@ export class ChatUtils {
     gifUrl,
     selectedImage
   }) {
-    const chatConversationId = find(
-      chatMessages,
+    const chatConversationId = chatMessages.find(
       (chat) => chat.receiverId === searchParamsId || chat.senderId === searchParamsId
     );
 
@@ -97,8 +96,7 @@ export class ChatUtils {
       navigate(`${pathname}?${createSearchParams(params)}`);
     } else {
       dispatch(setSelectedChatUser({ isLoading: false, user: null }));
-      const sender = find(
-        ChatUtils.chatUsers,
+      const sender = ChatUtils.chatUsers.find(
         (user) => user.userOne === profile?.username && user.userTwo.toLowerCase() === username
       );
       if (sender) {
@@ -111,12 +109,12 @@ export class ChatUtils {
     const onChatList = (data) => {
       if (data.senderUsername === profile?.username || data.receiverUsername === profile?.username) {
         setChatMessageList((prev) => {
-          const list = cloneDeep(prev);
-          const messageIndex = findIndex(list, ['conversationId', data.conversationId]);
+          const messageIndex = prev.findIndex((chat) => chat.conversationId === data.conversationId);
+          let list;
           if (messageIndex > -1) {
-            remove(list, (chat) => chat.conversationId === data.conversationId);
+            list = prev.filter((chat) => chat.conversationId !== data.conversationId);
           } else {
-            remove(list, (chat) => chat.receiverUsername === data.receiverUsername);
+            list = prev.filter((chat) => chat.receiverUsername !== data.receiverUsername);
           }
           return [data, ...list];
         });
@@ -139,7 +137,7 @@ export class ChatUtils {
 
     const onMessageRead = (data) => {
       if (data.senderUsername.toLowerCase() === username || data.receiverUsername.toLowerCase() === username) {
-        const findMessageIndex = findIndex(ChatUtils.privateChatMessages, ['_id', data._id]);
+        const findMessageIndex = ChatUtils.privateChatMessages.findIndex((m) => m._id === data._id);
         if (findMessageIndex > -1) {
           ChatUtils.privateChatMessages.splice(findMessageIndex, 1, data);
           setChatMessages([...ChatUtils.privateChatMessages]);
@@ -161,8 +159,8 @@ export class ChatUtils {
       if (data.senderUsername.toLowerCase() === username || data.receiverUsername.toLowerCase() === username) {
         setConversationId(data.conversationId);
         setChatMessages((prev) => {
-          const messages = cloneDeep(prev);
-          const messageIndex = findIndex(messages, (message) => message?._id === data._id);
+          const messages = structuredClone(prev);
+          const messageIndex = messages.findIndex((message) => message?._id === data._id);
           if (messageIndex > -1) {
             messages.splice(messageIndex, 1, data);
           }

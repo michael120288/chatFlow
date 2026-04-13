@@ -100,7 +100,8 @@ export function Game() {
       setCode(solutions[level.id] ?? level.starterCode);
       reset();
     }
-  }, [level, reset]); // eslint-disable-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- solutions is a static map; setCode is a stable state setter
+  }, [level, reset]);
 
   // Navigate to complete screen on pass
   useEffect(() => {

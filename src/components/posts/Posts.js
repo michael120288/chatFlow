@@ -13,8 +13,8 @@ const Posts = ({ allPosts, userFollowing, postsLoading }) => {
     <div className="posts-container" data-testid="posts">
       {!postsLoading &&
         allPosts.length > 0 &&
-        allPosts.map((post) => (
-          <div key={post?._id} data-testid="posts-item">
+        allPosts.map((post, index) => (
+          <div key={post?._id ?? `post-${index}`} data-testid="posts-item">
             {(!Utils.checkIfUserIsBlocked(profile?.blockedBy, post?.userId) || post?.userId === profile?._id) && (
               <>
                 {PostUtils.checkPrivacy(post, profile, userFollowing) && (

@@ -8,7 +8,7 @@ import { Utils } from '@services/utils/utils.service';
 import { userService } from '@services/api/user/user.service';
 import { ChatUtils } from '@services/utils/chat-utils.service';
 import { chatService } from '@services/api/chat/chat.service';
-import { some } from 'lodash';
+
 import MessageDisplay from '@components/chat/window/message-display/MessageDisplay';
 
 const ChatWindow = () => {
@@ -67,12 +67,10 @@ const ChatWindow = () => {
 
   const sendChatMessage = async (message, gifUrl, selectedImage) => {
     try {
-      const checkUserOne = some(
-        ChatUtils.chatUsers,
+      const checkUserOne = ChatUtils.chatUsers.some(
         (user) => user?.userOne === profile?.username && user?.userTwo === receiver?.username
       );
-      const checkUserTwo = some(
-        ChatUtils.chatUsers,
+      const checkUserTwo = ChatUtils.chatUsers.some(
         (user) => user?.userOne === receiver?.username && user?.userTwo === profile?.username
       );
       const messageData = ChatUtils.messageData({
@@ -123,7 +121,8 @@ const ChatWindow = () => {
       cleanupOnline?.();
       cleanupChatPage?.();
     };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- ChatUtils functions are stable module-level utilities; socket registered once on mount
+  }, []);
 
   useEffect(() => {
     if (!rendered.current) return;
@@ -134,7 +133,7 @@ const ChatWindow = () => {
       cleanupReceived?.();
       cleanupReaction?.();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- ChatUtils and state setters are stable; only re-run when URL username changes
   }, [searchParams]);
 
   return (

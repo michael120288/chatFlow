@@ -20,7 +20,7 @@ import { notificationService } from '@services/api/notifications/notification.se
 import { NotificationUtils } from '@services/utils/notification-utils.service';
 import NotificationPreview from '@components/dialog/NotificationPreview';
 import { socketService } from '@services/socket/socket.service';
-import { sumBy } from 'lodash';
+
 import { ChatUtils } from '@services/utils/chat-utils.service';
 import { chatService } from '@services/api/chat/chat.service';
 import { getConversationList } from '@redux/api/chat';
@@ -131,9 +131,11 @@ const Header = () => {
   }, [location]);
 
   useEffect(() => {
-    const count = sumBy(chatList, (notification) => {
-      return !notification.isRead && notification.receiverUsername === profile?.username ? 1 : 0;
-    });
+    const count = chatList.reduce(
+      (sum, notification) =>
+        sum + (!notification.isRead && notification.receiverUsername === profile?.username ? 1 : 0),
+      0
+    );
     setMessageCount(count);
     setMessageNotifications(chatList);
   }, [chatList, profile]);
@@ -198,7 +200,7 @@ const Header = () => {
           <div className="header-navbar">
             <div className="header-image" data-testid="header-image" onClick={() => navigate('/app/social/streams')}>
               <img src={logo} className="img-fluid" alt="" />
-              <div className="app-name">Chatty</div>
+              <div className="app-name">Code and Test</div>
             </div>
             <div className="header-menu-toggle">
               <span className="bar"></span>
@@ -216,6 +218,7 @@ const Header = () => {
                 role="button"
                 tabIndex="0"
                 title="Home"
+                aria-label="Home"
               >
                 <span className="header-list-name">
                   <FaHome className="header-list-icon" />
@@ -239,6 +242,7 @@ const Header = () => {
                 }}
                 role="button"
                 tabIndex="0"
+                aria-label="Notifications"
               >
                 <span className="header-list-name">
                   <FaRegBell className="header-list-icon" />
@@ -282,6 +286,7 @@ const Header = () => {
                 }}
                 role="button"
                 tabIndex="0"
+                aria-label="Messages"
               >
                 <span className="header-list-name">
                   <FaRegEnvelope className="header-list-icon" />

@@ -9,7 +9,11 @@ const GalleryImage = ({ post, showCaption, showDelete, imgSrc, onClick, onRemove
     <>
       <figure className="gallery-image" onClick={onClick} data-testid="gallery">
         <div className="gallery-image__crop">
-          <img className="gallery-image__media" src={`${imgSrc}`} alt="" />
+          <img
+            className="gallery-image__media"
+            src={`${imgSrc}`}
+            alt={post?.username ? `${post.username}'s photo` : 'Post photo'}
+          />
           {showDelete && (
             <span className="gallery-image__delete" onClick={onRemoveImage}>
               <FaTrash />

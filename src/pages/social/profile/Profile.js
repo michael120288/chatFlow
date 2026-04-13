@@ -13,7 +13,7 @@ import { Utils } from '@services/utils/utils.service';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useSearchParams } from 'react-router-dom';
-import { filter } from 'lodash';
+
 import ImageModal from '@components/image-modal/ImageModal';
 import Dialog from '@components/dialog/Dialog';
 
@@ -123,7 +123,7 @@ const Profile = () => {
   const removeImageFromGallery = async (imageId) => {
     try {
       dispatch(toggleDeleteDialog({ toggle: false, data: null }));
-      const images = filter(galleryImages, (image) => image._id !== imageId);
+      const images = galleryImages.filter((image) => image._id !== imageId);
       setGalleryImages(images);
       await removeImage(`/images/${imageId}`);
     } catch (error) {
@@ -185,8 +185,8 @@ const Profile = () => {
                 {galleryImages.length > 0 && (
                   <>
                     <div className="imageGrid-container">
-                      {galleryImages.map((image) => (
-                        <div key={image._id}>
+                      {galleryImages.map((image, index) => (
+                        <div key={image._id ?? `img-${index}`}>
                           <GalleryImage
                             showCaption={false}
                             showDelete={true}

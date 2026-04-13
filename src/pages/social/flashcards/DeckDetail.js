@@ -310,8 +310,8 @@ const DeckDetail = () => {
                 </button>
               </div>
               <div className="add-cards-list">
-                {availableCards.map((card) => (
-                  <label key={card._id} className="card-checkbox-item">
+                {availableCards.map((card, index) => (
+                  <label key={card._id ?? `avail-${index}`} className="card-checkbox-item">
                     <input
                       type="checkbox"
                       checked={selectedCards.includes(card._id)}
@@ -354,8 +354,8 @@ const DeckDetail = () => {
             </div>
           ) : (
             <div className="cards-list">
-              {cards.map((card) => (
-                <div key={card._id} className="deck-card-wrapper">
+              {cards.map((card, index) => (
+                <div key={card._id ?? `card-${index}`} className="deck-card-wrapper">
                   <CardItem
                     card={card}
                     onFlip={handleFlip}

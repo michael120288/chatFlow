@@ -1,6 +1,5 @@
 import { getConversationList } from '@redux/api/chat';
 import { createSlice } from '@reduxjs/toolkit';
-import { orderBy } from 'lodash';
 
 const initialState = {
   chatList: [],
@@ -30,7 +29,7 @@ const chatSlice = createSlice({
     builder.addCase(getConversationList.fulfilled, (state, action) => {
       const { list } = action.payload;
       state.isLoading = false;
-      const sortedList = orderBy(list, ['createdAt'], ['desc']);
+      const sortedList = [...list].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
       state.chatList = [...sortedList];
     });
     builder.addCase(getConversationList.rejected, (state) => {

@@ -12,7 +12,7 @@ import { addPostFeeling, closeModal, toggleGifModal } from '@redux/reducers/moda
 import Giphy from '@components/giphy/Giphy';
 import { ImageUtils } from '@services/utils/image-utils.service';
 import Spinner from '@components/spinner/Spinner';
-import { find } from 'lodash';
+
 import { Utils } from '@services/utils/utils.service';
 import { ProfanityFilter } from '@services/utils/profanity-filter.service';
 
@@ -81,7 +81,7 @@ const EditPost = () => {
 
   const getFeeling = useCallback(
     (name) => {
-      const feeling = find(feelingsList, (data) => data.name === name);
+      const feeling = feelingsList.find((data) => data.name === name);
       dispatch(addPostFeeling({ feeling }));
     },
     [dispatch]

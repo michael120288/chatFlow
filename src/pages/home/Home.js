@@ -52,7 +52,8 @@ const Home = () => {
   const isLoggedIn = !!(profile && token);
 
   useEffect(() => {
-    if (!token) {
+    const storedUsername = localStorage.getItem('username');
+    if (!token && storedUsername) {
       userService
         .checkCurrentUser()
         .then((res) => {
@@ -61,10 +62,11 @@ const Home = () => {
           }
         })
         .catch(() => {
-          // Not authenticated — stay on home with Sign In
+          // Session expired — stay on home with Sign In
         });
     }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional run-once: storedUsername is a localStorage read, not a reactive value
+  }, []);
 
   const handleSignOut = async () => {
     try {

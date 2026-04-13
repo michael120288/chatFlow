@@ -13,7 +13,7 @@ const Button = (props) => {
 };
 
 Button.propTypes = {
-  label: PropTypes.any.isRequired,
+  label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]).isRequired,
   className: PropTypes.string,
   handleClick: PropTypes.func,
   disabled: PropTypes.bool

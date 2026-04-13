@@ -1,19 +1,7 @@
-import { AuthTabs, ForgotPassword, ResetPassword } from '@pages/auth';
-import { Home } from '@pages/home';
-import SSOCallback from '@pages/auth/sso/SSOCallback';
-import Signout from '@pages/auth/signout/Signout';
-import { QAPractice } from '@pages/qa-practice';
-import QAPracticeLanding from '@pages/qa-practice/QAPracticeLanding';
+import { Suspense, lazy } from 'react';
+import { useRoutes } from 'react-router-dom';
 import Error from '@pages/error/Error';
 import ProtectedRoute from '@pages/ProtectedRoute';
-import { GameSection } from '@pages/game/GameSection';
-import { GameHome } from '@pages/game/GameHome';
-import { Track } from '@pages/game/Track';
-import { Game } from '@pages/game/Game';
-import { LevelComplete } from '@pages/game/LevelComplete';
-import { SelectorAcademy } from '@pages/selectors/SelectorAcademy';
-import { useRoutes } from 'react-router-dom';
-import { Suspense, lazy } from 'react';
 import StreamsSkeleton from '@pages/social/streams/StreamsSkeleton';
 import NotificationSkeleton from '@pages/social/notifications/NotificationSkeleton';
 import CardSkeleton from '@components/card-element/CardSkeleton';
@@ -21,6 +9,24 @@ import PhotoSkeleton from '@pages/social/photos/PhotoSkeleton';
 import ProfileSkeleton from '@pages/social/profile/ProfileSkeleton';
 import ChatSkeleton from '@pages/social/chat/ChatSkeleton';
 import VideoSkeleton from '@pages/social/videos/VideoSkeleton';
+import PageLoader from '@components/page-loader/PageLoader';
+
+const Home = lazy(() => import('@pages/home').then((m) => ({ default: m.Home })));
+const AuthTabs = lazy(() => import('@pages/auth').then((m) => ({ default: m.AuthTabs })));
+const ForgotPassword = lazy(() => import('@pages/auth').then((m) => ({ default: m.ForgotPassword })));
+const ResetPassword = lazy(() => import('@pages/auth').then((m) => ({ default: m.ResetPassword })));
+const SSOCallback = lazy(() => import('@pages/auth/sso/SSOCallback'));
+const Signout = lazy(() => import('@pages/auth/signout/Signout'));
+const QAPractice = lazy(() => import('@pages/qa-practice').then((m) => ({ default: m.QAPractice })));
+const QAPracticeLanding = lazy(() => import('@pages/qa-practice/QAPracticeLanding'));
+const GameSection = lazy(() => import('@pages/game/GameSection').then((m) => ({ default: m.GameSection })));
+const GameHome = lazy(() => import('@pages/game/GameHome').then((m) => ({ default: m.GameHome })));
+const Track = lazy(() => import('@pages/game/Track').then((m) => ({ default: m.Track })));
+const Game = lazy(() => import('@pages/game/Game').then((m) => ({ default: m.Game })));
+const LevelComplete = lazy(() => import('@pages/game/LevelComplete').then((m) => ({ default: m.LevelComplete })));
+const SelectorAcademy = lazy(() =>
+  import('@pages/selectors/SelectorAcademy').then((m) => ({ default: m.SelectorAcademy }))
+);
 
 const Social = lazy(() => import('@pages/social/Social'));
 const Chat = lazy(() => import('@pages/social/chat/Chat'));
@@ -43,220 +49,432 @@ export const AppRouter = () => {
   const elements = useRoutes([
     {
       path: '/',
-      element: <Home />
+      element: (
+        <Suspense fallback={<PageLoader />}>
+          <Home />
+        </Suspense>
+      )
     },
     {
       path: '/qa-practice',
       children: [
         {
           index: true,
-          element: <QAPracticeLanding />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <QAPracticeLanding />
+            </Suspense>
+          )
         },
         {
           path: 'web-inputs',
-          element: <QAPractice />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <QAPractice />
+            </Suspense>
+          )
         },
         {
           path: 'dynamic-table',
-          element: <QAPractice />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <QAPractice />
+            </Suspense>
+          )
         },
         {
           path: 'drag-and-drop',
-          element: <QAPractice />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <QAPractice />
+            </Suspense>
+          )
         },
         {
           path: 'iframe',
-          element: <QAPractice />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <QAPractice />
+            </Suspense>
+          )
         },
         {
           path: 'file-upload',
-          element: <QAPractice />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <QAPractice />
+            </Suspense>
+          )
         },
         {
           path: 'alerts-modals',
-          element: <QAPractice />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <QAPractice />
+            </Suspense>
+          )
         },
         {
           path: 'navigation',
-          element: <QAPractice />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <QAPractice />
+            </Suspense>
+          )
         },
         {
           path: 'tooltips',
-          element: <QAPractice />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <QAPractice />
+            </Suspense>
+          )
         },
         {
           path: 'loaders',
-          element: <QAPractice />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <QAPractice />
+            </Suspense>
+          )
         },
         {
           path: 'accordion',
-          element: <QAPractice />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <QAPractice />
+            </Suspense>
+          )
         },
         {
           path: 'tabs',
-          element: <QAPractice />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <QAPractice />
+            </Suspense>
+          )
         },
         {
           path: 'carousel',
-          element: <QAPractice />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <QAPractice />
+            </Suspense>
+          )
         },
         {
           path: 'search-filters',
-          element: <QAPractice />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <QAPractice />
+            </Suspense>
+          )
         },
         {
           path: 'breadcrumbs',
-          element: <QAPractice />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <QAPractice />
+            </Suspense>
+          )
         },
         {
           path: 'context-menu',
-          element: <QAPractice />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <QAPractice />
+            </Suspense>
+          )
         },
         {
           path: 'copy-clipboard',
-          element: <QAPractice />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <QAPractice />
+            </Suspense>
+          )
         },
         {
           path: 'rating',
-          element: <QAPractice />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <QAPractice />
+            </Suspense>
+          )
         },
         {
           path: 'wizard',
-          element: <QAPractice />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <QAPractice />
+            </Suspense>
+          )
         },
         {
           path: 'infinite-scroll',
-          element: <QAPractice />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <QAPractice />
+            </Suspense>
+          )
         },
         {
           path: 'sticky-elements',
-          element: <QAPractice />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <QAPractice />
+            </Suspense>
+          )
         },
         {
           path: 'local-storage',
-          element: <QAPractice />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <QAPractice />
+            </Suspense>
+          )
         },
         {
           path: 'cookies',
-          element: <QAPractice />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <QAPractice />
+            </Suspense>
+          )
         },
         {
           path: 'api-testing',
-          element: <QAPractice />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <QAPractice />
+            </Suspense>
+          )
         },
         {
           path: 'form-validation',
-          element: <QAPractice />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <QAPractice />
+            </Suspense>
+          )
         },
         {
           path: 'authentication',
-          element: <QAPractice />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <QAPractice />
+            </Suspense>
+          )
         },
         {
           path: 'download-files',
-          element: <QAPractice />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <QAPractice />
+            </Suspense>
+          )
         },
         {
           path: 'notifications',
-          element: <QAPractice />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <QAPractice />
+            </Suspense>
+          )
         },
         {
           path: 'keyboard-nav',
-          element: <QAPractice />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <QAPractice />
+            </Suspense>
+          )
         },
         {
           path: 'autocomplete',
-          element: <QAPractice />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <QAPractice />
+            </Suspense>
+          )
         },
         {
           path: 'multi-select',
-          element: <QAPractice />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <QAPractice />
+            </Suspense>
+          )
         },
         {
           path: 'date-time-picker',
-          element: <QAPractice />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <QAPractice />
+            </Suspense>
+          )
         },
         {
           path: 'dark-mode',
-          element: <QAPractice />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <QAPractice />
+            </Suspense>
+          )
         },
         {
           path: 'nested-dropdowns',
-          element: <QAPractice />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <QAPractice />
+            </Suspense>
+          )
         },
         {
           path: 'error-boundary',
-          element: <QAPractice />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <QAPractice />
+            </Suspense>
+          )
         },
         {
           path: 'disabled-readonly',
-          element: <QAPractice />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <QAPractice />
+            </Suspense>
+          )
         },
         {
           path: 'progress',
-          element: <QAPractice />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <QAPractice />
+            </Suspense>
+          )
         },
         {
           path: 'virtual-scroll',
-          element: <QAPractice />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <QAPractice />
+            </Suspense>
+          )
         },
         {
           path: 'websocket',
-          element: <QAPractice />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <QAPractice />
+            </Suspense>
+          )
         },
         {
           path: 'credit-card',
-          element: <QAPractice />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <QAPractice />
+            </Suspense>
+          )
         },
         {
           path: 'shadow-dom',
-          element: <QAPractice />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <QAPractice />
+            </Suspense>
+          )
         },
         {
           path: 'multi-tab',
-          element: <QAPractice />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <QAPractice />
+            </Suspense>
+          )
         },
         {
           path: 'viewport',
-          element: <QAPractice />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <QAPractice />
+            </Suspense>
+          )
         },
         {
           path: 'rich-text-editor',
-          element: <QAPractice />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <QAPractice />
+            </Suspense>
+          )
         },
         {
           path: 'soft-assertions',
-          element: <QAPractice />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <QAPractice />
+            </Suspense>
+          )
         },
         {
           path: 'wait-for-request',
-          element: <QAPractice />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <QAPractice />
+            </Suspense>
+          )
         },
         {
           path: 'visual-testing',
-          element: <QAPractice />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <QAPractice />
+            </Suspense>
+          )
         }
       ]
     },
     {
       path: '/auth',
-      element: <AuthTabs />
+      element: (
+        <Suspense fallback={<PageLoader />}>
+          <AuthTabs />
+        </Suspense>
+      )
     },
     {
       path: '/sso',
-      element: <SSOCallback />
+      element: (
+        <Suspense fallback={<PageLoader />}>
+          <SSOCallback />
+        </Suspense>
+      )
     },
     {
       path: '/signout',
-      element: <Signout />
+      element: (
+        <Suspense fallback={<PageLoader />}>
+          <Signout />
+        </Suspense>
+      )
     },
     {
       path: '/forgot-password',
-      element: <ForgotPassword />
+      element: (
+        <Suspense fallback={<PageLoader />}>
+          <ForgotPassword />
+        </Suspense>
+      )
     },
     {
       path: '/reset-password',
-      element: <ResetPassword />
+      element: (
+        <Suspense fallback={<PageLoader />}>
+          <ResetPassword />
+        </Suspense>
+      )
     },
     {
       path: '/app/social',
@@ -392,31 +610,53 @@ export const AppRouter = () => {
       path: '/app/game',
       element: (
         <ProtectedRoute>
-          <GameSection />
+          <Suspense fallback={<PageLoader />}>
+            <GameSection />
+          </Suspense>
         </ProtectedRoute>
       ),
       children: [
         {
           path: '',
-          element: <GameHome />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <GameHome />
+            </Suspense>
+          )
         },
         {
           path: 'track/:category',
-          element: <Track />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <Track />
+            </Suspense>
+          )
         },
         {
           path: ':levelId',
-          element: <Game />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <Game />
+            </Suspense>
+          )
         },
         {
           path: 'complete/:levelId',
-          element: <LevelComplete />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <LevelComplete />
+            </Suspense>
+          )
         }
       ]
     },
     {
       path: '/css-selectors',
-      element: <SelectorAcademy />
+      element: (
+        <Suspense fallback={<PageLoader />}>
+          <SelectorAcademy />
+        </Suspense>
+      )
     },
     {
       path: '*',

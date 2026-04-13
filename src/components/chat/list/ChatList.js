@@ -9,7 +9,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { userService } from '@services/api/user/user.service';
 import useDebounce from '@hooks/useDebounce';
 import { ChatUtils } from '@services/utils/chat-utils.service';
-import { cloneDeep, find, findIndex } from 'lodash';
+
 import { createSearchParams, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { setSelectedChatUser } from '@redux/reducers/chat/chat.reducer';
 import { chatService } from '@services/api/chat/chat.service';
@@ -65,8 +65,7 @@ const ChatList = () => {
       };
       ChatUtils.joinRoomEvent(user, profile);
       ChatUtils.privateChatMessages = [];
-      const findUser = find(
-        chatMessageList,
+      const findUser = chatMessageList.find(
         (chat) => chat.receiverId === searchParams.get('id') || chat.senderId === searchParams.get('id')
       );
       if (!findUser) {
@@ -96,8 +95,8 @@ const ChatList = () => {
 
   const removeSelectedUserFromList = (event) => {
     event.stopPropagation();
-    const updatedList = cloneDeep(chatMessageList);
-    const userIndex = findIndex(updatedList, ['receiverId', searchParams.get('id')]);
+    const updatedList = structuredClone(chatMessageList);
+    const userIndex = updatedList.findIndex((x) => x.receiverId === searchParams.get('id'));
     if (userIndex > -1) {
       updatedList.splice(userIndex, 1);
       setSelectedUser(null);
@@ -126,8 +125,7 @@ const ChatList = () => {
   // this is for when a user already exist in the chat list
   const addUsernameToUrlQuery = async (user) => {
     try {
-      const sender = find(
-        ChatUtils.chatUsers,
+      const sender = ChatUtils.chatUsers.find(
         (userData) =>
           userData.userOne === profile?.username && userData.userTwo.toLowerCase() === searchParams.get('username')
       );

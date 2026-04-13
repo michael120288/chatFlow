@@ -79,7 +79,13 @@ const PostForm = () => {
                 size={50}
                 avatarSrc={profile?.profilePicture}
               />
-              <div className="post-form-input" data-placeholder="Write something here..."></div>
+              <div
+                className="post-form-input"
+                data-placeholder="Write something here..."
+                role="textbox"
+                aria-label="Write a post"
+                aria-multiline="true"
+              ></div>
             </div>
             <hr />
             <ul className="post-form-list" data-testid="list-item">

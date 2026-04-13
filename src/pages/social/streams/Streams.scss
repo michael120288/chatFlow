@@ -24,9 +24,32 @@
 
     .streams-suggestions {
       grid-area: suggestions;
-      background-color: var(--white-1);
+      background-color: var(--color-bg-surface);
       max-height: 600px;
-      border-radius: 16px;
+      border-radius: var(--radius-md);
+    }
+
+    .streams-sentinel {
+      height: 50px;
+      margin-bottom: 50px;
+    }
+
+    @media (max-width: 768px) {
+      grid-template-areas:
+        "post"
+        "suggestions";
+      grid-template-columns: 1fr;
+      grid-template-rows: auto auto;
+
+      .streams-post {
+        height: auto;
+        overflow-y: visible;
+      }
+
+      .streams-suggestions {
+        max-height: none;
+        margin-bottom: 20px;
+      }
     }
   }
 }

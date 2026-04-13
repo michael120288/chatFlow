@@ -2,7 +2,7 @@ import Avatar from '@components/avatar/Avatar';
 import { timeAgo } from '@services/utils/timeago.utils';
 import PropTypes from 'prop-types';
 import { FaPencilAlt, FaRegTrashAlt } from 'react-icons/fa';
-import { find } from 'lodash';
+
 import { feelingsList, privacyList } from '@services/utils/static.data';
 import '@components/posts/post/Post.scss';
 import PostCommentSection from '@components/posts/post-comment-section/PostCommentSection';
@@ -30,12 +30,12 @@ const Post = ({ post, showIcons }) => {
   const dispatch = useDispatch();
 
   const getFeeling = (name) => {
-    const feeling = find(feelingsList, (data) => data.name === name);
+    const feeling = feelingsList.find((data) => data.name === name);
     return feeling?.image;
   };
 
   const getPrivacy = (type) => {
-    const privacy = find(privacyList, (data) => data.topText === type);
+    const privacy = privacyList.find((data) => data.topText === type);
     return privacy?.icon;
   };
 
@@ -75,7 +75,8 @@ const Post = ({ post, showIcons }) => {
 
   useEffect(() => {
     getBackgroundImageColor(post);
-  }, [post?.imgId, post?.gifUrl]); // eslint-disable-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- getBackgroundImageColor recreates every render; only rerun when the image actually changes
+  }, [post?.imgId, post?.gifUrl]);
 
   return (
     <>
@@ -114,7 +115,12 @@ const Post = ({ post, showIcons }) => {
                   {post?.username}
                   {post?.feelings && (
                     <div className="inline-display" data-testid="inline-display">
-                      is feeling <img className="feeling-icon" src={`${getFeeling(post?.feelings)}`} alt="" />{' '}
+                      is feeling{' '}
+                      <img
+                        className="feeling-icon"
+                        src={`${getFeeling(post?.feelings)}`}
+                        alt={post?.feelings || 'feeling'}
+                      />{' '}
                       <div>{post?.feelings}</div>
                     </div>
                   )}
@@ -134,7 +140,7 @@ const Post = ({ post, showIcons }) => {
               )}
             </div>
             <hr />
-            <div className="user-post" style={{ marginTop: '1rem', borderBottom: '' }}>
+            <div className="user-post">
               {post?.post && post?.bgColor === '#ffffff' && (
                 <p className="post" data-testid="user-post">
                   {post?.post}
@@ -161,10 +167,9 @@ const Post = ({ post, showIcons }) => {
                   }}
                 >
                   <img
-                    className="post-image"
-                    style={{ objectFit: 'contain' }}
+                    className="post-image post-image--contain"
                     src={`${Utils.getImage(post.imgId, post.imgVersion)}`}
-                    alt=""
+                    alt={`${post?.username}'s photo`}
                   />
                 </div>
               )}
@@ -194,7 +199,11 @@ const Post = ({ post, showIcons }) => {
                     setShowImageModal(!showImageModal);
                   }}
                 >
-                  <img className="post-image" style={{ objectFit: 'contain' }} src={`${post?.gifUrl}`} alt="" />
+                  <img
+                    className="post-image post-image--contain"
+                    src={`${post?.gifUrl}`}
+                    alt={`${post?.username}'s GIF`}
+                  />
                 </div>
               )}
               {(post?.reactions.length > 0 || post?.commentsCount > 0) && <hr />}

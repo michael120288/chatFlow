@@ -2,7 +2,6 @@ import { addUser } from '@redux/reducers/user/user.reducer';
 import { followerService } from '@services/api/followers/follower.service';
 import { socketService } from '@services/socket/socket.service';
 import { Utils } from '@services/utils/utils.service';
-import { cloneDeep, filter, find, findIndex } from 'lodash';
 
 export class FollowersUtils {
   static async followUser(user, dispatch) {
@@ -27,7 +26,7 @@ export class FollowersUtils {
 
   static socketIOFollowAndUnfollow(users, followers, setFollowers, setUsers) {
     socketService?.socket?.on('add follower', (data) => {
-      const userData = find(users, (user) => user._id === data?._id);
+      const userData = users.find((user) => user._id === data?._id);
       if (userData) {
         const updatedFollowers = [...followers, data];
         setFollowers(updatedFollowers);
@@ -36,9 +35,9 @@ export class FollowersUtils {
     });
 
     socketService?.socket?.on('remove follower', (data) => {
-      const userData = find(users, (user) => user._id === data?._id);
+      const userData = users.find((user) => user._id === data?._id);
       if (userData) {
-        const updatedFollowers = filter(followers, (follower) => follower._id !== data?._id);
+        const updatedFollowers = followers.filter((follower) => follower._id !== data?._id);
         setFollowers(updatedFollowers);
         FollowersUtils.updateSingleUser(users, userData, data, setUsers);
       }
@@ -47,7 +46,7 @@ export class FollowersUtils {
 
   static socketIORemoveFollowing(following, setFollowing) {
     socketService?.socket?.on('remove follower', (data) => {
-      const updatedFollowing = filter(following, (user) => user._id !== data?._id);
+      const updatedFollowing = following.filter((user) => user._id !== data?._id);
       setFollowing(updatedFollowing);
     });
   }
@@ -79,7 +78,7 @@ export class FollowersUtils {
   }
 
   static addBlockedUser(user, data) {
-    user = cloneDeep(user);
+    user = structuredClone(user);
     if (user?._id === data.blockedBy) {
       user.blocked.push(data.blockedUser);
     }
@@ -91,7 +90,7 @@ export class FollowersUtils {
   }
 
   static removeBlockedUser(profile, data) {
-    profile = cloneDeep(profile);
+    profile = structuredClone(profile);
     if (profile?._id === data.blockedBy) {
       profile.blocked = [...Utils.removeUserFromList(profile.blocked, data.blockedUser)];
     }
@@ -103,11 +102,11 @@ export class FollowersUtils {
   }
 
   static updateSingleUser(users, userData, followerData, setUsers) {
-    users = cloneDeep(users);
+    users = structuredClone(users);
     userData.followersCount = followerData.followersCount;
     userData.followingCount = followerData.followingCount;
     userData.postsCount = followerData.postsCount;
-    const index = findIndex(users, ['_id', userData?._id]);
+    const index = users.findIndex((u) => u._id === userData?._id);
     if (index > -1) {
       users.splice(index, 1, userData);
       setUsers(users);

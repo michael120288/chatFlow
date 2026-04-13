@@ -55,7 +55,7 @@ Input.propTypes = {
   type: PropTypes.string.isRequired,
   id: PropTypes.string,
   labelText: PropTypes.string,
-  value: PropTypes.any,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   className: PropTypes.string,
   placeholder: PropTypes.string,
   handleChange: PropTypes.func,

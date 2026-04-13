@@ -3,7 +3,6 @@ import checkIcon from '@assets/images/check.svg';
 import errorIcon from '@assets/images/error.svg';
 import infoIcon from '@assets/images/info.svg';
 import warningIcon from '@assets/images/warning.svg';
-import { cloneDeep, uniqBy } from 'lodash';
 
 const initialState = [];
 const toastIcons = [
@@ -27,10 +26,8 @@ const notificationsSlice = createSlice({
         icon: toast[type],
         backgroundColor: toast.color
       };
-      let list = cloneDeep(state);
-      list.unshift(toastItem);
-      list = [...uniqBy(list, 'description')];
-      return list;
+      const list = [toastItem, ...state];
+      return [...new Map(list.map((x) => [x.description, x])).values()];
     },
     clearNotification: () => {
       return [];

@@ -5,7 +5,7 @@ import { updateUserProfile } from '@redux/reducers/user/user.reducer';
 import { userService } from '@services/api/user/user.service';
 import { notificationItems } from '@services/utils/static.data';
 import { Utils } from '@services/utils/utils.service';
-import { cloneDeep } from 'lodash';
+
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -42,7 +42,7 @@ const NotificationSettings = () => {
   const sendNotificationSettings = async () => {
     try {
       const response = await userService.updateNotificationSettings(notificationSettings);
-      profile = cloneDeep(profile);
+      profile = structuredClone(profile);
       profile.notifications = response.data.settings;
       dispatch(updateUserProfile(profile));
       Utils.dispatchNotification(response.data.message, 'success', dispatch);
@@ -76,7 +76,7 @@ const NotificationSettings = () => {
                   toggle={data.toggle}
                   onClick={() => {
                     updateNotificationTypesToggle(index);
-                    notificationSettings = cloneDeep(notificationSettings);
+                    notificationSettings = structuredClone(notificationSettings);
                     notificationSettings[data.type] = !notificationSettings[data.type];
                     setNotificationSettings(notificationSettings);
                   }}
