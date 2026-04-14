@@ -1,8 +1,9 @@
 @mixin sidebar-styles {
-  background-color: var(--color-bg-surface);
-  border: 1px solid var(--white-2);
-  color: var(--dark-blue-2);
-  border-radius: var(--radius-lg);
+  background-color: var(--color-bg-brand);
+  border: none;
+  border-left: 3px solid var(--color-brand);
+  color: var(--color-brand-text);
+  border-radius: 0 var(--radius) var(--radius) 0;
   text-decoration: none;
 }
 
@@ -39,7 +40,8 @@
           transition: all 0.2s ease;
 
           &:hover {
-            @include sidebar-styles;
+            background-color: var(--color-bg-hover);
+            border-radius: var(--radius);
 
             .menu-icon {
               .icon {
@@ -54,8 +56,13 @@
 
           .menu-icon {
             .icon {
-              color: var(--color-text-link);
+              color: var(--color-brand);
             }
+          }
+
+          .menu-link span {
+            color: var(--color-brand-text);
+            font-weight: var(--font-weight-bold);
           }
         }
 
@@ -85,7 +92,7 @@
 }
 
 .sidebar-link:hover span {
-  color: var(--dark-blue-2);
+  color: var(--color-text-secondary);
 }
 
 @media screen and (max-width: 992px) {

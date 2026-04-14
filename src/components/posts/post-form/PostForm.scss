@@ -19,7 +19,7 @@
   }
 
   &-body {
-    height: 164px;
+    min-height: 164px;
     padding: 15px 0;
 
     hr {
@@ -68,7 +68,6 @@
         background: var(--color-bg-hover);
         border-radius: var(--radius-sm);
         padding: 0.5rem;
-        margin-right: 1rem;
         cursor: pointer;
 
         img {
