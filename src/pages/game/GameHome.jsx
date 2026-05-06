@@ -25,15 +25,18 @@ export function GameHome() {
   const playwrightLevels = levels.filter((l) => l.category === 'ui' || l.category === 'api');
   const cypressLevels = levels.filter((l) => l.category === 'cypress-ui');
   const jestLevels = levels.filter((l) => l.category === 'jest');
+  const vitestLevels = levels.filter((l) => l.category === 'vitest');
 
   const playwrightDone = playwrightLevels.filter((l) => completedLevels.includes(l.id)).length;
   const cypressDone = cypressLevels.filter((l) => completedLevels.includes(l.id)).length;
   const jestDone = jestLevels.filter((l) => completedLevels.includes(l.id)).length;
+  const vitestDone = vitestLevels.filter((l) => completedLevels.includes(l.id)).length;
 
   const playwrightTotalXP = playwrightLevels.reduce((sum, l) => sum + l.xpReward, 0);
   const cypressTotalXP = cypressLevels.reduce((sum, l) => sum + l.xpReward, 0);
   const jestTotalXP = jestLevels.reduce((sum, l) => sum + l.xpReward, 0);
-  const grandTotalXP = playwrightTotalXP + cypressTotalXP + jestTotalXP;
+  const vitestTotalXP = vitestLevels.reduce((sum, l) => sum + l.xpReward, 0);
+  const grandTotalXP = playwrightTotalXP + cypressTotalXP + jestTotalXP + vitestTotalXP;
 
   const playwrightXPEarned =
     trackXP.playwright ??
@@ -43,10 +46,13 @@ export function GameHome() {
     cypressLevels.filter((l) => completedLevels.includes(l.id)).reduce((sum, l) => sum + l.xpReward, 0);
   const jestXPEarned =
     trackXP.jest ?? jestLevels.filter((l) => completedLevels.includes(l.id)).reduce((sum, l) => sum + l.xpReward, 0);
+  const vitestXPEarned =
+    trackXP.vitest ?? vitestLevels.filter((l) => completedLevels.includes(l.id)).reduce((sum, l) => sum + l.xpReward, 0);
 
   const [pwOpen, setPwOpen] = useState(false);
   const [cyOpen, setCyOpen] = useState(false);
   const [jestOpen, setJestOpen] = useState(false);
+  const [vitestOpen, setVitestOpen] = useState(false);
 
   const xpTracks = [
     {
@@ -72,6 +78,14 @@ export function GameHome() {
       total: jestLevels.length,
       xpEarned: jestXPEarned,
       color: '#f59e0b'
+    },
+    {
+      label: 'Vitest',
+      icon: '⚡',
+      done: vitestDone,
+      total: vitestLevels.length,
+      xpEarned: vitestXPEarned,
+      color: '#fb923c'
     }
   ];
 
@@ -106,7 +120,7 @@ export function GameHome() {
         {error && <div className="error-msg">Failed to load levels: {error}</div>}
 
         {!loading && !error && (
-          <div className="tracks-row tracks-row--four">
+          <div className="tracks-row tracks-row--five">
             <Link to="/app/game/track/playwright" className="track-card track-playwright">
               <div className="tc-icon">🎭</div>
               <div className="tc-body">
@@ -248,6 +262,54 @@ export function GameHome() {
               </div>
               <div className="tc-arrow">→</div>
             </Link>
+            <Link to="/app/game/track/vitest" className="track-card track-vitest">
+              <div className="tc-icon">⚡</div>
+              <div className="tc-body">
+                <h2 className="tc-title">Vitest Unit Testing</h2>
+                <p className="tc-desc">
+                  Master unit testing with Vitest — vi.fn(), vi.spyOn(), vi.mock(), snapshots, fixtures and more
+                </p>
+                <div className="tc-meta">
+                  <span className="tc-count">{vitestLevels.length} Levels</span>
+                  <span className="tc-xp">{vitestTotalXP.toLocaleString()} XP</span>
+                </div>
+                <div className="tc-progress-track">
+                  <div
+                    className="tc-progress-fill"
+                    style={{ width: `${vitestLevels.length ? (vitestDone / vitestLevels.length) * 100 : 0}%` }}
+                  />
+                </div>
+                <span className="tc-done">
+                  {vitestDone} / {vitestLevels.length} complete
+                </span>
+                <button
+                  type="button"
+                  className="tc-topics-btn"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setVitestOpen((o) => !o);
+                  }}
+                  aria-expanded={vitestOpen}
+                >
+                  What you&apos;ll learn <span className="tc-topics-chevron">{vitestOpen ? '▲' : '▼'}</span>
+                </button>
+                {vitestOpen && (
+                  <ul className="tc-topics-list">
+                    <li>vi.fn() mock functions &amp; call tracking</li>
+                    <li>vi.spyOn() — spy on methods and modules</li>
+                    <li>vi.mock() — module mocking &amp; factories</li>
+                    <li>vi.useFakeTimers() &amp; vi.setSystemTime()</li>
+                    <li>test.extend fixtures &amp; test context</li>
+                    <li>toMatchSnapshot &amp; toMatchInlineSnapshot</li>
+                    <li>test.each &amp; describe.each</li>
+                    <li>Coverage with v8 and istanbul providers</li>
+                  </ul>
+                )}
+              </div>
+              <div className="tc-arrow">→</div>
+            </Link>
+
             <Link to="/css-selectors" className="track-card track-selectors">
               <div className="tc-icon">🎯</div>
               <div className="tc-body">

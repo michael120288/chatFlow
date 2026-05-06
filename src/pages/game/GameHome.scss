@@ -84,6 +84,11 @@
     grid-template-columns: repeat(2, 1fr);
     max-width: 720px;
   }
+
+  &--five {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 720px;
+  }
 }
 
 .track-card {
@@ -130,6 +135,11 @@
     border-color: #0a2a3a;
     &:hover { border-color: #38bdf8; }
   }
+
+  &.track-vitest {
+    border-color: #2e1500;
+    &:hover { border-color: #fb923c; }
+  }
 }
 
 .tc-icon { font-size: 44px; line-height: 1; margin-top: 2px; }
@@ -147,6 +157,7 @@
   .track-cypress & { color: #22c55e; }
   .track-jest & { color: #f59e0b; }
   .track-selectors & { color: #38bdf8; }
+  .track-vitest & { color: #fb923c; }
 }
 
 .tc-desc {
@@ -201,6 +212,7 @@
   .track-cypress & { background: #22c55e; }
   .track-jest & { background: #f59e0b; }
   .track-selectors & { background: #38bdf8; }
+  .track-vitest & { background: #fb923c; }
 }
 
 .tc-done {
@@ -222,6 +234,7 @@
 .track-cypress:hover .tc-arrow { color: #22c55e; }
 .track-jest:hover .tc-arrow { color: #f59e0b; }
 .track-selectors:hover .tc-arrow { color: #38bdf8; }
+.track-vitest:hover .tc-arrow { color: #fb923c; }
 
 // ── Topics collapsible ───────────────────────────────────────────────────────
 
@@ -241,6 +254,7 @@
   .track-playwright &:hover { color: #818cf8; }
   .track-cypress &:hover { color: #22c55e; }
   .track-jest &:hover { color: #f59e0b; }
+  .track-vitest &:hover { color: #fb923c; }
 }
 
 .tc-topics-chevron { font-size: 10px; }
@@ -271,6 +285,7 @@
 .track-playwright .tc-topics-list li::before { color: #4a4a80; }
 .track-cypress .tc-topics-list li::before { color: #0d4a20; }
 .track-jest .tc-topics-list li::before { color: #4a3000; }
+.track-vitest .tc-topics-list li::before { color: #4a2000; }
 
 // ── Footer ────────────────────────────────────────────────────────────────────
 

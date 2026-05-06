@@ -12,7 +12,7 @@ const features = [
     title: 'QA Practice',
     description:
       '46 interactive scenarios covering forms, drag-and-drop, WebSocket, virtual scroll, and more — built for Playwright automation practice.',
-    cta: 'Start Practising',
+    cta: 'Start Practicing',
     path: '/qa-practice',
     accent: '#667eea'
   },
@@ -133,7 +133,7 @@ const Home = () => {
               className="home-landing-hero-btn home-landing-hero-btn--primary"
               onClick={() => navigate('/qa-practice')}
             >
-              Start Practising →
+              Start Practicing →
             </button>
             {isLoggedIn ? (
               <button className="home-landing-hero-btn home-landing-hero-btn--ghost" onClick={handleSignOut}>

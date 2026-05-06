@@ -281,6 +281,115 @@ export function Track() {
         }
       ]
     },
+    vitest: {
+      icon: '⚡',
+      title: 'Vitest Unit Testing',
+      desc: 'Master unit testing with Vitest — vi.fn(), vi.spyOn(), vi.mock(), snapshots, fixtures and more',
+      sections: [
+        {
+          title: 'Foundations',
+          icon: '🧱',
+          desc: 'First test, toBe, toEqual, toStrictEqual, truthiness, toThrow, describe() and grouping',
+          orderRange: [1, 15]
+        },
+        {
+          title: 'Core Matchers',
+          icon: '🔢',
+          desc: 'Numeric, string, array and object matchers — toBeCloseTo, toMatch, toHaveProperty, toBeTypeOf, toSatisfy',
+          orderRange: [16, 30]
+        },
+        {
+          title: 'Async Testing',
+          icon: '⚡',
+          desc: 'async/await, resolves/rejects, expect.assertions(), Promise.all, async beforeEach and timeouts',
+          orderRange: [31, 45]
+        },
+        {
+          title: 'Mock Functions',
+          icon: '🎭',
+          desc: 'vi.fn(), mock.calls, mockReturnValue, mockResolvedValue, mockImplementation, toHaveBeenCalledWith',
+          orderRange: [46, 60]
+        },
+        {
+          title: 'Spies',
+          icon: '🕵️',
+          desc: 'vi.spyOn(), spy on methods and getters, mockReturnValue, restore, vi.restoreAllMocks()',
+          orderRange: [61, 75]
+        },
+        {
+          title: 'Module Mocking',
+          icon: '🔗',
+          desc: 'vi.mock(), vi.importMock(), vi.importActual(), partial mocking, vi.doMock(), vi.unmock()',
+          orderRange: [76, 90]
+        },
+        {
+          title: 'Setup & Teardown',
+          icon: '🏗️',
+          desc: 'beforeEach, afterEach, beforeAll, afterAll, test.skip, test.todo, test.only, describe.skip',
+          orderRange: [91, 105]
+        },
+        {
+          title: 'Timer Mocking',
+          icon: '⏱️',
+          desc: 'vi.useFakeTimers(), vi.advanceTimersByTime(), vi.setSystemTime(), Date.now() mocking',
+          orderRange: [106, 120]
+        },
+        {
+          title: 'Table-Driven Tests',
+          icon: '📋',
+          desc: 'test.each with arrays and objects, describe.each, template literals, async each',
+          orderRange: [121, 135]
+        },
+        {
+          title: 'Snapshots',
+          icon: '📸',
+          desc: 'toMatchSnapshot, toMatchInlineSnapshot, toMatchFileSnapshot, snapshot serializers',
+          orderRange: [136, 150]
+        },
+        {
+          title: 'Test Context & Fixtures',
+          icon: '🔬',
+          desc: 'test.extend, custom fixtures, setup/teardown, onTestFailed, onTestFinished, async fixtures',
+          orderRange: [151, 165]
+        },
+        {
+          title: 'Advanced Patterns',
+          icon: '🚀',
+          desc: 'test.concurrent, expect.extend custom matchers, expect.soft(), class testing, error subclasses',
+          orderRange: [166, 185]
+        },
+        {
+          title: 'Coverage',
+          icon: '📊',
+          desc: 'v8 and istanbul providers, thresholds, branch/function/line coverage, reporters, ignore comments',
+          orderRange: [186, 200]
+        },
+        {
+          title: 'TypeScript & ESM',
+          icon: '🔷',
+          desc: 'TypeScript tests, generics, path aliases, ESM imports, vi.mock with TypeScript, type-safe spies',
+          orderRange: [201, 215]
+        },
+        {
+          title: 'Workspace & Config',
+          icon: '⚙️',
+          desc: 'vitest.config.ts, environments, globals, setupFiles, clearMocks, retry, bail, testTimeout',
+          orderRange: [216, 230]
+        },
+        {
+          title: 'Real-World Patterns',
+          icon: '🌐',
+          desc: 'HTTP client mocking, service layers, repository pattern, event emitters, pub/sub, state machines and integration tests',
+          orderRange: [231, 255]
+        },
+        {
+          title: 'Complete API Coverage',
+          icon: '🔬',
+          desc: 'test.fails, test.for, test.repeats, bench(), toBeNullable, toBeOneOf, toMatchFileSnapshot, toHaveResolved family, expect.poll, expect.unreachable, expect.addEqualityTesters, vi.mockObject, vi.hoisted, vi.advanceTimersByTimeAsync, vi.waitUntil, vi.setConfig and more',
+          orderRange: [256, 296]
+        }
+      ]
+    },
     'cypress-ui': {
       icon: '🌲',
       title: 'Cypress UI Testing',
@@ -500,6 +609,7 @@ export function Track() {
   ).sort((a, b) => a.order - b.order);
 
   const isUnlocked = (level) => {
+    if (category === 'vitest' || category === 'jest') return true;
     if (!meta.sections) {
       const idx = trackLevels.findIndex((l) => l.id === level.id);
       if (idx === 0) return true;
@@ -514,7 +624,14 @@ export function Track() {
 
   const doneLevels = trackLevels.filter((l) => completedLevels.includes(l.id));
   const totalXP = trackLevels.reduce((sum, l) => sum + l.xpReward, 0);
-  const trackKey = category === 'cypress-ui' ? 'cypress-ui' : category === 'jest' ? 'jest' : 'playwright';
+  const trackKey =
+    category === 'cypress-ui'
+      ? 'cypress-ui'
+      : category === 'jest'
+      ? 'jest'
+      : category === 'vitest'
+      ? 'vitest'
+      : 'playwright';
   const earnedXP = trackXP[trackKey] ?? doneLevels.reduce((sum, l) => sum + l.xpReward, 0);
   const nextLevel = trackLevels.find((l) => !completedLevels.includes(l.id));
 
@@ -669,7 +786,7 @@ export function Track() {
                               <div className="card-status">{done ? '✓' : !unlocked ? '🔒' : '▶'}</div>
                               <div className="card-title">{level.title}</div>
                               <div className="card-tags">
-                                {level.tags.slice(0, 2).map((t) => (
+                                {(level.tags || []).slice(0, 2).map((t) => (
                                   <span key={t} className="tag">
                                     {t}
                                   </span>

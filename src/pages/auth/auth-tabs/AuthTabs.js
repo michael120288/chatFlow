@@ -70,7 +70,7 @@ const AuthTabs = () => {
               <div className="auth-right-header">
                 <h2 className="auth-right-title">{type === 'Sign In' ? 'Welcome back' : 'Create account'}</h2>
                 <p className="auth-right-subtitle">
-                  {type === 'Sign In' ? 'Sign in to your QA Hub account' : 'Join QA Hub and start practising'}
+                  {type === 'Sign In' ? 'Sign in to your QA Hub account' : 'Join QA Hub and start practicing'}
                 </p>
               </div>
 

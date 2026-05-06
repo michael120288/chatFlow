@@ -282,7 +282,7 @@ const QAPracticeLanding = () => {
             <div className="qa-landing-hero">
               <h2>46 Interactive Scenarios</h2>
               <p>
-                A hands-on playground for practising Playwright end-to-end testing. Each scenario gives you a real,
+                A hands-on playground for practicing Playwright end-to-end testing. Each scenario gives you a real,
                 interactive UI element to automate — from basic form inputs to WebSockets and virtual scroll. Pick a
                 category below to get started.
               </p>
