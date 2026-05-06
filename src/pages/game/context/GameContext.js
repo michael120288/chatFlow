@@ -57,7 +57,13 @@ export function GameProvider({ children }) {
               const lvl = levels.find((l) => l.id === id);
               if (lvl) {
                 const track =
-                  lvl.category === 'jest' ? 'jest' : lvl.category === 'vitest' ? 'vitest' : lvl.category === 'cypress-ui' ? 'cypress-ui' : 'playwright';
+                  lvl.category === 'jest'
+                    ? 'jest'
+                    : lvl.category === 'vitest'
+                      ? 'vitest'
+                      : lvl.category === 'cypress-ui'
+                        ? 'cypress-ui'
+                        : 'playwright';
                 trackXP[track] = (trackXP[track] ?? 0) + (lvl.xpReward ?? 0);
               }
             }

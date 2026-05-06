@@ -47,7 +47,8 @@ export function GameHome() {
   const jestXPEarned =
     trackXP.jest ?? jestLevels.filter((l) => completedLevels.includes(l.id)).reduce((sum, l) => sum + l.xpReward, 0);
   const vitestXPEarned =
-    trackXP.vitest ?? vitestLevels.filter((l) => completedLevels.includes(l.id)).reduce((sum, l) => sum + l.xpReward, 0);
+    trackXP.vitest ??
+    vitestLevels.filter((l) => completedLevels.includes(l.id)).reduce((sum, l) => sum + l.xpReward, 0);
 
   const [pwOpen, setPwOpen] = useState(false);
   const [cyOpen, setCyOpen] = useState(false);
