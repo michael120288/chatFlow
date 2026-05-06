@@ -60,10 +60,10 @@ export function GameProvider({ children }) {
                   lvl.category === 'jest'
                     ? 'jest'
                     : lvl.category === 'vitest'
-                      ? 'vitest'
-                      : lvl.category === 'cypress-ui'
-                        ? 'cypress-ui'
-                        : 'playwright';
+                    ? 'vitest'
+                    : lvl.category === 'cypress-ui'
+                    ? 'cypress-ui'
+                    : 'playwright';
                 trackXP[track] = (trackXP[track] ?? 0) + (lvl.xpReward ?? 0);
               }
             }
