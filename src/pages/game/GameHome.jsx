@@ -36,7 +36,6 @@ export function GameHome() {
   const cypressTotalXP = cypressLevels.reduce((sum, l) => sum + l.xpReward, 0);
   const jestTotalXP = jestLevels.reduce((sum, l) => sum + l.xpReward, 0);
   const vitestTotalXP = vitestLevels.reduce((sum, l) => sum + l.xpReward, 0);
-  const grandTotalXP = playwrightTotalXP + cypressTotalXP + jestTotalXP + vitestTotalXP;
 
   const playwrightXPEarned =
     trackXP.playwright ??
