@@ -9,7 +9,7 @@ export function GameHome() {
   const [levels, setLevels] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { completedLevels, trackXP, setTotalLevels, resetProgress } = useProgress();
+  const { xp, completedLevels, trackXP, setTotalLevels, resetProgress } = useProgress();
 
   useEffect(() => {
     gameService
@@ -104,11 +104,11 @@ export function GameHome() {
             <div className="stat-l">Levels</div>
           </div>
           <div className="stat-card">
-            <div className="stat-n">{loading ? '…' : grandTotalXP.toLocaleString()}</div>
-            <div className="stat-l">Total XP</div>
+            <div className="stat-n">{xp.toLocaleString()}</div>
+            <div className="stat-l">Your XP</div>
           </div>
           <div className="stat-card">
-            <div className="stat-n">3</div>
+            <div className="stat-n">4</div>
             <div className="stat-l">Tracks</div>
           </div>
         </div>
