@@ -44,8 +44,7 @@ function ExplanationRenderer({ text }) {
 ExplanationRenderer.propTypes = { text: PropTypes.string.isRequired };
 
 export function LevelHeader({ level, prevId, nextId }) {
-  // Auto-open explanation for early levels (first 10 in the track)
-  const [showExplanation, setShowExplanation] = useState(level.order <= 10);
+  const [showExplanation, setShowExplanation] = useState(false);
   const trackCategory = level.category === 'ui' || level.category === 'api' ? 'playwright' : level.category;
   const backTo = `/app/game/track/${trackCategory}`;
 
