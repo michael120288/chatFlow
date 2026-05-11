@@ -39,9 +39,9 @@ const features = [
 ];
 
 const stats = [
-  { number: '1,180', label: 'Coding Challenges' },
+  { number: '1,731', label: 'Coding Challenges' },
   { number: '46', label: 'QA Scenarios' },
-  { number: '3', label: 'Test Tracks' },
+  { number: '5', label: 'Test Tracks' },
   { number: '1', label: 'Platform' }
 ];
 

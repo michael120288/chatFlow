@@ -45,6 +45,10 @@ export function GameLayout() {
             <span className="xp-icon">⚡</span>
             <span className="xp-value">{(trackXP.vitest ?? 0).toLocaleString()} XP</span>
           </div>
+          <div className="xp-chip xp-chip--python">
+            <span className="xp-icon">🐍</span>
+            <span className="xp-value">{(trackXP['python-playwright'] ?? 0).toLocaleString()} XP</span>
+          </div>
           <div className="progress-chip">
             <span>
               {completedLevels.length}/{totalLevels}

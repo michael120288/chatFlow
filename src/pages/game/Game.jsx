@@ -213,7 +213,12 @@ export function Game() {
           />
           <div className="editor-area">
             <Suspense fallback={<div>Loading editor...</div>}>
-              <CodeEditor value={code} onChange={setCode} readOnly={submitting} />
+              <CodeEditor
+                value={code}
+                onChange={setCode}
+                readOnly={submitting}
+                language={level?.tool === 'python-playwright' ? 'python' : 'javascript'}
+              />
             </Suspense>
           </div>
           <ResultPanel result={result} loading={submitting} error={submitError} />

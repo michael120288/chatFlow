@@ -33,6 +33,7 @@ export function LevelComplete() {
   const isJest = level.id.startsWith('jest-');
   const isCypress = level.id.startsWith('cy-');
   const isVitest = level.id.startsWith('vitest-');
+  const isPython = level.id.startsWith('py-pl-');
 
   const trackConfig = isJest
     ? { total: 255, label: 'Jest', master: 'Jest Master' }
@@ -40,6 +41,8 @@ export function LevelComplete() {
     ? { total: 560, label: 'Cypress', master: 'Cypress Master' }
     : isVitest
     ? { total: 296, label: 'Vitest', master: 'Vitest Master' }
+    : isPython
+    ? { total: 255, label: 'Python Playwright', master: 'Python Master' }
     : { total: 365, label: 'Playwright', master: 'Playwright Master' };
 
   const nextOrder = level.order + 1;
@@ -51,6 +54,8 @@ export function LevelComplete() {
     ? `cy-${String(nextOrder).padStart(3, '0')}`
     : isVitest
     ? `vitest-${String(nextOrder).padStart(3, '0')}`
+    : isPython
+    ? `py-pl-${String(nextOrder).padStart(2, '0')}`
     : `level-${String(nextOrder).padStart(2, '0')}`;
 
   const trackLevelsCompleted = completedLevels.filter((id) =>
@@ -60,6 +65,8 @@ export function LevelComplete() {
       ? id.startsWith('cy-')
       : isVitest
       ? id.startsWith('vitest-')
+      : isPython
+      ? id.startsWith('py-pl-')
       : id.startsWith('level-')
   ).length;
 

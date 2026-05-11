@@ -89,6 +89,16 @@
     grid-template-columns: repeat(2, 1fr);
     max-width: 720px;
   }
+
+  &--six {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 720px;
+
+    @media (min-width: 1100px) {
+      grid-template-columns: repeat(3, 1fr);
+      max-width: 1100px;
+    }
+  }
 }
 
 .track-card {
@@ -140,6 +150,11 @@
     border-color: #2e1500;
     &:hover { border-color: #fb923c; }
   }
+
+  &.track-python {
+    border-color: #0a2e1a;
+    &:hover { border-color: #4ade80; }
+  }
 }
 
 .tc-icon { font-size: 44px; line-height: 1; margin-top: 2px; }
@@ -158,6 +173,7 @@
   .track-jest & { color: #f59e0b; }
   .track-selectors & { color: #38bdf8; }
   .track-vitest & { color: #fb923c; }
+  .track-python & { color: #4ade80; }
 }
 
 .tc-desc {
@@ -213,6 +229,7 @@
   .track-jest & { background: #f59e0b; }
   .track-selectors & { background: #38bdf8; }
   .track-vitest & { background: #fb923c; }
+  .track-python & { background: #4ade80; }
 }
 
 .tc-done {
@@ -235,6 +252,7 @@
 .track-jest:hover .tc-arrow { color: #f59e0b; }
 .track-selectors:hover .tc-arrow { color: #38bdf8; }
 .track-vitest:hover .tc-arrow { color: #fb923c; }
+.track-python:hover .tc-arrow { color: #4ade80; }
 
 // ── Topics collapsible ───────────────────────────────────────────────────────
 

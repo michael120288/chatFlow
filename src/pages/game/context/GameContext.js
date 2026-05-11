@@ -63,6 +63,8 @@ export function GameProvider({ children }) {
                     ? 'vitest'
                     : lvl.category === 'cypress-ui'
                     ? 'cypress-ui'
+                    : lvl.category === 'python-playwright'
+                    ? 'python-playwright'
                     : 'playwright';
                 trackXP[track] = (trackXP[track] ?? 0) + (lvl.xpReward ?? 0);
               }

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import { gameService } from '@services/api/game/game.service';
 import { useProgress } from './hooks/useProgress';
@@ -11,6 +12,8 @@ export function Track() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { completedLevels, trackXP } = useProgress();
+  const { profile } = useSelector((state) => state.user);
+  const isAdmin = profile?.username?.toLowerCase() === 'michael120288';
 
   useEffect(() => {
     gameService
@@ -390,6 +393,151 @@ export function Track() {
         }
       ]
     },
+    'python-playwright': {
+      icon: '🐍',
+      title: 'Python Playwright',
+      desc: 'Master browser automation with Python — sync_playwright, locators, assertions, network mocking and more',
+      sections: [
+        {
+          title: 'Foundations',
+          icon: '🎯',
+          desc: 'Navigation, locators, text extraction, visibility checks and basic actions',
+          orderRange: [1, 10]
+        },
+        {
+          title: 'Assertions',
+          icon: '✅',
+          desc: 'expect() assertions — to_have_text, to_be_visible, to_have_count, to_have_url and more',
+          orderRange: [11, 20]
+        },
+        {
+          title: 'Network & Waiting',
+          icon: '🔌',
+          desc: 'Route mocking, response/request interception, wait strategies and HTTP headers',
+          orderRange: [21, 30]
+        },
+        {
+          title: 'Advanced Actions',
+          icon: '⚡',
+          desc: 'Keyboard, hover, dialogs, select, evaluate, viewport, screenshots and scroll',
+          orderRange: [31, 40]
+        },
+        {
+          title: 'Boss Challenges',
+          icon: '🏆',
+          desc: 'Multi-step flows, iframes, context isolation, cookies and complex selectors',
+          orderRange: [41, 50]
+        },
+        {
+          title: 'Advanced Locators',
+          icon: '🔍',
+          desc: 'get_by_role, get_by_label, get_by_placeholder, filter, nth, first, last, count and chaining',
+          orderRange: [51, 65]
+        },
+        {
+          title: 'Advanced Assertions',
+          icon: '✅',
+          desc: 'to_have_value, to_be_enabled, to_be_focused, to_have_class, to_have_attribute, soft assertions and expect chains',
+          orderRange: [66, 80]
+        },
+        {
+          title: 'Screenshots & Page State',
+          icon: '📸',
+          desc: 'Full-page and element screenshots, page.title(), page.url(), bounding_box, scroll_into_view and page.content()',
+          orderRange: [81, 95]
+        },
+        {
+          title: 'Network & Routing',
+          icon: '🌐',
+          desc: 'route.fulfill, route.abort, route.continue_, unroute, expect_request, expect_response and HAR recording',
+          orderRange: [96, 110]
+        },
+        {
+          title: 'Browser Context',
+          icon: '🌍',
+          desc: 'new_context, cookies, geolocation, locale, timezone, user_agent, http_credentials and offline mode',
+          orderRange: [111, 125]
+        },
+        {
+          title: 'Keyboard & Mouse',
+          icon: '⌨️',
+          desc: 'keyboard.type, keyboard.press, keyboard.down/up, mouse.move, mouse.wheel, press_sequentially, dblclick and tap',
+          orderRange: [126, 140]
+        },
+        {
+          title: 'Navigation & Frames',
+          icon: '🗺️',
+          desc: 'go_back, go_forward, reload, wait_for_load_state, wait_for_url, frame_locator and nested iframes',
+          orderRange: [141, 155]
+        },
+        {
+          title: 'Advanced Patterns',
+          icon: '🚀',
+          desc: 'Page Object Model, parameterized flows, context isolation, tracing, video recording and accessibility snapshots',
+          orderRange: [156, 170]
+        },
+        {
+          title: 'Boss Challenges II',
+          icon: '🏆',
+          desc: 'Device emulation, expose_function, add_init_script, add_style_tag, multi-browser and the Grand Python Master finale',
+          orderRange: [171, 200]
+        },
+        {
+          title: 'File Downloads',
+          icon: '⬇️',
+          desc: 'expect_download, suggested_filename, save_as, cancel and verifying files on disk',
+          orderRange: [201, 205]
+        },
+        {
+          title: 'Popups & Multi-tab',
+          icon: '🪟',
+          desc: 'expect_popup, popup.title/url/close, context.new_page and multi-page flows',
+          orderRange: [206, 215]
+        },
+        {
+          title: 'File Upload',
+          icon: '📁',
+          desc: 'set_input_files with real and virtual files, multiple files and clearing inputs',
+          orderRange: [213, 220]
+        },
+        {
+          title: 'Select & Checkboxes',
+          icon: '☑️',
+          desc: 'select_option by value/label/index, check, uncheck, is_checked and multi-step form flows',
+          orderRange: [216, 224]
+        },
+        {
+          title: 'Advanced Locator Methods',
+          icon: '🔬',
+          desc: 'locator.and_, locator.or_, get_by_test_id, all_text_contents, all_inner_texts, to_have_css, to_have_role and evaluate_handle',
+          orderRange: [221, 230]
+        },
+        {
+          title: 'Storage State',
+          icon: '💾',
+          desc: 'context.storage_state save and restore for pre-authenticated test sessions',
+          orderRange: [229, 232]
+        },
+        {
+          title: 'Clock & Fake Timers',
+          icon: '⏱️',
+          desc: 'page.clock.install, advance, fake Date.now, setTimeout and setInterval control',
+          orderRange: [231, 235]
+        },
+        {
+          title: 'Media Emulation',
+          icon: '🌓',
+          desc: 'emulate_media with dark/light color-scheme, print media, reduced-motion and add_style_tag',
+          orderRange: [236, 240]
+        },
+        {
+          title: 'Python API Testing',
+          icon: '🌐',
+          desc: 'page.request and APIRequestContext — GET, POST, headers, JSON, base_url, params, status codes and hybrid browser+API flows',
+          orderRange: [241, 255]
+        }
+      ]
+    },
     'cypress-ui': {
       icon: '🌲',
       title: 'Cypress UI Testing',
@@ -609,7 +757,7 @@ export function Track() {
   ).sort((a, b) => a.order - b.order);
 
   const isUnlocked = (level) => {
-    if (category === 'vitest' || category === 'jest') return true;
+    if (isAdmin) return true;
     if (!meta.sections) {
       const idx = trackLevels.findIndex((l) => l.id === level.id);
       if (idx === 0) return true;
@@ -631,6 +779,8 @@ export function Track() {
       ? 'jest'
       : category === 'vitest'
       ? 'vitest'
+      : category === 'python-playwright'
+      ? 'python-playwright'
       : 'playwright';
   const earnedXP = trackXP[trackKey] ?? doneLevels.reduce((sum, l) => sum + l.xpReward, 0);
   const nextLevel = trackLevels.find((l) => !completedLevels.includes(l.id));

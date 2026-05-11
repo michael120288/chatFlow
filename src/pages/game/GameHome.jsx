@@ -26,16 +26,19 @@ export function GameHome() {
   const cypressLevels = levels.filter((l) => l.category === 'cypress-ui');
   const jestLevels = levels.filter((l) => l.category === 'jest');
   const vitestLevels = levels.filter((l) => l.category === 'vitest');
+  const pythonLevels = levels.filter((l) => l.category === 'python-playwright');
 
   const playwrightDone = playwrightLevels.filter((l) => completedLevels.includes(l.id)).length;
   const cypressDone = cypressLevels.filter((l) => completedLevels.includes(l.id)).length;
   const jestDone = jestLevels.filter((l) => completedLevels.includes(l.id)).length;
   const vitestDone = vitestLevels.filter((l) => completedLevels.includes(l.id)).length;
+  const pythonDone = pythonLevels.filter((l) => completedLevels.includes(l.id)).length;
 
   const playwrightTotalXP = playwrightLevels.reduce((sum, l) => sum + l.xpReward, 0);
   const cypressTotalXP = cypressLevels.reduce((sum, l) => sum + l.xpReward, 0);
   const jestTotalXP = jestLevels.reduce((sum, l) => sum + l.xpReward, 0);
   const vitestTotalXP = vitestLevels.reduce((sum, l) => sum + l.xpReward, 0);
+  const pythonTotalXP = pythonLevels.reduce((sum, l) => sum + l.xpReward, 0);
 
   const playwrightXPEarned =
     trackXP.playwright ??
@@ -48,11 +51,15 @@ export function GameHome() {
   const vitestXPEarned =
     trackXP.vitest ??
     vitestLevels.filter((l) => completedLevels.includes(l.id)).reduce((sum, l) => sum + l.xpReward, 0);
+  const pythonXPEarned =
+    trackXP['python-playwright'] ??
+    pythonLevels.filter((l) => completedLevels.includes(l.id)).reduce((sum, l) => sum + l.xpReward, 0);
 
   const [pwOpen, setPwOpen] = useState(false);
   const [cyOpen, setCyOpen] = useState(false);
   const [jestOpen, setJestOpen] = useState(false);
   const [vitestOpen, setVitestOpen] = useState(false);
+  const [pyOpen, setPyOpen] = useState(false);
 
   const xpTracks = [
     {
@@ -86,6 +93,14 @@ export function GameHome() {
       total: vitestLevels.length,
       xpEarned: vitestXPEarned,
       color: '#fb923c'
+    },
+    {
+      label: 'Python Playwright',
+      icon: '🐍',
+      done: pythonDone,
+      total: pythonLevels.length,
+      xpEarned: pythonXPEarned,
+      color: '#4ade80'
     }
   ];
 
@@ -107,7 +122,7 @@ export function GameHome() {
             <div className="stat-l">Your XP</div>
           </div>
           <div className="stat-card">
-            <div className="stat-n">4</div>
+            <div className="stat-n">5</div>
             <div className="stat-l">Tracks</div>
           </div>
         </div>
@@ -120,7 +135,7 @@ export function GameHome() {
         {error && <div className="error-msg">Failed to load levels: {error}</div>}
 
         {!loading && !error && (
-          <div className="tracks-row tracks-row--five">
+          <div className="tracks-row tracks-row--six">
             <Link to="/app/game/track/playwright" className="track-card track-playwright">
               <div className="tc-icon">🎭</div>
               <div className="tc-body">
@@ -304,6 +319,54 @@ export function GameHome() {
                     <li>toMatchSnapshot &amp; toMatchInlineSnapshot</li>
                     <li>test.each &amp; describe.each</li>
                     <li>Coverage with v8 and istanbul providers</li>
+                  </ul>
+                )}
+              </div>
+              <div className="tc-arrow">→</div>
+            </Link>
+
+            <Link to="/app/game/track/python-playwright" className="track-card track-python">
+              <div className="tc-icon">🐍</div>
+              <div className="tc-body">
+                <h2 className="tc-title">Python Playwright</h2>
+                <p className="tc-desc">
+                  Browser automation with Python — sync_playwright, locators, assertions, route mocking and more
+                </p>
+                <div className="tc-meta">
+                  <span className="tc-count">{pythonLevels.length} Levels</span>
+                  <span className="tc-xp">{pythonTotalXP.toLocaleString()} XP</span>
+                </div>
+                <div className="tc-progress-track">
+                  <div
+                    className="tc-progress-fill"
+                    style={{ width: `${pythonLevels.length ? (pythonDone / pythonLevels.length) * 100 : 0}%` }}
+                  />
+                </div>
+                <span className="tc-done">
+                  {pythonDone} / {pythonLevels.length} complete
+                </span>
+                <button
+                  type="button"
+                  className="tc-topics-btn"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setPyOpen((o) => !o);
+                  }}
+                  aria-expanded={pyOpen}
+                >
+                  What you&apos;ll learn <span className="tc-topics-chevron">{pyOpen ? '▲' : '▼'}</span>
+                </button>
+                {pyOpen && (
+                  <ul className="tc-topics-list">
+                    <li>sync_playwright &amp; browser lifecycle</li>
+                    <li>Locators — locator(), get_by_role(), get_by_text()</li>
+                    <li>Assertions — expect().to_have_text(), to_be_visible()</li>
+                    <li>Route mocking &amp; response interception</li>
+                    <li>Keyboard, hover, dialogs &amp; select</li>
+                    <li>Screenshots, viewport &amp; scroll</li>
+                    <li>iframes, contexts &amp; cookies</li>
+                    <li>Multi-step automation flows</li>
                   </ul>
                 )}
               </div>

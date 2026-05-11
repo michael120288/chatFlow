@@ -2,12 +2,12 @@ import PropTypes from 'prop-types';
 import Editor from '@monaco-editor/react';
 import './CodeEditor.scss';
 
-export function CodeEditor({ value, onChange, readOnly = false }) {
+export function CodeEditor({ value, onChange, readOnly = false, language = 'javascript' }) {
   return (
     <div className="code-editor">
       <Editor
         height="100%"
-        defaultLanguage="javascript"
+        language={language}
         value={value}
         theme="vs-dark"
         onChange={(val) => onChange(val ?? '')}
@@ -34,5 +34,6 @@ export function CodeEditor({ value, onChange, readOnly = false }) {
 CodeEditor.propTypes = {
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
-  readOnly: PropTypes.bool
+  readOnly: PropTypes.bool,
+  language: PropTypes.string
 };
